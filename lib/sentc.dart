@@ -30,11 +30,6 @@ class Sentc {
 
   Future<String> register(String userIdentifier, String password)
   {
-    return api.register(password: password, userIdentifier: userIdentifier);
-  }
-
-  Future<String> registerTest()
-  {
-    return api.registerTestFull();
+    return api.register(baseUrl: "",authToken: "",password: password, userIdentifier: userIdentifier);
   }
 }
