@@ -15,28 +15,40 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _sentcPlugin = Sentc(app_token: "");
+  Future<String>? register;
 
-  late Future<void> register;
+  _asyncInit() async {
+    await Sentc.init(app_token: "");
+
+    //set here the futures
+    setState(() {
+      register = Sentc.register("abc", "def");
+      print("init");
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    register = _sentcPlugin.register("abc", "def");
+
+    _asyncInit();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: ListView(
-            children: <Widget>[
-              FutureBuilder<List<dynamic>>(
-                  future: Future.wait([register]),
+    if (register != null) {
+      //normal view
+
+      return MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Center(
+            child: ListView(
+              children: <Widget>[
+                FutureBuilder<List<dynamic>>(
+                  future: Future.wait([register ?? Future(() => "")]),
                   builder: (context, snap) {
                     final data = snap.data;
 
@@ -48,11 +60,28 @@ class _MyAppState extends State<MyApp> {
                       '${data[0]}',
                       style: Theme.of(context).textTheme.headline4,
                     );
-                  }),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      //waiting view for init the app
+
+      return MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Center(
+            child: ListView(
+              children: const <Widget>[Text("waiting")],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }
