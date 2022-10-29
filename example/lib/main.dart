@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _sentcPlugin = Sentc();
+  final _sentcPlugin = Sentc(app_token: "");
 
   late Future<void> register;
 
@@ -33,15 +33,17 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Column(
+          child: ListView(
             children: <Widget>[
               FutureBuilder<List<dynamic>>(
                   future: Future.wait([register]),
                   builder: (context, snap) {
                     final data = snap.data;
+
                     if (data == null) {
                       return const Text("Loading");
                     }
+
                     return Text(
                       '${data[0]}',
                       style: Theme.of(context).textTheme.headline4,
@@ -49,7 +51,6 @@ class _MyAppState extends State<MyApp> {
                   }),
             ],
           ),
-
         ),
       ),
     );
