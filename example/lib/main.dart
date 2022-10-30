@@ -40,48 +40,67 @@ class _MyAppState extends State<MyApp> {
       //normal view
 
       return MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-          ),
-          body: Center(
-            child: ListView(
-              children: <Widget>[
-                FutureBuilder<List<dynamic>>(
-                  future: Future.wait([register ?? Future(() => "")]),
-                  builder: (context, snap) {
-                    final data = snap.data;
+        home: ListViewLayout(
+          <Widget>[
+            FutureBuilder<List<dynamic>>(
+              future: Future.wait([register ?? Future(() => "")]),
+              builder: (context, snap) {
+                final data = snap.data;
 
-                    if (data == null) {
-                      return const Text("Loading");
-                    }
+                if (data == null) {
+                  return const Text("Loading");
+                }
 
-                    return Text(
-                      '${data[0]}',
-                      style: Theme.of(context).textTheme.headline4,
-                    );
-                  },
-                ),
-              ],
+                return Text(
+                  '${data[0]}',
+                  style: Theme.of(context).textTheme.headline4,
+                );
+              },
             ),
-          ),
+          ],
         ),
       );
     } else {
       //waiting view for init the app
 
-      return MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-          ),
-          body: Center(
-            child: ListView(
-              children: const <Widget>[Text("waiting")],
-            ),
-          ),
+      return const MaterialApp(
+        home: ListViewLayout(
+          <Widget>[Text("waiting")],
         ),
       );
     }
+  }
+}
+
+class ListViewLayout extends StatelessWidget {
+  final List<Widget> body;
+
+  const ListViewLayout(this.body);
+
+  @override
+  Widget build(BuildContext context) {
+    return Layout(
+      Center(
+        child: ListView(
+          children: body,
+        ),
+      ),
+    );
+  }
+}
+
+class Layout extends StatelessWidget {
+  final Widget body;
+
+  const Layout(this.body);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Plugin example app'),
+      ),
+      body: body,
+    );
   }
 }
