@@ -18,7 +18,15 @@ class _MyAppState extends State<MyApp> {
   Future<String>? register;
 
   _asyncInit() async {
-    await Sentc.init(app_token: "");
+    await Sentc.init(
+      app_token: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
+      base_url: "http://192.168.178.21:3002",
+      //base_url: "http://127.0.0.1:3002",
+    );
+
+    var reg = await Sentc.register("userIdentifier", "password");
+
+    print(reg);
 
     //set here the futures
     setState(() {

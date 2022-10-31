@@ -47,7 +47,7 @@ class Sentc {
             : DynamicLibrary.open(path);
 
     final SentcFlutterImpl api = SentcFlutterImpl(dylib);
-    base_url = base_url ?? "https://api.sentc.com";
+    _base_url = base_url ?? "https://api.sentc.com";
 
     REFRESH_OPTIONS refresh_endpoint =
         refresh_options != null ? refresh_options.endpoint : REFRESH_OPTIONS.api;
