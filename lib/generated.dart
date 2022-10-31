@@ -211,6 +211,118 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kInitUserConstMeta;
+
+  Future<List<UserDeviceList>> getUserDevices(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String lastFetchedTime,
+      required String lastFetchedId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetUserDevicesConstMeta;
+
+  Future<void> resetPassword(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String newPassword,
+      required String decryptedPrivateKey,
+      required String decryptedSignKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kResetPasswordConstMeta;
+
+  Future<void> changePassword(
+      {required String baseUrl,
+      required String authToken,
+      required String userIdentifier,
+      required String oldPassword,
+      required String newPassword,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kChangePasswordConstMeta;
+
+  Future<void> deleteUser(
+      {required String baseUrl,
+      required String authToken,
+      required String userIdentifier,
+      required String password,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDeleteUserConstMeta;
+
+  Future<void> deleteDevice(
+      {required String baseUrl,
+      required String authToken,
+      required String deviceIdentifier,
+      required String password,
+      required String deviceId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDeleteDeviceConstMeta;
+
+  Future<void> updateUser(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String userIdentifier,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUpdateUserConstMeta;
+
+  Future<UserPublicKeyData> userFetchPublicKey(
+      {required String baseUrl,
+      required String authToken,
+      required String userId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserFetchPublicKeyConstMeta;
+
+  Future<String> userFetchVerifyKey(
+      {required String baseUrl,
+      required String authToken,
+      required String userId,
+      required String verifyKeyId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserFetchVerifyKeyConstMeta;
+
+  Future<String> userKeyRotation(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String publicDeviceKey,
+      required String preUserKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserKeyRotationConstMeta;
+
+  Future<List<KeyRotationGetOut>> userPreDoneKeyRotation(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserPreDoneKeyRotationConstMeta;
+
+  Future<KeyRotationInput> userGetDoneKeyRotationServerInput(
+      {required String serverOutput, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta
+      get kUserGetDoneKeyRotationServerInputConstMeta;
+
+  Future<void> userFinishKeyRotation(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String serverOutput,
+      required String preGroupKey,
+      required String publicKey,
+      required String privateKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserFinishKeyRotationConstMeta;
 }
 
 class DeviceKeyData {
@@ -248,6 +360,40 @@ class GroupInviteReqList {
   GroupInviteReqList({
     required this.groupId,
     required this.time,
+  });
+}
+
+class KeyRotationGetOut {
+  final String preGroupKeyId;
+  final String newGroupKeyId;
+  final String encryptedEphKeyKeyId;
+  final String serverOutput;
+
+  KeyRotationGetOut({
+    required this.preGroupKeyId,
+    required this.newGroupKeyId,
+    required this.encryptedEphKeyKeyId,
+    required this.serverOutput,
+  });
+}
+
+class KeyRotationInput {
+  final String encryptedEphemeralKeyByGroupKeyAndPublicKey;
+  final String encryptedGroupKeyByEphemeral;
+  final String ephemeralAlg;
+  final String encryptedEphKeyKeyId;
+  final String previousGroupKeyId;
+  final String time;
+  final String newGroupKeyId;
+
+  KeyRotationInput({
+    required this.encryptedEphemeralKeyByGroupKeyAndPublicKey,
+    required this.encryptedGroupKeyByEphemeral,
+    required this.ephemeralAlg,
+    required this.encryptedEphKeyKeyId,
+    required this.previousGroupKeyId,
+    required this.time,
+    required this.newGroupKeyId,
   });
 }
 
@@ -299,6 +445,18 @@ class UserData {
   });
 }
 
+class UserDeviceList {
+  final String deviceId;
+  final String time;
+  final String deviceIdentifier;
+
+  UserDeviceList({
+    required this.deviceId,
+    required this.time,
+    required this.deviceIdentifier,
+  });
+}
+
 class UserInitServerOutput {
   final String jwt;
   final List<GroupInviteReqList> invites;
@@ -330,6 +488,16 @@ class UserKeyData {
     required this.verifyKey,
     required this.exportedPublicKey,
     required this.exportedVerifyKey,
+  });
+}
+
+class UserPublicKeyData {
+  final String publicKey;
+  final String publicKeyId;
+
+  UserPublicKeyData({
+    required this.publicKey,
+    required this.publicKeyId,
   });
 }
 
@@ -825,6 +993,373 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
         argNames: ["baseUrl", "authToken", "jwt", "refreshToken"],
       );
 
+  Future<List<UserDeviceList>> getUserDevices(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String lastFetchedTime,
+          required String lastFetchedId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_get_user_devices(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedId)),
+        parseSuccessData: _wire2api_list_user_device_list,
+        constMeta: kGetUserDevicesConstMeta,
+        argValues: [baseUrl, authToken, jwt, lastFetchedTime, lastFetchedId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGetUserDevicesConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_user_devices",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "lastFetchedTime",
+          "lastFetchedId"
+        ],
+      );
+
+  Future<void> resetPassword(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String newPassword,
+          required String decryptedPrivateKey,
+          required String decryptedSignKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_reset_password(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(newPassword),
+            _api2wire_String(decryptedPrivateKey),
+            _api2wire_String(decryptedSignKey)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kResetPasswordConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          newPassword,
+          decryptedPrivateKey,
+          decryptedSignKey
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kResetPasswordConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "reset_password",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "newPassword",
+          "decryptedPrivateKey",
+          "decryptedSignKey"
+        ],
+      );
+
+  Future<void> changePassword(
+          {required String baseUrl,
+          required String authToken,
+          required String userIdentifier,
+          required String oldPassword,
+          required String newPassword,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_change_password(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(userIdentifier),
+            _api2wire_String(oldPassword),
+            _api2wire_String(newPassword)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kChangePasswordConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          userIdentifier,
+          oldPassword,
+          newPassword
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kChangePasswordConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "change_password",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "userIdentifier",
+          "oldPassword",
+          "newPassword"
+        ],
+      );
+
+  Future<void> deleteUser(
+          {required String baseUrl,
+          required String authToken,
+          required String userIdentifier,
+          required String password,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_delete_user(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(userIdentifier),
+            _api2wire_String(password)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kDeleteUserConstMeta,
+        argValues: [baseUrl, authToken, userIdentifier, password],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDeleteUserConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "delete_user",
+        argNames: ["baseUrl", "authToken", "userIdentifier", "password"],
+      );
+
+  Future<void> deleteDevice(
+          {required String baseUrl,
+          required String authToken,
+          required String deviceIdentifier,
+          required String password,
+          required String deviceId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_delete_device(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(deviceIdentifier),
+            _api2wire_String(password),
+            _api2wire_String(deviceId)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kDeleteDeviceConstMeta,
+        argValues: [baseUrl, authToken, deviceIdentifier, password, deviceId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDeleteDeviceConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "delete_device",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "deviceIdentifier",
+          "password",
+          "deviceId"
+        ],
+      );
+
+  Future<void> updateUser(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String userIdentifier,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_update_user(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(userIdentifier)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kUpdateUserConstMeta,
+        argValues: [baseUrl, authToken, jwt, userIdentifier],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kUpdateUserConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "update_user",
+        argNames: ["baseUrl", "authToken", "jwt", "userIdentifier"],
+      );
+
+  Future<UserPublicKeyData> userFetchPublicKey(
+          {required String baseUrl,
+          required String authToken,
+          required String userId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_user_fetch_public_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(userId)),
+        parseSuccessData: _wire2api_user_public_key_data,
+        constMeta: kUserFetchPublicKeyConstMeta,
+        argValues: [baseUrl, authToken, userId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kUserFetchPublicKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_fetch_public_key",
+        argNames: ["baseUrl", "authToken", "userId"],
+      );
+
+  Future<String> userFetchVerifyKey(
+          {required String baseUrl,
+          required String authToken,
+          required String userId,
+          required String verifyKeyId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_user_fetch_verify_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(userId),
+            _api2wire_String(verifyKeyId)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kUserFetchVerifyKeyConstMeta,
+        argValues: [baseUrl, authToken, userId, verifyKeyId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kUserFetchVerifyKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_fetch_verify_key",
+        argNames: ["baseUrl", "authToken", "userId", "verifyKeyId"],
+      );
+
+  Future<String> userKeyRotation(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String publicDeviceKey,
+          required String preUserKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_user_key_rotation(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(publicDeviceKey),
+            _api2wire_String(preUserKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kUserKeyRotationConstMeta,
+        argValues: [baseUrl, authToken, jwt, publicDeviceKey, preUserKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kUserKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_key_rotation",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "publicDeviceKey",
+          "preUserKey"
+        ],
+      );
+
+  Future<List<KeyRotationGetOut>> userPreDoneKeyRotation(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_user_pre_done_key_rotation(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt)),
+        parseSuccessData: _wire2api_list_key_rotation_get_out,
+        constMeta: kUserPreDoneKeyRotationConstMeta,
+        argValues: [baseUrl, authToken, jwt],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kUserPreDoneKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_pre_done_key_rotation",
+        argNames: ["baseUrl", "authToken", "jwt"],
+      );
+
+  Future<KeyRotationInput> userGetDoneKeyRotationServerInput(
+          {required String serverOutput, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_user_get_done_key_rotation_server_input(
+            port_, _api2wire_String(serverOutput)),
+        parseSuccessData: _wire2api_key_rotation_input,
+        constMeta: kUserGetDoneKeyRotationServerInputConstMeta,
+        argValues: [serverOutput],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta
+      get kUserGetDoneKeyRotationServerInputConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "user_get_done_key_rotation_server_input",
+            argNames: ["serverOutput"],
+          );
+
+  Future<void> userFinishKeyRotation(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String serverOutput,
+          required String preGroupKey,
+          required String publicKey,
+          required String privateKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_user_finish_key_rotation(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(serverOutput),
+            _api2wire_String(preGroupKey),
+            _api2wire_String(publicKey),
+            _api2wire_String(privateKey)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kUserFinishKeyRotationConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          serverOutput,
+          preGroupKey,
+          publicKey,
+          privateKey
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kUserFinishKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_finish_key_rotation",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "serverOutput",
+          "preGroupKey",
+          "publicKey",
+          "privateKey"
+        ],
+      );
+
   // Section: api2wire
   ffi.Pointer<wire_uint_8_list> _api2wire_String(String raw) {
     return _api2wire_uint_8_list(utf8.encoder.convert(raw));
@@ -891,8 +1426,43 @@ GroupInviteReqList _wire2api_group_invite_req_list(dynamic raw) {
   );
 }
 
+KeyRotationGetOut _wire2api_key_rotation_get_out(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 4)
+    throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+  return KeyRotationGetOut(
+    preGroupKeyId: _wire2api_String(arr[0]),
+    newGroupKeyId: _wire2api_String(arr[1]),
+    encryptedEphKeyKeyId: _wire2api_String(arr[2]),
+    serverOutput: _wire2api_String(arr[3]),
+  );
+}
+
+KeyRotationInput _wire2api_key_rotation_input(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 7)
+    throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+  return KeyRotationInput(
+    encryptedEphemeralKeyByGroupKeyAndPublicKey: _wire2api_String(arr[0]),
+    encryptedGroupKeyByEphemeral: _wire2api_String(arr[1]),
+    ephemeralAlg: _wire2api_String(arr[2]),
+    encryptedEphKeyKeyId: _wire2api_String(arr[3]),
+    previousGroupKeyId: _wire2api_String(arr[4]),
+    time: _wire2api_String(arr[5]),
+    newGroupKeyId: _wire2api_String(arr[6]),
+  );
+}
+
 List<GroupInviteReqList> _wire2api_list_group_invite_req_list(dynamic raw) {
   return (raw as List<dynamic>).map(_wire2api_group_invite_req_list).toList();
+}
+
+List<KeyRotationGetOut> _wire2api_list_key_rotation_get_out(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_key_rotation_get_out).toList();
+}
+
+List<UserDeviceList> _wire2api_list_user_device_list(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_user_device_list).toList();
 }
 
 List<UserKeyData> _wire2api_list_user_key_data(dynamic raw) {
@@ -955,6 +1525,17 @@ UserData _wire2api_user_data(dynamic raw) {
   );
 }
 
+UserDeviceList _wire2api_user_device_list(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  return UserDeviceList(
+    deviceId: _wire2api_String(arr[0]),
+    time: _wire2api_String(arr[1]),
+    deviceIdentifier: _wire2api_String(arr[2]),
+  );
+}
+
 UserInitServerOutput _wire2api_user_init_server_output(dynamic raw) {
   final arr = raw as List<dynamic>;
   if (arr.length != 2)
@@ -979,6 +1560,16 @@ UserKeyData _wire2api_user_key_data(dynamic raw) {
     verifyKey: _wire2api_String(arr[6]),
     exportedPublicKey: _wire2api_String(arr[7]),
     exportedVerifyKey: _wire2api_String(arr[8]),
+  );
+}
+
+UserPublicKeyData _wire2api_user_public_key_data(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return UserPublicKeyData(
+    publicKey: _wire2api_String(arr[0]),
+    publicKeyId: _wire2api_String(arr[1]),
   );
 }
 
@@ -1554,6 +2145,403 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_get_user_devices(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_id,
+  ) {
+    return _wire_get_user_devices(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      last_fetched_time,
+      last_fetched_id,
+    );
+  }
+
+  late final _wire_get_user_devicesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_get_user_devices');
+  late final _wire_get_user_devices = _wire_get_user_devicesPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_reset_password(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> new_password,
+    ffi.Pointer<wire_uint_8_list> decrypted_private_key,
+    ffi.Pointer<wire_uint_8_list> decrypted_sign_key,
+  ) {
+    return _wire_reset_password(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      new_password,
+      decrypted_private_key,
+      decrypted_sign_key,
+    );
+  }
+
+  late final _wire_reset_passwordPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_reset_password');
+  late final _wire_reset_password = _wire_reset_passwordPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_change_password(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> user_identifier,
+    ffi.Pointer<wire_uint_8_list> old_password,
+    ffi.Pointer<wire_uint_8_list> new_password,
+  ) {
+    return _wire_change_password(
+      port_,
+      base_url,
+      auth_token,
+      user_identifier,
+      old_password,
+      new_password,
+    );
+  }
+
+  late final _wire_change_passwordPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_change_password');
+  late final _wire_change_password = _wire_change_passwordPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_delete_user(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> user_identifier,
+    ffi.Pointer<wire_uint_8_list> password,
+  ) {
+    return _wire_delete_user(
+      port_,
+      base_url,
+      auth_token,
+      user_identifier,
+      password,
+    );
+  }
+
+  late final _wire_delete_userPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_delete_user');
+  late final _wire_delete_user = _wire_delete_userPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_delete_device(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> device_identifier,
+    ffi.Pointer<wire_uint_8_list> password,
+    ffi.Pointer<wire_uint_8_list> device_id,
+  ) {
+    return _wire_delete_device(
+      port_,
+      base_url,
+      auth_token,
+      device_identifier,
+      password,
+      device_id,
+    );
+  }
+
+  late final _wire_delete_devicePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_delete_device');
+  late final _wire_delete_device = _wire_delete_devicePtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_update_user(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> user_identifier,
+  ) {
+    return _wire_update_user(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      user_identifier,
+    );
+  }
+
+  late final _wire_update_userPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_update_user');
+  late final _wire_update_user = _wire_update_userPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_fetch_public_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> user_id,
+  ) {
+    return _wire_user_fetch_public_key(
+      port_,
+      base_url,
+      auth_token,
+      user_id,
+    );
+  }
+
+  late final _wire_user_fetch_public_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_user_fetch_public_key');
+  late final _wire_user_fetch_public_key =
+      _wire_user_fetch_public_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_fetch_verify_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> user_id,
+    ffi.Pointer<wire_uint_8_list> verify_key_id,
+  ) {
+    return _wire_user_fetch_verify_key(
+      port_,
+      base_url,
+      auth_token,
+      user_id,
+      verify_key_id,
+    );
+  }
+
+  late final _wire_user_fetch_verify_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_user_fetch_verify_key');
+  late final _wire_user_fetch_verify_key =
+      _wire_user_fetch_verify_keyPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> public_device_key,
+    ffi.Pointer<wire_uint_8_list> pre_user_key,
+  ) {
+    return _wire_user_key_rotation(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      public_device_key,
+      pre_user_key,
+    );
+  }
+
+  late final _wire_user_key_rotationPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_user_key_rotation');
+  late final _wire_user_key_rotation = _wire_user_key_rotationPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_pre_done_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+  ) {
+    return _wire_user_pre_done_key_rotation(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+    );
+  }
+
+  late final _wire_user_pre_done_key_rotationPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_user_pre_done_key_rotation');
+  late final _wire_user_pre_done_key_rotation =
+      _wire_user_pre_done_key_rotationPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_get_done_key_rotation_server_input(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> server_output,
+  ) {
+    return _wire_user_get_done_key_rotation_server_input(
+      port_,
+      server_output,
+    );
+  }
+
+  late final _wire_user_get_done_key_rotation_server_inputPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_user_get_done_key_rotation_server_input');
+  late final _wire_user_get_done_key_rotation_server_input =
+      _wire_user_get_done_key_rotation_server_inputPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_finish_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> server_output,
+    ffi.Pointer<wire_uint_8_list> pre_group_key,
+    ffi.Pointer<wire_uint_8_list> public_key,
+    ffi.Pointer<wire_uint_8_list> private_key,
+  ) {
+    return _wire_user_finish_key_rotation(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      server_output,
+      pre_group_key,
+      public_key,
+      private_key,
+    );
+  }
+
+  late final _wire_user_finish_key_rotationPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_user_finish_key_rotation');
+  late final _wire_user_finish_key_rotation =
+      _wire_user_finish_key_rotationPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list(
     int len,
