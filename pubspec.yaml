@@ -2,6 +2,10 @@ name: sentc
 description: An end to end encryption sdk for every developer.
 version: 0.0.1
 homepage: https://sentclose.com/
+documentation: https://sentc.com/
+authors:
+  - Sentclose <contact@sentclose.com>
+  - Jörn Heinemann <j.heinemann@sentclose.com>
 
 environment:
   sdk: ">=2.17.3 <3.0.0"
