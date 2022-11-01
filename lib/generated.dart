@@ -686,6 +686,211 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta;
+
+  Future<EncryptedHead> splitHeadAndEncryptedData(
+      {required Uint8List data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSplitHeadAndEncryptedDataConstMeta;
+
+  Future<EncryptedHead> splitHeadAndEncryptedString(
+      {required String data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSplitHeadAndEncryptedStringConstMeta;
+
+  Future<EncryptedHead> deserializeHeadFromString(
+      {required String head, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDeserializeHeadFromStringConstMeta;
+
+  Future<CryptoRawOutput> encryptRawSymmetric(
+      {required String key,
+      required Uint8List data,
+      required String signKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kEncryptRawSymmetricConstMeta;
+
+  Future<Uint8List> decryptRawSymmetric(
+      {required String key,
+      required Uint8List encryptedData,
+      required String head,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptRawSymmetricConstMeta;
+
+  Future<Uint8List> encryptSymmetric(
+      {required String key,
+      required Uint8List data,
+      required String signKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kEncryptSymmetricConstMeta;
+
+  Future<Uint8List> decryptSymmetric(
+      {required String key,
+      required Uint8List encryptedData,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptSymmetricConstMeta;
+
+  Future<String> encryptStringSymmetric(
+      {required String key,
+      required String data,
+      required String signKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kEncryptStringSymmetricConstMeta;
+
+  Future<String> decryptStringSymmetric(
+      {required String key,
+      required String encryptedData,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptStringSymmetricConstMeta;
+
+  Future<CryptoRawOutput> encryptRawAsymmetric(
+      {required String replyPublicKeyData,
+      required Uint8List data,
+      required String signKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kEncryptRawAsymmetricConstMeta;
+
+  Future<Uint8List> decryptRawAsymmetric(
+      {required String privateKey,
+      required Uint8List encryptedData,
+      required String head,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptRawAsymmetricConstMeta;
+
+  Future<Uint8List> encryptAsymmetric(
+      {required String replyPublicKeyData,
+      required Uint8List data,
+      required String signKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kEncryptAsymmetricConstMeta;
+
+  Future<Uint8List> decryptAsymmetric(
+      {required String privateKey,
+      required Uint8List encryptedData,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptAsymmetricConstMeta;
+
+  Future<String> encryptStringAsymmetric(
+      {required String replyPublicKeyData,
+      required String data,
+      required String signKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kEncryptStringAsymmetricConstMeta;
+
+  Future<String> decryptStringAsymmetric(
+      {required String privateKey,
+      required String encryptedData,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptStringAsymmetricConstMeta;
+
+  Future<NonRegisteredKeyOutput> generateNonRegisterSymKey(
+      {required String masterKey, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGenerateNonRegisterSymKeyConstMeta;
+
+  Future<NonRegisteredKeyOutput> generateNonRegisterSymKeyByPublicKey(
+      {required String replyPublicKey, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta
+      get kGenerateNonRegisterSymKeyByPublicKeyConstMeta;
+
+  Future<String> decryptSymKey(
+      {required String masterKey,
+      required String encryptedSymmetricKeyInfo,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptSymKeyConstMeta;
+
+  Future<String> decryptSymKeyByPrivateKey(
+      {required String privateKey,
+      required String encryptedSymmetricKeyInfo,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecryptSymKeyByPrivateKeyConstMeta;
+
+  Future<KeyGenOutput> generateAndRegisterSymKey(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String masterKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGenerateAndRegisterSymKeyConstMeta;
+
+  Future<KeyGenOutput> generateAndRegisterSymKeyByPublicKey(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String publicKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta
+      get kGenerateAndRegisterSymKeyByPublicKeyConstMeta;
+
+  Future<String> getSymKeyById(
+      {required String baseUrl,
+      required String authToken,
+      required String keyId,
+      required String masterKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdConstMeta;
+
+  Future<String> getSymKeyByIdByPrivateKey(
+      {required String baseUrl,
+      required String authToken,
+      required String keyId,
+      required String privateKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdByPrivateKeyConstMeta;
+
+  Future<KeysToMasterKeyFetch> getKeysForMasterKey(
+      {required String baseUrl,
+      required String authToken,
+      required String masterKeyId,
+      required String lastFetchedTime,
+      required String lastKeyId,
+      required String masterKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetKeysForMasterKeyConstMeta;
+
+  Future<void> deleteSymKey(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String keyId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta;
+}
+
+class CryptoRawOutput {
+  final String head;
+  final Uint8List data;
+
+  CryptoRawOutput({
+    required this.head,
+    required this.data,
+  });
 }
 
 class DeviceKeyData {
@@ -703,6 +908,16 @@ class DeviceKeyData {
     required this.verifyKey,
     required this.exportedPublicKey,
     required this.exportedVerifyKey,
+  });
+}
+
+class EncryptedHead {
+  final String id;
+  final SignHead? sign;
+
+  EncryptedHead({
+    required this.id,
+    this.sign,
   });
 }
 
@@ -804,6 +1019,16 @@ class GroupUserListItem {
   });
 }
 
+class KeyGenOutput {
+  final String key;
+  final String keyId;
+
+  KeyGenOutput({
+    required this.key,
+    required this.keyId,
+  });
+}
+
 class KeyRotationGetOut {
   final String preGroupKeyId;
   final String newGroupKeyId;
@@ -838,6 +1063,18 @@ class KeyRotationInput {
   });
 }
 
+class KeysToMasterKeyFetch {
+  final String lastFetchedTime;
+  final String lastKeyId;
+  final List<String> keys;
+
+  KeysToMasterKeyFetch({
+    required this.lastFetchedTime,
+    required this.lastKeyId,
+    required this.keys,
+  });
+}
+
 class ListGroups {
   final String groupId;
   final String time;
@@ -851,6 +1088,16 @@ class ListGroups {
     required this.joinedTime,
     required this.rank,
     this.parent,
+  });
+}
+
+class NonRegisteredKeyOutput {
+  final String key;
+  final String encryptedKey;
+
+  NonRegisteredKeyOutput({
+    required this.key,
+    required this.encryptedKey,
   });
 }
 
@@ -881,6 +1128,16 @@ class RegisterDeviceData {
   RegisterDeviceData({
     required this.sessionId,
     required this.exportedPublicKey,
+  });
+}
+
+class SignHead {
+  final String id;
+  final String alg;
+
+  SignHead({
+    required this.id,
+    required this.alg,
   });
 }
 
@@ -2935,6 +3192,585 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
         argNames: ["baseUrl", "authToken", "jwt", "id", "adminRank"],
       );
 
+  Future<EncryptedHead> splitHeadAndEncryptedData(
+          {required Uint8List data, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_split_head_and_encrypted_data(
+            port_, _api2wire_uint_8_list(data)),
+        parseSuccessData: _wire2api_encrypted_head,
+        constMeta: kSplitHeadAndEncryptedDataConstMeta,
+        argValues: [data],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kSplitHeadAndEncryptedDataConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "split_head_and_encrypted_data",
+        argNames: ["data"],
+      );
+
+  Future<EncryptedHead> splitHeadAndEncryptedString(
+          {required String data, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_split_head_and_encrypted_string(
+            port_, _api2wire_String(data)),
+        parseSuccessData: _wire2api_encrypted_head,
+        constMeta: kSplitHeadAndEncryptedStringConstMeta,
+        argValues: [data],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kSplitHeadAndEncryptedStringConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "split_head_and_encrypted_string",
+        argNames: ["data"],
+      );
+
+  Future<EncryptedHead> deserializeHeadFromString(
+          {required String head, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_deserialize_head_from_string(
+            port_, _api2wire_String(head)),
+        parseSuccessData: _wire2api_encrypted_head,
+        constMeta: kDeserializeHeadFromStringConstMeta,
+        argValues: [head],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDeserializeHeadFromStringConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "deserialize_head_from_string",
+        argNames: ["head"],
+      );
+
+  Future<CryptoRawOutput> encryptRawSymmetric(
+          {required String key,
+          required Uint8List data,
+          required String signKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_encrypt_raw_symmetric(
+            port_,
+            _api2wire_String(key),
+            _api2wire_uint_8_list(data),
+            _api2wire_String(signKey)),
+        parseSuccessData: _wire2api_crypto_raw_output,
+        constMeta: kEncryptRawSymmetricConstMeta,
+        argValues: [key, data, signKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kEncryptRawSymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "encrypt_raw_symmetric",
+        argNames: ["key", "data", "signKey"],
+      );
+
+  Future<Uint8List> decryptRawSymmetric(
+          {required String key,
+          required Uint8List encryptedData,
+          required String head,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_raw_symmetric(
+            port_,
+            _api2wire_String(key),
+            _api2wire_uint_8_list(encryptedData),
+            _api2wire_String(head),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kDecryptRawSymmetricConstMeta,
+        argValues: [key, encryptedData, head, verifyKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptRawSymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_raw_symmetric",
+        argNames: ["key", "encryptedData", "head", "verifyKeyData"],
+      );
+
+  Future<Uint8List> encryptSymmetric(
+          {required String key,
+          required Uint8List data,
+          required String signKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_encrypt_symmetric(
+            port_,
+            _api2wire_String(key),
+            _api2wire_uint_8_list(data),
+            _api2wire_String(signKey)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kEncryptSymmetricConstMeta,
+        argValues: [key, data, signKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kEncryptSymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "encrypt_symmetric",
+        argNames: ["key", "data", "signKey"],
+      );
+
+  Future<Uint8List> decryptSymmetric(
+          {required String key,
+          required Uint8List encryptedData,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_symmetric(
+            port_,
+            _api2wire_String(key),
+            _api2wire_uint_8_list(encryptedData),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kDecryptSymmetricConstMeta,
+        argValues: [key, encryptedData, verifyKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptSymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_symmetric",
+        argNames: ["key", "encryptedData", "verifyKeyData"],
+      );
+
+  Future<String> encryptStringSymmetric(
+          {required String key,
+          required String data,
+          required String signKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_encrypt_string_symmetric(
+            port_,
+            _api2wire_String(key),
+            _api2wire_String(data),
+            _api2wire_String(signKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kEncryptStringSymmetricConstMeta,
+        argValues: [key, data, signKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kEncryptStringSymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "encrypt_string_symmetric",
+        argNames: ["key", "data", "signKey"],
+      );
+
+  Future<String> decryptStringSymmetric(
+          {required String key,
+          required String encryptedData,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_string_symmetric(
+            port_,
+            _api2wire_String(key),
+            _api2wire_String(encryptedData),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kDecryptStringSymmetricConstMeta,
+        argValues: [key, encryptedData, verifyKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptStringSymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_string_symmetric",
+        argNames: ["key", "encryptedData", "verifyKeyData"],
+      );
+
+  Future<CryptoRawOutput> encryptRawAsymmetric(
+          {required String replyPublicKeyData,
+          required Uint8List data,
+          required String signKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_encrypt_raw_asymmetric(
+            port_,
+            _api2wire_String(replyPublicKeyData),
+            _api2wire_uint_8_list(data),
+            _api2wire_String(signKey)),
+        parseSuccessData: _wire2api_crypto_raw_output,
+        constMeta: kEncryptRawAsymmetricConstMeta,
+        argValues: [replyPublicKeyData, data, signKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kEncryptRawAsymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "encrypt_raw_asymmetric",
+        argNames: ["replyPublicKeyData", "data", "signKey"],
+      );
+
+  Future<Uint8List> decryptRawAsymmetric(
+          {required String privateKey,
+          required Uint8List encryptedData,
+          required String head,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_raw_asymmetric(
+            port_,
+            _api2wire_String(privateKey),
+            _api2wire_uint_8_list(encryptedData),
+            _api2wire_String(head),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kDecryptRawAsymmetricConstMeta,
+        argValues: [privateKey, encryptedData, head, verifyKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptRawAsymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_raw_asymmetric",
+        argNames: ["privateKey", "encryptedData", "head", "verifyKeyData"],
+      );
+
+  Future<Uint8List> encryptAsymmetric(
+          {required String replyPublicKeyData,
+          required Uint8List data,
+          required String signKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_encrypt_asymmetric(
+            port_,
+            _api2wire_String(replyPublicKeyData),
+            _api2wire_uint_8_list(data),
+            _api2wire_String(signKey)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kEncryptAsymmetricConstMeta,
+        argValues: [replyPublicKeyData, data, signKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kEncryptAsymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "encrypt_asymmetric",
+        argNames: ["replyPublicKeyData", "data", "signKey"],
+      );
+
+  Future<Uint8List> decryptAsymmetric(
+          {required String privateKey,
+          required Uint8List encryptedData,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_asymmetric(
+            port_,
+            _api2wire_String(privateKey),
+            _api2wire_uint_8_list(encryptedData),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kDecryptAsymmetricConstMeta,
+        argValues: [privateKey, encryptedData, verifyKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptAsymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_asymmetric",
+        argNames: ["privateKey", "encryptedData", "verifyKeyData"],
+      );
+
+  Future<String> encryptStringAsymmetric(
+          {required String replyPublicKeyData,
+          required String data,
+          required String signKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_encrypt_string_asymmetric(
+            port_,
+            _api2wire_String(replyPublicKeyData),
+            _api2wire_String(data),
+            _api2wire_String(signKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kEncryptStringAsymmetricConstMeta,
+        argValues: [replyPublicKeyData, data, signKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kEncryptStringAsymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "encrypt_string_asymmetric",
+        argNames: ["replyPublicKeyData", "data", "signKey"],
+      );
+
+  Future<String> decryptStringAsymmetric(
+          {required String privateKey,
+          required String encryptedData,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_string_asymmetric(
+            port_,
+            _api2wire_String(privateKey),
+            _api2wire_String(encryptedData),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kDecryptStringAsymmetricConstMeta,
+        argValues: [privateKey, encryptedData, verifyKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptStringAsymmetricConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_string_asymmetric",
+        argNames: ["privateKey", "encryptedData", "verifyKeyData"],
+      );
+
+  Future<NonRegisteredKeyOutput> generateNonRegisterSymKey(
+          {required String masterKey, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_generate_non_register_sym_key(
+            port_, _api2wire_String(masterKey)),
+        parseSuccessData: _wire2api_non_registered_key_output,
+        constMeta: kGenerateNonRegisterSymKeyConstMeta,
+        argValues: [masterKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGenerateNonRegisterSymKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "generate_non_register_sym_key",
+        argNames: ["masterKey"],
+      );
+
+  Future<NonRegisteredKeyOutput> generateNonRegisterSymKeyByPublicKey(
+          {required String replyPublicKey, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) =>
+            inner.wire_generate_non_register_sym_key_by_public_key(
+                port_, _api2wire_String(replyPublicKey)),
+        parseSuccessData: _wire2api_non_registered_key_output,
+        constMeta: kGenerateNonRegisterSymKeyByPublicKeyConstMeta,
+        argValues: [replyPublicKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta
+      get kGenerateNonRegisterSymKeyByPublicKeyConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "generate_non_register_sym_key_by_public_key",
+            argNames: ["replyPublicKey"],
+          );
+
+  Future<String> decryptSymKey(
+          {required String masterKey,
+          required String encryptedSymmetricKeyInfo,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_sym_key(
+            port_,
+            _api2wire_String(masterKey),
+            _api2wire_String(encryptedSymmetricKeyInfo)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kDecryptSymKeyConstMeta,
+        argValues: [masterKey, encryptedSymmetricKeyInfo],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptSymKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_sym_key",
+        argNames: ["masterKey", "encryptedSymmetricKeyInfo"],
+      );
+
+  Future<String> decryptSymKeyByPrivateKey(
+          {required String privateKey,
+          required String encryptedSymmetricKeyInfo,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decrypt_sym_key_by_private_key(
+            port_,
+            _api2wire_String(privateKey),
+            _api2wire_String(encryptedSymmetricKeyInfo)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kDecryptSymKeyByPrivateKeyConstMeta,
+        argValues: [privateKey, encryptedSymmetricKeyInfo],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecryptSymKeyByPrivateKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decrypt_sym_key_by_private_key",
+        argNames: ["privateKey", "encryptedSymmetricKeyInfo"],
+      );
+
+  Future<KeyGenOutput> generateAndRegisterSymKey(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String masterKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_generate_and_register_sym_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(masterKey)),
+        parseSuccessData: _wire2api_key_gen_output,
+        constMeta: kGenerateAndRegisterSymKeyConstMeta,
+        argValues: [baseUrl, authToken, jwt, masterKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGenerateAndRegisterSymKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "generate_and_register_sym_key",
+        argNames: ["baseUrl", "authToken", "jwt", "masterKey"],
+      );
+
+  Future<KeyGenOutput> generateAndRegisterSymKeyByPublicKey(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String publicKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) =>
+            inner.wire_generate_and_register_sym_key_by_public_key(
+                port_,
+                _api2wire_String(baseUrl),
+                _api2wire_String(authToken),
+                _api2wire_String(jwt),
+                _api2wire_String(publicKey)),
+        parseSuccessData: _wire2api_key_gen_output,
+        constMeta: kGenerateAndRegisterSymKeyByPublicKeyConstMeta,
+        argValues: [baseUrl, authToken, jwt, publicKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta
+      get kGenerateAndRegisterSymKeyByPublicKeyConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "generate_and_register_sym_key_by_public_key",
+            argNames: ["baseUrl", "authToken", "jwt", "publicKey"],
+          );
+
+  Future<String> getSymKeyById(
+          {required String baseUrl,
+          required String authToken,
+          required String keyId,
+          required String masterKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_get_sym_key_by_id(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(keyId),
+            _api2wire_String(masterKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGetSymKeyByIdConstMeta,
+        argValues: [baseUrl, authToken, keyId, masterKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_sym_key_by_id",
+        argNames: ["baseUrl", "authToken", "keyId", "masterKey"],
+      );
+
+  Future<String> getSymKeyByIdByPrivateKey(
+          {required String baseUrl,
+          required String authToken,
+          required String keyId,
+          required String privateKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_get_sym_key_by_id_by_private_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(keyId),
+            _api2wire_String(privateKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGetSymKeyByIdByPrivateKeyConstMeta,
+        argValues: [baseUrl, authToken, keyId, privateKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdByPrivateKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_sym_key_by_id_by_private_key",
+        argNames: ["baseUrl", "authToken", "keyId", "privateKey"],
+      );
+
+  Future<KeysToMasterKeyFetch> getKeysForMasterKey(
+          {required String baseUrl,
+          required String authToken,
+          required String masterKeyId,
+          required String lastFetchedTime,
+          required String lastKeyId,
+          required String masterKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_get_keys_for_master_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(masterKeyId),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastKeyId),
+            _api2wire_String(masterKey)),
+        parseSuccessData: _wire2api_keys_to_master_key_fetch,
+        constMeta: kGetKeysForMasterKeyConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          masterKeyId,
+          lastFetchedTime,
+          lastKeyId,
+          masterKey
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGetKeysForMasterKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_keys_for_master_key",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "masterKeyId",
+          "lastFetchedTime",
+          "lastKeyId",
+          "masterKey"
+        ],
+      );
+
+  Future<void> deleteSymKey(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String keyId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_delete_sym_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(keyId)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kDeleteSymKeyConstMeta,
+        argValues: [baseUrl, authToken, jwt, keyId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "delete_sym_key",
+        argNames: ["baseUrl", "authToken", "jwt", "keyId"],
+      );
+
   // Section: api2wire
   ffi.Pointer<wire_uint_8_list> _api2wire_String(String raw) {
     return _api2wire_uint_8_list(utf8.encoder.convert(raw));
@@ -2967,8 +3803,26 @@ String _wire2api_String(dynamic raw) {
   return raw as String;
 }
 
+List<String> _wire2api_StringList(dynamic raw) {
+  return (raw as List<dynamic>).cast<String>();
+}
+
 bool _wire2api_bool(dynamic raw) {
   return raw as bool;
+}
+
+SignHead _wire2api_box_autoadd_sign_head(dynamic raw) {
+  return _wire2api_sign_head(raw);
+}
+
+CryptoRawOutput _wire2api_crypto_raw_output(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return CryptoRawOutput(
+    head: _wire2api_String(arr[0]),
+    data: _wire2api_uint_8_list(arr[1]),
+  );
 }
 
 DeviceKeyData _wire2api_device_key_data(dynamic raw) {
@@ -2982,6 +3836,16 @@ DeviceKeyData _wire2api_device_key_data(dynamic raw) {
     verifyKey: _wire2api_String(arr[3]),
     exportedPublicKey: _wire2api_String(arr[4]),
     exportedVerifyKey: _wire2api_String(arr[5]),
+  );
+}
+
+EncryptedHead _wire2api_encrypted_head(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return EncryptedHead(
+    id: _wire2api_String(arr[0]),
+    sign: _wire2api_opt_box_autoadd_sign_head(arr[1]),
   );
 }
 
@@ -3079,6 +3943,16 @@ int _wire2api_i32(dynamic raw) {
   return raw as int;
 }
 
+KeyGenOutput _wire2api_key_gen_output(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return KeyGenOutput(
+    key: _wire2api_String(arr[0]),
+    keyId: _wire2api_String(arr[1]),
+  );
+}
+
 KeyRotationGetOut _wire2api_key_rotation_get_out(dynamic raw) {
   final arr = raw as List<dynamic>;
   if (arr.length != 4)
@@ -3103,6 +3977,17 @@ KeyRotationInput _wire2api_key_rotation_input(dynamic raw) {
     previousGroupKeyId: _wire2api_String(arr[4]),
     time: _wire2api_String(arr[5]),
     newGroupKeyId: _wire2api_String(arr[6]),
+  );
+}
+
+KeysToMasterKeyFetch _wire2api_keys_to_master_key_fetch(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  return KeysToMasterKeyFetch(
+    lastFetchedTime: _wire2api_String(arr[0]),
+    lastKeyId: _wire2api_String(arr[1]),
+    keys: _wire2api_StringList(arr[2]),
   );
 }
 
@@ -3151,8 +4036,22 @@ List<UserKeyData> _wire2api_list_user_key_data(dynamic raw) {
   return (raw as List<dynamic>).map(_wire2api_user_key_data).toList();
 }
 
+NonRegisteredKeyOutput _wire2api_non_registered_key_output(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return NonRegisteredKeyOutput(
+    key: _wire2api_String(arr[0]),
+    encryptedKey: _wire2api_String(arr[1]),
+  );
+}
+
 String? _wire2api_opt_String(dynamic raw) {
   return raw == null ? null : _wire2api_String(raw);
+}
+
+SignHead? _wire2api_opt_box_autoadd_sign_head(dynamic raw) {
+  return raw == null ? null : _wire2api_box_autoadd_sign_head(raw);
 }
 
 PreRegisterDeviceData _wire2api_pre_register_device_data(dynamic raw) {
@@ -3182,6 +4081,16 @@ RegisterDeviceData _wire2api_register_device_data(dynamic raw) {
   return RegisterDeviceData(
     sessionId: _wire2api_String(arr[0]),
     exportedPublicKey: _wire2api_String(arr[1]),
+  );
+}
+
+SignHead _wire2api_sign_head(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return SignHead(
+    id: _wire2api_String(arr[0]),
+    alg: _wire2api_String(arr[1]),
   );
 }
 
@@ -5458,6 +6367,669 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           int)>();
+
+  void wire_split_head_and_encrypted_data(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> data,
+  ) {
+    return _wire_split_head_and_encrypted_data(
+      port_,
+      data,
+    );
+  }
+
+  late final _wire_split_head_and_encrypted_dataPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_split_head_and_encrypted_data');
+  late final _wire_split_head_and_encrypted_data =
+      _wire_split_head_and_encrypted_dataPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_split_head_and_encrypted_string(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> data,
+  ) {
+    return _wire_split_head_and_encrypted_string(
+      port_,
+      data,
+    );
+  }
+
+  late final _wire_split_head_and_encrypted_stringPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_split_head_and_encrypted_string');
+  late final _wire_split_head_and_encrypted_string =
+      _wire_split_head_and_encrypted_stringPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_deserialize_head_from_string(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> head,
+  ) {
+    return _wire_deserialize_head_from_string(
+      port_,
+      head,
+    );
+  }
+
+  late final _wire_deserialize_head_from_stringPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_deserialize_head_from_string');
+  late final _wire_deserialize_head_from_string =
+      _wire_deserialize_head_from_stringPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_encrypt_raw_symmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+  ) {
+    return _wire_encrypt_raw_symmetric(
+      port_,
+      key,
+      data,
+      sign_key,
+    );
+  }
+
+  late final _wire_encrypt_raw_symmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_encrypt_raw_symmetric');
+  late final _wire_encrypt_raw_symmetric =
+      _wire_encrypt_raw_symmetricPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_raw_symmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> encrypted_data,
+    ffi.Pointer<wire_uint_8_list> head,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_decrypt_raw_symmetric(
+      port_,
+      key,
+      encrypted_data,
+      head,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_decrypt_raw_symmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_decrypt_raw_symmetric');
+  late final _wire_decrypt_raw_symmetric =
+      _wire_decrypt_raw_symmetricPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_encrypt_symmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+  ) {
+    return _wire_encrypt_symmetric(
+      port_,
+      key,
+      data,
+      sign_key,
+    );
+  }
+
+  late final _wire_encrypt_symmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_encrypt_symmetric');
+  late final _wire_encrypt_symmetric = _wire_encrypt_symmetricPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_symmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> encrypted_data,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_decrypt_symmetric(
+      port_,
+      key,
+      encrypted_data,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_decrypt_symmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_decrypt_symmetric');
+  late final _wire_decrypt_symmetric = _wire_decrypt_symmetricPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_encrypt_string_symmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+  ) {
+    return _wire_encrypt_string_symmetric(
+      port_,
+      key,
+      data,
+      sign_key,
+    );
+  }
+
+  late final _wire_encrypt_string_symmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_encrypt_string_symmetric');
+  late final _wire_encrypt_string_symmetric =
+      _wire_encrypt_string_symmetricPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_string_symmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> encrypted_data,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_decrypt_string_symmetric(
+      port_,
+      key,
+      encrypted_data,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_decrypt_string_symmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_decrypt_string_symmetric');
+  late final _wire_decrypt_string_symmetric =
+      _wire_decrypt_string_symmetricPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_encrypt_raw_asymmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> reply_public_key_data,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+  ) {
+    return _wire_encrypt_raw_asymmetric(
+      port_,
+      reply_public_key_data,
+      data,
+      sign_key,
+    );
+  }
+
+  late final _wire_encrypt_raw_asymmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_encrypt_raw_asymmetric');
+  late final _wire_encrypt_raw_asymmetric =
+      _wire_encrypt_raw_asymmetricPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_raw_asymmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_data,
+    ffi.Pointer<wire_uint_8_list> head,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_decrypt_raw_asymmetric(
+      port_,
+      private_key,
+      encrypted_data,
+      head,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_decrypt_raw_asymmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_decrypt_raw_asymmetric');
+  late final _wire_decrypt_raw_asymmetric =
+      _wire_decrypt_raw_asymmetricPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_encrypt_asymmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> reply_public_key_data,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+  ) {
+    return _wire_encrypt_asymmetric(
+      port_,
+      reply_public_key_data,
+      data,
+      sign_key,
+    );
+  }
+
+  late final _wire_encrypt_asymmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_encrypt_asymmetric');
+  late final _wire_encrypt_asymmetric = _wire_encrypt_asymmetricPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_asymmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_data,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_decrypt_asymmetric(
+      port_,
+      private_key,
+      encrypted_data,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_decrypt_asymmetricPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_decrypt_asymmetric');
+  late final _wire_decrypt_asymmetric = _wire_decrypt_asymmetricPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_encrypt_string_asymmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> reply_public_key_data,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+  ) {
+    return _wire_encrypt_string_asymmetric(
+      port_,
+      reply_public_key_data,
+      data,
+      sign_key,
+    );
+  }
+
+  late final _wire_encrypt_string_asymmetricPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_encrypt_string_asymmetric');
+  late final _wire_encrypt_string_asymmetric =
+      _wire_encrypt_string_asymmetricPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_string_asymmetric(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_data,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_decrypt_string_asymmetric(
+      port_,
+      private_key,
+      encrypted_data,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_decrypt_string_asymmetricPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_decrypt_string_asymmetric');
+  late final _wire_decrypt_string_asymmetric =
+      _wire_decrypt_string_asymmetricPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_generate_non_register_sym_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> master_key,
+  ) {
+    return _wire_generate_non_register_sym_key(
+      port_,
+      master_key,
+    );
+  }
+
+  late final _wire_generate_non_register_sym_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_generate_non_register_sym_key');
+  late final _wire_generate_non_register_sym_key =
+      _wire_generate_non_register_sym_keyPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_generate_non_register_sym_key_by_public_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> reply_public_key,
+  ) {
+    return _wire_generate_non_register_sym_key_by_public_key(
+      port_,
+      reply_public_key,
+    );
+  }
+
+  late final _wire_generate_non_register_sym_key_by_public_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_generate_non_register_sym_key_by_public_key');
+  late final _wire_generate_non_register_sym_key_by_public_key =
+      _wire_generate_non_register_sym_key_by_public_keyPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_sym_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> master_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_symmetric_key_info,
+  ) {
+    return _wire_decrypt_sym_key(
+      port_,
+      master_key,
+      encrypted_symmetric_key_info,
+    );
+  }
+
+  late final _wire_decrypt_sym_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_decrypt_sym_key');
+  late final _wire_decrypt_sym_key = _wire_decrypt_sym_keyPtr.asFunction<
+      void Function(
+          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_decrypt_sym_key_by_private_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_symmetric_key_info,
+  ) {
+    return _wire_decrypt_sym_key_by_private_key(
+      port_,
+      private_key,
+      encrypted_symmetric_key_info,
+    );
+  }
+
+  late final _wire_decrypt_sym_key_by_private_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_decrypt_sym_key_by_private_key');
+  late final _wire_decrypt_sym_key_by_private_key =
+      _wire_decrypt_sym_key_by_private_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_generate_and_register_sym_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> master_key,
+  ) {
+    return _wire_generate_and_register_sym_key(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      master_key,
+    );
+  }
+
+  late final _wire_generate_and_register_sym_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_generate_and_register_sym_key');
+  late final _wire_generate_and_register_sym_key =
+      _wire_generate_and_register_sym_keyPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_generate_and_register_sym_key_by_public_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> public_key,
+  ) {
+    return _wire_generate_and_register_sym_key_by_public_key(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      public_key,
+    );
+  }
+
+  late final _wire_generate_and_register_sym_key_by_public_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_generate_and_register_sym_key_by_public_key');
+  late final _wire_generate_and_register_sym_key_by_public_key =
+      _wire_generate_and_register_sym_key_by_public_keyPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_get_sym_key_by_id(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> key_id,
+    ffi.Pointer<wire_uint_8_list> master_key,
+  ) {
+    return _wire_get_sym_key_by_id(
+      port_,
+      base_url,
+      auth_token,
+      key_id,
+      master_key,
+    );
+  }
+
+  late final _wire_get_sym_key_by_idPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_get_sym_key_by_id');
+  late final _wire_get_sym_key_by_id = _wire_get_sym_key_by_idPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_get_sym_key_by_id_by_private_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> key_id,
+    ffi.Pointer<wire_uint_8_list> private_key,
+  ) {
+    return _wire_get_sym_key_by_id_by_private_key(
+      port_,
+      base_url,
+      auth_token,
+      key_id,
+      private_key,
+    );
+  }
+
+  late final _wire_get_sym_key_by_id_by_private_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_get_sym_key_by_id_by_private_key');
+  late final _wire_get_sym_key_by_id_by_private_key =
+      _wire_get_sym_key_by_id_by_private_keyPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_get_keys_for_master_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> master_key_id,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_key_id,
+    ffi.Pointer<wire_uint_8_list> master_key,
+  ) {
+    return _wire_get_keys_for_master_key(
+      port_,
+      base_url,
+      auth_token,
+      master_key_id,
+      last_fetched_time,
+      last_key_id,
+      master_key,
+    );
+  }
+
+  late final _wire_get_keys_for_master_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_get_keys_for_master_key');
+  late final _wire_get_keys_for_master_key =
+      _wire_get_keys_for_master_keyPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_delete_sym_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> key_id,
+  ) {
+    return _wire_delete_sym_key(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      key_id,
+    );
+  }
+
+  late final _wire_delete_sym_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_delete_sym_key');
+  late final _wire_delete_sym_key = _wire_delete_sym_keyPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list(
     int len,
