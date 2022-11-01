@@ -323,6 +323,369 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kUserFinishKeyRotationConstMeta;
+
+  ///
+  ///Create input for the server api.
+  ///
+  ///Use this for group and child group. For child group use the public key of the parent group!
+  ///
+  Future<String> groupPrepareCreateGroup(
+      {required String creatorsPublicKey, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareCreateGroupConstMeta;
+
+  ///
+  ///Create a group with request.
+  ///
+  ///Only the default values are send to the server, no extra data. If extra data is required, use prepare_create
+  ///
+  Future<String> groupCreateGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String creatorsPublicKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupCreateGroupConstMeta;
+
+  Future<String> groupCreateChildGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String parentPublicKey,
+      required String parentId,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupCreateChildGroupConstMeta;
+
+  ///
+  ///Get the group data without request.
+  ///
+  ///Use the parent group private key when fetching child group data.
+  ///
+  Future<GroupOutData> groupExtractGroupData(
+      {required String serverOutput, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupExtractGroupDataConstMeta;
+
+  ///
+  ///Get keys from pagination.
+  ///
+  ///Call the group route with the last fetched key time and the last fetched key id. Get both from the key data.
+  ///
+  Future<List<GroupOutDataKeys>> groupExtractGroupKeys(
+      {required String serverOutput, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupExtractGroupKeysConstMeta;
+
+  Future<GroupOutData> groupGetGroupData(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupDataConstMeta;
+
+  Future<List<GroupOutDataKeys>> groupGetGroupKeys(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String lastFetchedTime,
+      required String lastFetchedKeyId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeysConstMeta;
+
+  Future<GroupOutDataKeys> groupGetGroupKey(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String keyId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeyConstMeta;
+
+  Future<GroupKeyData> groupDecryptKey(
+      {required String privateKey,
+      required String serverKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupDecryptKeyConstMeta;
+
+  Future<List<GroupUserListItem>> groupGetMember(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String lastFetchedTime,
+      required String lastFetchedId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetMemberConstMeta;
+
+  Future<GroupDataCheckUpdateServerOutput> groupGetGroupUpdates(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupUpdatesConstMeta;
+
+  Future<List<ListGroups>> groupGetGroupsForUser(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupsForUserConstMeta;
+
+  ///
+  ///Prepare all group keys for a new member.
+  ///
+  ///Use the group keys from get group data or get group keys fn as string array
+  ///
+  Future<String> groupPrepareKeysForNewMember(
+      {required String userPublicKey,
+      required String groupKeys,
+      required int keyCount,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareKeysForNewMemberConstMeta;
+
+  Future<String> groupInviteUser(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String userId,
+      required int keyCount,
+      required int adminRank,
+      required bool autoInvite,
+      required String userPublicKey,
+      required String groupKeys,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupInviteUserConstMeta;
+
+  Future<void> groupInviteUserSession(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required bool autoInvite,
+      required String sessionId,
+      required String userPublicKey,
+      required String groupKeys,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupInviteUserSessionConstMeta;
+
+  Future<List<GroupInviteReqList>> groupGetInvitesForUser(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetInvitesForUserConstMeta;
+
+  Future<void> groupAcceptInvite(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupAcceptInviteConstMeta;
+
+  Future<void> groupRejectInvite(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupRejectInviteConstMeta;
+
+  Future<void> groupJoinReq(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupJoinReqConstMeta;
+
+  Future<List<GroupJoinReqList>> groupGetJoinReqs(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required int adminRank,
+      required String lastFetchedTime,
+      required String lastFetchedId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetJoinReqsConstMeta;
+
+  Future<void> groupRejectJoinReq(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required int adminRank,
+      required String rejectedUserId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupRejectJoinReqConstMeta;
+
+  Future<String> groupAcceptJoinReq(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String userId,
+      required int keyCount,
+      required int adminRank,
+      required String userPublicKey,
+      required String groupKeys,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupAcceptJoinReqConstMeta;
+
+  Future<void> groupJoinUserSession(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String sessionId,
+      required String userPublicKey,
+      required String groupKeys,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupJoinUserSessionConstMeta;
+
+  Future<void> groupStopGroupInvites(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupStopGroupInvitesConstMeta;
+
+  Future<void> leaveGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kLeaveGroupConstMeta;
+
+  Future<String> groupPrepareKeyRotation(
+      {required String preGroupKey, required String publicKey, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareKeyRotationConstMeta;
+
+  Future<String> groupDoneKeyRotation(
+      {required String privateKey,
+      required String publicKey,
+      required String preGroupKey,
+      required String serverOutput,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupDoneKeyRotationConstMeta;
+
+  Future<String> groupKeyRotation(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String publicKey,
+      required String preGroupKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupKeyRotationConstMeta;
+
+  Future<List<KeyRotationGetOut>> groupPreDoneKeyRotation(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupPreDoneKeyRotationConstMeta;
+
+  Future<KeyRotationInput> groupGetDoneKeyRotationServerInput(
+      {required String serverOutput, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta
+      get kGroupGetDoneKeyRotationServerInputConstMeta;
+
+  Future<void> groupFinishKeyRotation(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String serverOutput,
+      required String preGroupKey,
+      required String publicKey,
+      required String privateKey,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupFinishKeyRotationConstMeta;
+
+  Future<String> groupPrepareUpdateRank(
+      {required String userId,
+      required int rank,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareUpdateRankConstMeta;
+
+  Future<void> groupUpdateRank(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String userId,
+      required int rank,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupUpdateRankConstMeta;
+
+  Future<void> groupKickUser(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String userId,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupKickUserConstMeta;
+
+  Future<void> groupDeleteGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required int adminRank,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta;
 }
 
 class DeviceKeyData {
@@ -353,6 +716,16 @@ class GeneratedRegisterData {
   });
 }
 
+class GroupDataCheckUpdateServerOutput {
+  final bool keyUpdate;
+  final int rank;
+
+  GroupDataCheckUpdateServerOutput({
+    required this.keyUpdate,
+    required this.rank,
+  });
+}
+
 class GroupInviteReqList {
   final String groupId;
   final String time;
@@ -360,6 +733,74 @@ class GroupInviteReqList {
   GroupInviteReqList({
     required this.groupId,
     required this.time,
+  });
+}
+
+class GroupJoinReqList {
+  final String userId;
+  final String time;
+
+  GroupJoinReqList({
+    required this.userId,
+    required this.time,
+  });
+}
+
+class GroupKeyData {
+  final String privateGroupKey;
+  final String publicGroupKey;
+  final String groupKey;
+  final String time;
+  final String groupKeyId;
+
+  GroupKeyData({
+    required this.privateGroupKey,
+    required this.publicGroupKey,
+    required this.groupKey,
+    required this.time,
+    required this.groupKeyId,
+  });
+}
+
+class GroupOutData {
+  final String groupId;
+  final String parentGroupId;
+  final int rank;
+  final bool keyUpdate;
+  final String createdTime;
+  final String joinedTime;
+  final List<GroupOutDataKeys> keys;
+
+  GroupOutData({
+    required this.groupId,
+    required this.parentGroupId,
+    required this.rank,
+    required this.keyUpdate,
+    required this.createdTime,
+    required this.joinedTime,
+    required this.keys,
+  });
+}
+
+class GroupOutDataKeys {
+  final String privateKeyId;
+  final String keyData;
+
+  GroupOutDataKeys({
+    required this.privateKeyId,
+    required this.keyData,
+  });
+}
+
+class GroupUserListItem {
+  final String userId;
+  final int rank;
+  final String joinedTime;
+
+  GroupUserListItem({
+    required this.userId,
+    required this.rank,
+    required this.joinedTime,
   });
 }
 
@@ -394,6 +835,22 @@ class KeyRotationInput {
     required this.previousGroupKeyId,
     required this.time,
     required this.newGroupKeyId,
+  });
+}
+
+class ListGroups {
+  final String groupId;
+  final String time;
+  final String joinedTime;
+  final int rank;
+  final String? parent;
+
+  ListGroups({
+    required this.groupId,
+    required this.time,
+    required this.joinedTime,
+    required this.rank,
+    this.parent,
   });
 }
 
@@ -1360,9 +1817,1131 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
         ],
       );
 
+  Future<String> groupPrepareCreateGroup(
+          {required String creatorsPublicKey, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_prepare_create_group(
+            port_, _api2wire_String(creatorsPublicKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupPrepareCreateGroupConstMeta,
+        argValues: [creatorsPublicKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareCreateGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_prepare_create_group",
+        argNames: ["creatorsPublicKey"],
+      );
+
+  Future<String> groupCreateGroup(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String creatorsPublicKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_create_group(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(creatorsPublicKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupCreateGroupConstMeta,
+        argValues: [baseUrl, authToken, jwt, creatorsPublicKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupCreateGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_create_group",
+        argNames: ["baseUrl", "authToken", "jwt", "creatorsPublicKey"],
+      );
+
+  Future<String> groupCreateChildGroup(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String parentPublicKey,
+          required String parentId,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_create_child_group(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(parentPublicKey),
+            _api2wire_String(parentId),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupCreateChildGroupConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          parentPublicKey,
+          parentId,
+          adminRank
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupCreateChildGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_create_child_group",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "parentPublicKey",
+          "parentId",
+          "adminRank"
+        ],
+      );
+
+  Future<GroupOutData> groupExtractGroupData(
+          {required String serverOutput, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_extract_group_data(
+            port_, _api2wire_String(serverOutput)),
+        parseSuccessData: _wire2api_group_out_data,
+        constMeta: kGroupExtractGroupDataConstMeta,
+        argValues: [serverOutput],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupExtractGroupDataConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_extract_group_data",
+        argNames: ["serverOutput"],
+      );
+
+  Future<List<GroupOutDataKeys>> groupExtractGroupKeys(
+          {required String serverOutput, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_extract_group_keys(
+            port_, _api2wire_String(serverOutput)),
+        parseSuccessData: _wire2api_list_group_out_data_keys,
+        constMeta: kGroupExtractGroupKeysConstMeta,
+        argValues: [serverOutput],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupExtractGroupKeysConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_extract_group_keys",
+        argNames: ["serverOutput"],
+      );
+
+  Future<GroupOutData> groupGetGroupData(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_group_data(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_group_out_data,
+        constMeta: kGroupGetGroupDataConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupDataConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_group_data",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<List<GroupOutDataKeys>> groupGetGroupKeys(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String lastFetchedTime,
+          required String lastFetchedKeyId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_group_keys(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedKeyId)),
+        parseSuccessData: _wire2api_list_group_out_data_keys,
+        constMeta: kGroupGetGroupKeysConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          lastFetchedTime,
+          lastFetchedKeyId
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeysConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_group_keys",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "lastFetchedTime",
+          "lastFetchedKeyId"
+        ],
+      );
+
+  Future<GroupOutDataKeys> groupGetGroupKey(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String keyId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_group_key(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(keyId)),
+        parseSuccessData: _wire2api_group_out_data_keys,
+        constMeta: kGroupGetGroupKeyConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, keyId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_group_key",
+        argNames: ["baseUrl", "authToken", "jwt", "id", "keyId"],
+      );
+
+  Future<GroupKeyData> groupDecryptKey(
+          {required String privateKey,
+          required String serverKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_decrypt_key(port_,
+            _api2wire_String(privateKey), _api2wire_String(serverKeyData)),
+        parseSuccessData: _wire2api_group_key_data,
+        constMeta: kGroupDecryptKeyConstMeta,
+        argValues: [privateKey, serverKeyData],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupDecryptKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_decrypt_key",
+        argNames: ["privateKey", "serverKeyData"],
+      );
+
+  Future<List<GroupUserListItem>> groupGetMember(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String lastFetchedTime,
+          required String lastFetchedId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_member(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedId)),
+        parseSuccessData: _wire2api_list_group_user_list_item,
+        constMeta: kGroupGetMemberConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          lastFetchedTime,
+          lastFetchedId
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetMemberConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_member",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "lastFetchedTime",
+          "lastFetchedId"
+        ],
+      );
+
+  Future<GroupDataCheckUpdateServerOutput> groupGetGroupUpdates(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_group_updates(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_group_data_check_update_server_output,
+        constMeta: kGroupGetGroupUpdatesConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupUpdatesConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_group_updates",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<List<ListGroups>> groupGetGroupsForUser(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String lastFetchedTime,
+          required String lastFetchedGroupId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_groups_for_user(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedGroupId)),
+        parseSuccessData: _wire2api_list_list_groups,
+        constMeta: kGroupGetGroupsForUserConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          lastFetchedTime,
+          lastFetchedGroupId
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetGroupsForUserConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_groups_for_user",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "lastFetchedTime",
+          "lastFetchedGroupId"
+        ],
+      );
+
+  Future<String> groupPrepareKeysForNewMember(
+          {required String userPublicKey,
+          required String groupKeys,
+          required int keyCount,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_prepare_keys_for_new_member(
+            port_,
+            _api2wire_String(userPublicKey),
+            _api2wire_String(groupKeys),
+            _api2wire_i32(keyCount),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupPrepareKeysForNewMemberConstMeta,
+        argValues: [userPublicKey, groupKeys, keyCount, adminRank],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareKeysForNewMemberConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_prepare_keys_for_new_member",
+        argNames: ["userPublicKey", "groupKeys", "keyCount", "adminRank"],
+      );
+
+  Future<String> groupInviteUser(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String userId,
+          required int keyCount,
+          required int adminRank,
+          required bool autoInvite,
+          required String userPublicKey,
+          required String groupKeys,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_invite_user(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(userId),
+            _api2wire_i32(keyCount),
+            _api2wire_i32(adminRank),
+            autoInvite,
+            _api2wire_String(userPublicKey),
+            _api2wire_String(groupKeys)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupInviteUserConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          userId,
+          keyCount,
+          adminRank,
+          autoInvite,
+          userPublicKey,
+          groupKeys
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupInviteUserConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_invite_user",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "userId",
+          "keyCount",
+          "adminRank",
+          "autoInvite",
+          "userPublicKey",
+          "groupKeys"
+        ],
+      );
+
+  Future<void> groupInviteUserSession(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required bool autoInvite,
+          required String sessionId,
+          required String userPublicKey,
+          required String groupKeys,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_invite_user_session(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            autoInvite,
+            _api2wire_String(sessionId),
+            _api2wire_String(userPublicKey),
+            _api2wire_String(groupKeys)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupInviteUserSessionConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          autoInvite,
+          sessionId,
+          userPublicKey,
+          groupKeys
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupInviteUserSessionConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_invite_user_session",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "autoInvite",
+          "sessionId",
+          "userPublicKey",
+          "groupKeys"
+        ],
+      );
+
+  Future<List<GroupInviteReqList>> groupGetInvitesForUser(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String lastFetchedTime,
+          required String lastFetchedGroupId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_invites_for_user(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedGroupId)),
+        parseSuccessData: _wire2api_list_group_invite_req_list,
+        constMeta: kGroupGetInvitesForUserConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          lastFetchedTime,
+          lastFetchedGroupId
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetInvitesForUserConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_invites_for_user",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "lastFetchedTime",
+          "lastFetchedGroupId"
+        ],
+      );
+
+  Future<void> groupAcceptInvite(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_accept_invite(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupAcceptInviteConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupAcceptInviteConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_accept_invite",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<void> groupRejectInvite(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_reject_invite(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupRejectInviteConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupRejectInviteConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_reject_invite",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<void> groupJoinReq(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_join_req(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupJoinReqConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupJoinReqConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_join_req",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<List<GroupJoinReqList>> groupGetJoinReqs(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required int adminRank,
+          required String lastFetchedTime,
+          required String lastFetchedId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_join_reqs(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_i32(adminRank),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedId)),
+        parseSuccessData: _wire2api_list_group_join_req_list,
+        constMeta: kGroupGetJoinReqsConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          adminRank,
+          lastFetchedTime,
+          lastFetchedId
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetJoinReqsConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_join_reqs",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "adminRank",
+          "lastFetchedTime",
+          "lastFetchedId"
+        ],
+      );
+
+  Future<void> groupRejectJoinReq(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required int adminRank,
+          required String rejectedUserId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_reject_join_req(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_i32(adminRank),
+            _api2wire_String(rejectedUserId)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupRejectJoinReqConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, adminRank, rejectedUserId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupRejectJoinReqConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_reject_join_req",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "adminRank",
+          "rejectedUserId"
+        ],
+      );
+
+  Future<String> groupAcceptJoinReq(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String userId,
+          required int keyCount,
+          required int adminRank,
+          required String userPublicKey,
+          required String groupKeys,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_accept_join_req(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(userId),
+            _api2wire_i32(keyCount),
+            _api2wire_i32(adminRank),
+            _api2wire_String(userPublicKey),
+            _api2wire_String(groupKeys)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupAcceptJoinReqConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          userId,
+          keyCount,
+          adminRank,
+          userPublicKey,
+          groupKeys
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupAcceptJoinReqConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_accept_join_req",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "userId",
+          "keyCount",
+          "adminRank",
+          "userPublicKey",
+          "groupKeys"
+        ],
+      );
+
+  Future<void> groupJoinUserSession(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String sessionId,
+          required String userPublicKey,
+          required String groupKeys,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_join_user_session(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(sessionId),
+            _api2wire_String(userPublicKey),
+            _api2wire_String(groupKeys)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupJoinUserSessionConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          sessionId,
+          userPublicKey,
+          groupKeys
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupJoinUserSessionConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_join_user_session",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "sessionId",
+          "userPublicKey",
+          "groupKeys"
+        ],
+      );
+
+  Future<void> groupStopGroupInvites(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_stop_group_invites(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupStopGroupInvitesConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, adminRank],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupStopGroupInvitesConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_stop_group_invites",
+        argNames: ["baseUrl", "authToken", "jwt", "id", "adminRank"],
+      );
+
+  Future<void> leaveGroup(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_leave_group(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kLeaveGroupConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kLeaveGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "leave_group",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<String> groupPrepareKeyRotation(
+          {required String preGroupKey,
+          required String publicKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_prepare_key_rotation(
+            port_, _api2wire_String(preGroupKey), _api2wire_String(publicKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupPrepareKeyRotationConstMeta,
+        argValues: [preGroupKey, publicKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_prepare_key_rotation",
+        argNames: ["preGroupKey", "publicKey"],
+      );
+
+  Future<String> groupDoneKeyRotation(
+          {required String privateKey,
+          required String publicKey,
+          required String preGroupKey,
+          required String serverOutput,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_done_key_rotation(
+            port_,
+            _api2wire_String(privateKey),
+            _api2wire_String(publicKey),
+            _api2wire_String(preGroupKey),
+            _api2wire_String(serverOutput)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupDoneKeyRotationConstMeta,
+        argValues: [privateKey, publicKey, preGroupKey, serverOutput],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupDoneKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_done_key_rotation",
+        argNames: ["privateKey", "publicKey", "preGroupKey", "serverOutput"],
+      );
+
+  Future<String> groupKeyRotation(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String publicKey,
+          required String preGroupKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_key_rotation(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(publicKey),
+            _api2wire_String(preGroupKey)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupKeyRotationConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, publicKey, preGroupKey],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_key_rotation",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "publicKey",
+          "preGroupKey"
+        ],
+      );
+
+  Future<List<KeyRotationGetOut>> groupPreDoneKeyRotation(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_pre_done_key_rotation(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_list_key_rotation_get_out,
+        constMeta: kGroupPreDoneKeyRotationConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupPreDoneKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_pre_done_key_rotation",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
+  Future<KeyRotationInput> groupGetDoneKeyRotationServerInput(
+          {required String serverOutput, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_done_key_rotation_server_input(
+            port_, _api2wire_String(serverOutput)),
+        parseSuccessData: _wire2api_key_rotation_input,
+        constMeta: kGroupGetDoneKeyRotationServerInputConstMeta,
+        argValues: [serverOutput],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta
+      get kGroupGetDoneKeyRotationServerInputConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "group_get_done_key_rotation_server_input",
+            argNames: ["serverOutput"],
+          );
+
+  Future<void> groupFinishKeyRotation(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String serverOutput,
+          required String preGroupKey,
+          required String publicKey,
+          required String privateKey,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_finish_key_rotation(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(serverOutput),
+            _api2wire_String(preGroupKey),
+            _api2wire_String(publicKey),
+            _api2wire_String(privateKey)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupFinishKeyRotationConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          serverOutput,
+          preGroupKey,
+          publicKey,
+          privateKey
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupFinishKeyRotationConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_finish_key_rotation",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "serverOutput",
+          "preGroupKey",
+          "publicKey",
+          "privateKey"
+        ],
+      );
+
+  Future<String> groupPrepareUpdateRank(
+          {required String userId,
+          required int rank,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_prepare_update_rank(
+            port_,
+            _api2wire_String(userId),
+            _api2wire_i32(rank),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupPrepareUpdateRankConstMeta,
+        argValues: [userId, rank, adminRank],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupPrepareUpdateRankConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_prepare_update_rank",
+        argNames: ["userId", "rank", "adminRank"],
+      );
+
+  Future<void> groupUpdateRank(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String userId,
+          required int rank,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_update_rank(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(userId),
+            _api2wire_i32(rank),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupUpdateRankConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, userId, rank, adminRank],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupUpdateRankConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_update_rank",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "userId",
+          "rank",
+          "adminRank"
+        ],
+      );
+
+  Future<void> groupKickUser(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String userId,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_kick_user(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(userId),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupKickUserConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, userId, adminRank],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupKickUserConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_kick_user",
+        argNames: ["baseUrl", "authToken", "jwt", "id", "userId", "adminRank"],
+      );
+
+  Future<void> groupDeleteGroup(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required int adminRank,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_delete_group(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_i32(adminRank)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kGroupDeleteGroupConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, adminRank],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_delete_group",
+        argNames: ["baseUrl", "authToken", "jwt", "id", "adminRank"],
+      );
+
   // Section: api2wire
   ffi.Pointer<wire_uint_8_list> _api2wire_String(String raw) {
     return _api2wire_uint_8_list(utf8.encoder.convert(raw));
+  }
+
+  int _api2wire_bool(bool raw) {
+    return raw ? 1 : 0;
   }
 
   int _api2wire_i32(int raw) {
@@ -1416,6 +2995,17 @@ GeneratedRegisterData _wire2api_generated_register_data(dynamic raw) {
   );
 }
 
+GroupDataCheckUpdateServerOutput
+    _wire2api_group_data_check_update_server_output(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return GroupDataCheckUpdateServerOutput(
+    keyUpdate: _wire2api_bool(arr[0]),
+    rank: _wire2api_i32(arr[1]),
+  );
+}
+
 GroupInviteReqList _wire2api_group_invite_req_list(dynamic raw) {
   final arr = raw as List<dynamic>;
   if (arr.length != 2)
@@ -1424,6 +3014,69 @@ GroupInviteReqList _wire2api_group_invite_req_list(dynamic raw) {
     groupId: _wire2api_String(arr[0]),
     time: _wire2api_String(arr[1]),
   );
+}
+
+GroupJoinReqList _wire2api_group_join_req_list(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return GroupJoinReqList(
+    userId: _wire2api_String(arr[0]),
+    time: _wire2api_String(arr[1]),
+  );
+}
+
+GroupKeyData _wire2api_group_key_data(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 5)
+    throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+  return GroupKeyData(
+    privateGroupKey: _wire2api_String(arr[0]),
+    publicGroupKey: _wire2api_String(arr[1]),
+    groupKey: _wire2api_String(arr[2]),
+    time: _wire2api_String(arr[3]),
+    groupKeyId: _wire2api_String(arr[4]),
+  );
+}
+
+GroupOutData _wire2api_group_out_data(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 7)
+    throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+  return GroupOutData(
+    groupId: _wire2api_String(arr[0]),
+    parentGroupId: _wire2api_String(arr[1]),
+    rank: _wire2api_i32(arr[2]),
+    keyUpdate: _wire2api_bool(arr[3]),
+    createdTime: _wire2api_String(arr[4]),
+    joinedTime: _wire2api_String(arr[5]),
+    keys: _wire2api_list_group_out_data_keys(arr[6]),
+  );
+}
+
+GroupOutDataKeys _wire2api_group_out_data_keys(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return GroupOutDataKeys(
+    privateKeyId: _wire2api_String(arr[0]),
+    keyData: _wire2api_String(arr[1]),
+  );
+}
+
+GroupUserListItem _wire2api_group_user_list_item(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  return GroupUserListItem(
+    userId: _wire2api_String(arr[0]),
+    rank: _wire2api_i32(arr[1]),
+    joinedTime: _wire2api_String(arr[2]),
+  );
+}
+
+int _wire2api_i32(dynamic raw) {
+  return raw as int;
 }
 
 KeyRotationGetOut _wire2api_key_rotation_get_out(dynamic raw) {
@@ -1457,8 +3110,37 @@ List<GroupInviteReqList> _wire2api_list_group_invite_req_list(dynamic raw) {
   return (raw as List<dynamic>).map(_wire2api_group_invite_req_list).toList();
 }
 
+List<GroupJoinReqList> _wire2api_list_group_join_req_list(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_group_join_req_list).toList();
+}
+
+List<GroupOutDataKeys> _wire2api_list_group_out_data_keys(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_group_out_data_keys).toList();
+}
+
+List<GroupUserListItem> _wire2api_list_group_user_list_item(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_group_user_list_item).toList();
+}
+
+ListGroups _wire2api_list_groups(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 5)
+    throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+  return ListGroups(
+    groupId: _wire2api_String(arr[0]),
+    time: _wire2api_String(arr[1]),
+    joinedTime: _wire2api_String(arr[2]),
+    rank: _wire2api_i32(arr[3]),
+    parent: _wire2api_opt_String(arr[4]),
+  );
+}
+
 List<KeyRotationGetOut> _wire2api_list_key_rotation_get_out(dynamic raw) {
   return (raw as List<dynamic>).map(_wire2api_key_rotation_get_out).toList();
+}
+
+List<ListGroups> _wire2api_list_list_groups(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_list_groups).toList();
 }
 
 List<UserDeviceList> _wire2api_list_user_device_list(dynamic raw) {
@@ -1467,6 +3149,10 @@ List<UserDeviceList> _wire2api_list_user_device_list(dynamic raw) {
 
 List<UserKeyData> _wire2api_list_user_key_data(dynamic raw) {
   return (raw as List<dynamic>).map(_wire2api_user_key_data).toList();
+}
+
+String? _wire2api_opt_String(dynamic raw) {
+  return raw == null ? null : _wire2api_String(raw);
 }
 
 PreRegisterDeviceData _wire2api_pre_register_device_data(dynamic raw) {
@@ -2542,6 +4228,1236 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_prepare_create_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> creators_public_key,
+  ) {
+    return _wire_group_prepare_create_group(
+      port_,
+      creators_public_key,
+    );
+  }
+
+  late final _wire_group_prepare_create_groupPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_prepare_create_group');
+  late final _wire_group_prepare_create_group =
+      _wire_group_prepare_create_groupPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_create_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> creators_public_key,
+  ) {
+    return _wire_group_create_group(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      creators_public_key,
+    );
+  }
+
+  late final _wire_group_create_groupPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_create_group');
+  late final _wire_group_create_group = _wire_group_create_groupPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_create_child_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> parent_public_key,
+    ffi.Pointer<wire_uint_8_list> parent_id,
+    int admin_rank,
+  ) {
+    return _wire_group_create_child_group(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      parent_public_key,
+      parent_id,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_create_child_groupPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32)>>('wire_group_create_child_group');
+  late final _wire_group_create_child_group =
+      _wire_group_create_child_groupPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int)>();
+
+  void wire_group_extract_group_data(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> server_output,
+  ) {
+    return _wire_group_extract_group_data(
+      port_,
+      server_output,
+    );
+  }
+
+  late final _wire_group_extract_group_dataPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_extract_group_data');
+  late final _wire_group_extract_group_data = _wire_group_extract_group_dataPtr
+      .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_extract_group_keys(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> server_output,
+  ) {
+    return _wire_group_extract_group_keys(
+      port_,
+      server_output,
+    );
+  }
+
+  late final _wire_group_extract_group_keysPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_extract_group_keys');
+  late final _wire_group_extract_group_keys = _wire_group_extract_group_keysPtr
+      .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_group_data(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_get_group_data(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_get_group_dataPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_data');
+  late final _wire_group_get_group_data =
+      _wire_group_get_group_dataPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_group_keys(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_key_id,
+  ) {
+    return _wire_group_get_group_keys(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      last_fetched_time,
+      last_fetched_key_id,
+    );
+  }
+
+  late final _wire_group_get_group_keysPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_keys');
+  late final _wire_group_get_group_keys =
+      _wire_group_get_group_keysPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_group_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> key_id,
+  ) {
+    return _wire_group_get_group_key(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      key_id,
+    );
+  }
+
+  late final _wire_group_get_group_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_key');
+  late final _wire_group_get_group_key =
+      _wire_group_get_group_keyPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_decrypt_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> server_key_data,
+  ) {
+    return _wire_group_decrypt_key(
+      port_,
+      private_key,
+      server_key_data,
+    );
+  }
+
+  late final _wire_group_decrypt_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_decrypt_key');
+  late final _wire_group_decrypt_key = _wire_group_decrypt_keyPtr.asFunction<
+      void Function(
+          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_member(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_id,
+  ) {
+    return _wire_group_get_member(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      last_fetched_time,
+      last_fetched_id,
+    );
+  }
+
+  late final _wire_group_get_memberPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_member');
+  late final _wire_group_get_member = _wire_group_get_memberPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_group_updates(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_get_group_updates(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_get_group_updatesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_updates');
+  late final _wire_group_get_group_updates =
+      _wire_group_get_group_updatesPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_groups_for_user(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+  ) {
+    return _wire_group_get_groups_for_user(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      last_fetched_time,
+      last_fetched_group_id,
+    );
+  }
+
+  late final _wire_group_get_groups_for_userPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_get_groups_for_user');
+  late final _wire_group_get_groups_for_user =
+      _wire_group_get_groups_for_userPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_prepare_keys_for_new_member(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> user_public_key,
+    ffi.Pointer<wire_uint_8_list> group_keys,
+    int key_count,
+    int admin_rank,
+  ) {
+    return _wire_group_prepare_keys_for_new_member(
+      port_,
+      user_public_key,
+      group_keys,
+      key_count,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_prepare_keys_for_new_memberPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32,
+              ffi.Int32)>>('wire_group_prepare_keys_for_new_member');
+  late final _wire_group_prepare_keys_for_new_member =
+      _wire_group_prepare_keys_for_new_memberPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, int, int)>();
+
+  void wire_group_invite_user(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> user_id,
+    int key_count,
+    int admin_rank,
+    bool auto_invite,
+    ffi.Pointer<wire_uint_8_list> user_public_key,
+    ffi.Pointer<wire_uint_8_list> group_keys,
+  ) {
+    return _wire_group_invite_user(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      user_id,
+      key_count,
+      admin_rank,
+      auto_invite ? 1 : 0,
+      user_public_key,
+      group_keys,
+    );
+  }
+
+  late final _wire_group_invite_userPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32,
+              ffi.Int32,
+              ffi.Uint8,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_invite_user');
+  late final _wire_group_invite_user = _wire_group_invite_userPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          int,
+          int,
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_invite_user_session(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    bool auto_invite,
+    ffi.Pointer<wire_uint_8_list> session_id,
+    ffi.Pointer<wire_uint_8_list> user_public_key,
+    ffi.Pointer<wire_uint_8_list> group_keys,
+  ) {
+    return _wire_group_invite_user_session(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      auto_invite ? 1 : 0,
+      session_id,
+      user_public_key,
+      group_keys,
+    );
+  }
+
+  late final _wire_group_invite_user_sessionPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Uint8,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_invite_user_session');
+  late final _wire_group_invite_user_session =
+      _wire_group_invite_user_sessionPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_invites_for_user(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+  ) {
+    return _wire_group_get_invites_for_user(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      last_fetched_time,
+      last_fetched_group_id,
+    );
+  }
+
+  late final _wire_group_get_invites_for_userPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_get_invites_for_user');
+  late final _wire_group_get_invites_for_user =
+      _wire_group_get_invites_for_userPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_accept_invite(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_accept_invite(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_accept_invitePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_accept_invite');
+  late final _wire_group_accept_invite =
+      _wire_group_accept_invitePtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_reject_invite(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_reject_invite(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_reject_invitePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_reject_invite');
+  late final _wire_group_reject_invite =
+      _wire_group_reject_invitePtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_join_req(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_join_req(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_join_reqPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_join_req');
+  late final _wire_group_join_req = _wire_group_join_reqPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_join_reqs(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    int admin_rank,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_id,
+  ) {
+    return _wire_group_get_join_reqs(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      admin_rank,
+      last_fetched_time,
+      last_fetched_id,
+    );
+  }
+
+  late final _wire_group_get_join_reqsPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_join_reqs');
+  late final _wire_group_get_join_reqs =
+      _wire_group_get_join_reqsPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_reject_join_req(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    int admin_rank,
+    ffi.Pointer<wire_uint_8_list> rejected_user_id,
+  ) {
+    return _wire_group_reject_join_req(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      admin_rank,
+      rejected_user_id,
+    );
+  }
+
+  late final _wire_group_reject_join_reqPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_reject_join_req');
+  late final _wire_group_reject_join_req =
+      _wire_group_reject_join_reqPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_accept_join_req(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> user_id,
+    int key_count,
+    int admin_rank,
+    ffi.Pointer<wire_uint_8_list> user_public_key,
+    ffi.Pointer<wire_uint_8_list> group_keys,
+  ) {
+    return _wire_group_accept_join_req(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      user_id,
+      key_count,
+      admin_rank,
+      user_public_key,
+      group_keys,
+    );
+  }
+
+  late final _wire_group_accept_join_reqPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32,
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_accept_join_req');
+  late final _wire_group_accept_join_req =
+      _wire_group_accept_join_reqPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_join_user_session(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> session_id,
+    ffi.Pointer<wire_uint_8_list> user_public_key,
+    ffi.Pointer<wire_uint_8_list> group_keys,
+  ) {
+    return _wire_group_join_user_session(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      session_id,
+      user_public_key,
+      group_keys,
+    );
+  }
+
+  late final _wire_group_join_user_sessionPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_join_user_session');
+  late final _wire_group_join_user_session =
+      _wire_group_join_user_sessionPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_stop_group_invites(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    int admin_rank,
+  ) {
+    return _wire_group_stop_group_invites(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_stop_group_invitesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32)>>('wire_group_stop_group_invites');
+  late final _wire_group_stop_group_invites =
+      _wire_group_stop_group_invitesPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int)>();
+
+  void wire_leave_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_leave_group(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_leave_groupPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_leave_group');
+  late final _wire_leave_group = _wire_leave_groupPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_prepare_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> pre_group_key,
+    ffi.Pointer<wire_uint_8_list> public_key,
+  ) {
+    return _wire_group_prepare_key_rotation(
+      port_,
+      pre_group_key,
+      public_key,
+    );
+  }
+
+  late final _wire_group_prepare_key_rotationPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_prepare_key_rotation');
+  late final _wire_group_prepare_key_rotation =
+      _wire_group_prepare_key_rotationPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_done_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> public_key,
+    ffi.Pointer<wire_uint_8_list> pre_group_key,
+    ffi.Pointer<wire_uint_8_list> server_output,
+  ) {
+    return _wire_group_done_key_rotation(
+      port_,
+      private_key,
+      public_key,
+      pre_group_key,
+      server_output,
+    );
+  }
+
+  late final _wire_group_done_key_rotationPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_done_key_rotation');
+  late final _wire_group_done_key_rotation =
+      _wire_group_done_key_rotationPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> public_key,
+    ffi.Pointer<wire_uint_8_list> pre_group_key,
+  ) {
+    return _wire_group_key_rotation(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      public_key,
+      pre_group_key,
+    );
+  }
+
+  late final _wire_group_key_rotationPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_key_rotation');
+  late final _wire_group_key_rotation = _wire_group_key_rotationPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_pre_done_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_pre_done_key_rotation(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_pre_done_key_rotationPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_pre_done_key_rotation');
+  late final _wire_group_pre_done_key_rotation =
+      _wire_group_pre_done_key_rotationPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_done_key_rotation_server_input(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> server_output,
+  ) {
+    return _wire_group_get_done_key_rotation_server_input(
+      port_,
+      server_output,
+    );
+  }
+
+  late final _wire_group_get_done_key_rotation_server_inputPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_get_done_key_rotation_server_input');
+  late final _wire_group_get_done_key_rotation_server_input =
+      _wire_group_get_done_key_rotation_server_inputPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_finish_key_rotation(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> server_output,
+    ffi.Pointer<wire_uint_8_list> pre_group_key,
+    ffi.Pointer<wire_uint_8_list> public_key,
+    ffi.Pointer<wire_uint_8_list> private_key,
+  ) {
+    return _wire_group_finish_key_rotation(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      server_output,
+      pre_group_key,
+      public_key,
+      private_key,
+    );
+  }
+
+  late final _wire_group_finish_key_rotationPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_finish_key_rotation');
+  late final _wire_group_finish_key_rotation =
+      _wire_group_finish_key_rotationPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_prepare_update_rank(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> user_id,
+    int rank,
+    int admin_rank,
+  ) {
+    return _wire_group_prepare_update_rank(
+      port_,
+      user_id,
+      rank,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_prepare_update_rankPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>, ffi.Int32,
+              ffi.Int32)>>('wire_group_prepare_update_rank');
+  late final _wire_group_prepare_update_rank =
+      _wire_group_prepare_update_rankPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>, int, int)>();
+
+  void wire_group_update_rank(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> user_id,
+    int rank,
+    int admin_rank,
+  ) {
+    return _wire_group_update_rank(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      user_id,
+      rank,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_update_rankPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32,
+              ffi.Int32)>>('wire_group_update_rank');
+  late final _wire_group_update_rank = _wire_group_update_rankPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          int,
+          int)>();
+
+  void wire_group_kick_user(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> user_id,
+    int admin_rank,
+  ) {
+    return _wire_group_kick_user(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      user_id,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_kick_userPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32)>>('wire_group_kick_user');
+  late final _wire_group_kick_user = _wire_group_kick_userPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          int)>();
+
+  void wire_group_delete_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    int admin_rank,
+  ) {
+    return _wire_group_delete_group(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      admin_rank,
+    );
+  }
+
+  late final _wire_group_delete_groupPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32)>>('wire_group_delete_group');
+  late final _wire_group_delete_group = _wire_group_delete_groupPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list(
     int len,
