@@ -885,6 +885,107 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta;
+
+  Future<FileData> fileDownloadFileMeta(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String groupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileDownloadFileMetaConstMeta;
+
+  Future<Uint8List> fileDownloadAndDecryptFilePart(
+      {required String baseUrl,
+      required String urlPrefix,
+      required String authToken,
+      required String partId,
+      required String contentKey,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileDownloadAndDecryptFilePartConstMeta;
+
+  Future<List<FilePartListItem>> fileDownloadPartList(
+      {required String baseUrl,
+      required String authToken,
+      required String fileId,
+      required String lastSequence,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileDownloadPartListConstMeta;
+
+  Future<FileRegisterOutput> fileRegisterFile(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String masterKeyId,
+      required String contentKey,
+      required String belongsToId,
+      required String belongsToType,
+      required String fileName,
+      required String groupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileRegisterFileConstMeta;
+
+  Future<FilePrepareRegister> filePrepareRegisterFile(
+      {required String masterKeyId,
+      required String contentKey,
+      required String belongsToId,
+      required String belongsToType,
+      required String fileName,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFilePrepareRegisterFileConstMeta;
+
+  Future<FileDoneRegister> fileDoneRegisterFile(
+      {required String serverOutput, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileDoneRegisterFileConstMeta;
+
+  Future<void> fileUploadPart(
+      {required String baseUrl,
+      required String urlPrefix,
+      required String authToken,
+      required String jwt,
+      required String sessionId,
+      required bool end,
+      required int sequence,
+      required String contentKey,
+      required String signKey,
+      required Uint8List part,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileUploadPartConstMeta;
+
+  Future<void> fileFileNameUpdate(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String fileId,
+      required String contentKey,
+      required String fileName,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileFileNameUpdateConstMeta;
+
+  Future<void> fileDeleteFile(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String fileId,
+      required String groupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileDeleteFileConstMeta;
+}
+
+enum BelongsToType {
+  Group,
+  User,
+  None,
 }
 
 class Claims {
@@ -940,6 +1041,72 @@ class EncryptedHead {
   EncryptedHead({
     required this.id,
     this.sign,
+  });
+}
+
+class FileData {
+  final String fileId;
+  final String masterKeyId;
+  final String owner;
+  final String? belongsTo;
+  final BelongsToType belongsToType;
+  final String keyId;
+  final String? encryptedFileName;
+  final List<FilePartListItem> partList;
+
+  FileData({
+    required this.fileId,
+    required this.masterKeyId,
+    required this.owner,
+    this.belongsTo,
+    required this.belongsToType,
+    required this.keyId,
+    this.encryptedFileName,
+    required this.partList,
+  });
+}
+
+class FileDoneRegister {
+  final String fileId;
+  final String sessionId;
+
+  FileDoneRegister({
+    required this.fileId,
+    required this.sessionId,
+  });
+}
+
+class FilePartListItem {
+  final String partId;
+  final int sequence;
+  final bool externStorage;
+
+  FilePartListItem({
+    required this.partId,
+    required this.sequence,
+    required this.externStorage,
+  });
+}
+
+class FilePrepareRegister {
+  final String encryptedFileName;
+  final String serverInput;
+
+  FilePrepareRegister({
+    required this.encryptedFileName,
+    required this.serverInput,
+  });
+}
+
+class FileRegisterOutput {
+  final String fileId;
+  final String sessionId;
+  final String encryptedFileName;
+
+  FileRegisterOutput({
+    required this.fileId,
+    required this.sessionId,
+    required this.encryptedFileName,
   });
 }
 
@@ -3808,6 +3975,334 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
         argNames: ["baseUrl", "authToken", "jwt", "keyId"],
       );
 
+  Future<FileData> fileDownloadFileMeta(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String groupId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_download_file_meta(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(groupId)),
+        parseSuccessData: _wire2api_file_data,
+        constMeta: kFileDownloadFileMetaConstMeta,
+        argValues: [baseUrl, authToken, jwt, id, groupId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileDownloadFileMetaConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_download_file_meta",
+        argNames: ["baseUrl", "authToken", "jwt", "id", "groupId"],
+      );
+
+  Future<Uint8List> fileDownloadAndDecryptFilePart(
+          {required String baseUrl,
+          required String urlPrefix,
+          required String authToken,
+          required String partId,
+          required String contentKey,
+          required String verifyKeyData,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_download_and_decrypt_file_part(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(urlPrefix),
+            _api2wire_String(authToken),
+            _api2wire_String(partId),
+            _api2wire_String(contentKey),
+            _api2wire_String(verifyKeyData)),
+        parseSuccessData: _wire2api_uint_8_list,
+        constMeta: kFileDownloadAndDecryptFilePartConstMeta,
+        argValues: [
+          baseUrl,
+          urlPrefix,
+          authToken,
+          partId,
+          contentKey,
+          verifyKeyData
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileDownloadAndDecryptFilePartConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_download_and_decrypt_file_part",
+        argNames: [
+          "baseUrl",
+          "urlPrefix",
+          "authToken",
+          "partId",
+          "contentKey",
+          "verifyKeyData"
+        ],
+      );
+
+  Future<List<FilePartListItem>> fileDownloadPartList(
+          {required String baseUrl,
+          required String authToken,
+          required String fileId,
+          required String lastSequence,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_download_part_list(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(fileId),
+            _api2wire_String(lastSequence)),
+        parseSuccessData: _wire2api_list_file_part_list_item,
+        constMeta: kFileDownloadPartListConstMeta,
+        argValues: [baseUrl, authToken, fileId, lastSequence],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileDownloadPartListConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_download_part_list",
+        argNames: ["baseUrl", "authToken", "fileId", "lastSequence"],
+      );
+
+  Future<FileRegisterOutput> fileRegisterFile(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String masterKeyId,
+          required String contentKey,
+          required String belongsToId,
+          required String belongsToType,
+          required String fileName,
+          required String groupId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_register_file(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(masterKeyId),
+            _api2wire_String(contentKey),
+            _api2wire_String(belongsToId),
+            _api2wire_String(belongsToType),
+            _api2wire_String(fileName),
+            _api2wire_String(groupId)),
+        parseSuccessData: _wire2api_file_register_output,
+        constMeta: kFileRegisterFileConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          masterKeyId,
+          contentKey,
+          belongsToId,
+          belongsToType,
+          fileName,
+          groupId
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileRegisterFileConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_register_file",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "masterKeyId",
+          "contentKey",
+          "belongsToId",
+          "belongsToType",
+          "fileName",
+          "groupId"
+        ],
+      );
+
+  Future<FilePrepareRegister> filePrepareRegisterFile(
+          {required String masterKeyId,
+          required String contentKey,
+          required String belongsToId,
+          required String belongsToType,
+          required String fileName,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_prepare_register_file(
+            port_,
+            _api2wire_String(masterKeyId),
+            _api2wire_String(contentKey),
+            _api2wire_String(belongsToId),
+            _api2wire_String(belongsToType),
+            _api2wire_String(fileName)),
+        parseSuccessData: _wire2api_file_prepare_register,
+        constMeta: kFilePrepareRegisterFileConstMeta,
+        argValues: [
+          masterKeyId,
+          contentKey,
+          belongsToId,
+          belongsToType,
+          fileName
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFilePrepareRegisterFileConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_prepare_register_file",
+        argNames: [
+          "masterKeyId",
+          "contentKey",
+          "belongsToId",
+          "belongsToType",
+          "fileName"
+        ],
+      );
+
+  Future<FileDoneRegister> fileDoneRegisterFile(
+          {required String serverOutput, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_done_register_file(
+            port_, _api2wire_String(serverOutput)),
+        parseSuccessData: _wire2api_file_done_register,
+        constMeta: kFileDoneRegisterFileConstMeta,
+        argValues: [serverOutput],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileDoneRegisterFileConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_done_register_file",
+        argNames: ["serverOutput"],
+      );
+
+  Future<void> fileUploadPart(
+          {required String baseUrl,
+          required String urlPrefix,
+          required String authToken,
+          required String jwt,
+          required String sessionId,
+          required bool end,
+          required int sequence,
+          required String contentKey,
+          required String signKey,
+          required Uint8List part,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_upload_part(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(urlPrefix),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(sessionId),
+            end,
+            _api2wire_i32(sequence),
+            _api2wire_String(contentKey),
+            _api2wire_String(signKey),
+            _api2wire_uint_8_list(part)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kFileUploadPartConstMeta,
+        argValues: [
+          baseUrl,
+          urlPrefix,
+          authToken,
+          jwt,
+          sessionId,
+          end,
+          sequence,
+          contentKey,
+          signKey,
+          part
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileUploadPartConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_upload_part",
+        argNames: [
+          "baseUrl",
+          "urlPrefix",
+          "authToken",
+          "jwt",
+          "sessionId",
+          "end",
+          "sequence",
+          "contentKey",
+          "signKey",
+          "part"
+        ],
+      );
+
+  Future<void> fileFileNameUpdate(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String fileId,
+          required String contentKey,
+          required String fileName,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_file_name_update(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(fileId),
+            _api2wire_String(contentKey),
+            _api2wire_String(fileName)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kFileFileNameUpdateConstMeta,
+        argValues: [baseUrl, authToken, jwt, fileId, contentKey, fileName],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileFileNameUpdateConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_file_name_update",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "fileId",
+          "contentKey",
+          "fileName"
+        ],
+      );
+
+  Future<void> fileDeleteFile(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String fileId,
+          required String groupId,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_file_delete_file(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(fileId),
+            _api2wire_String(groupId)),
+        parseSuccessData: _wire2api_unit,
+        constMeta: kFileDeleteFileConstMeta,
+        argValues: [baseUrl, authToken, jwt, fileId, groupId],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kFileDeleteFileConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_delete_file",
+        argNames: ["baseUrl", "authToken", "jwt", "fileId", "groupId"],
+      );
+
   // Section: api2wire
   ffi.Pointer<wire_uint_8_list> _api2wire_String(String raw) {
     return _api2wire_uint_8_list(utf8.encoder.convert(raw));
@@ -3842,6 +4337,10 @@ String _wire2api_String(dynamic raw) {
 
 List<String> _wire2api_StringList(dynamic raw) {
   return (raw as List<dynamic>).cast<String>();
+}
+
+BelongsToType _wire2api_belongs_to_type(dynamic raw) {
+  return BelongsToType.values[raw];
 }
 
 bool _wire2api_bool(dynamic raw) {
@@ -3897,6 +4396,64 @@ EncryptedHead _wire2api_encrypted_head(dynamic raw) {
   return EncryptedHead(
     id: _wire2api_String(arr[0]),
     sign: _wire2api_opt_box_autoadd_sign_head(arr[1]),
+  );
+}
+
+FileData _wire2api_file_data(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 8)
+    throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+  return FileData(
+    fileId: _wire2api_String(arr[0]),
+    masterKeyId: _wire2api_String(arr[1]),
+    owner: _wire2api_String(arr[2]),
+    belongsTo: _wire2api_opt_String(arr[3]),
+    belongsToType: _wire2api_belongs_to_type(arr[4]),
+    keyId: _wire2api_String(arr[5]),
+    encryptedFileName: _wire2api_opt_String(arr[6]),
+    partList: _wire2api_list_file_part_list_item(arr[7]),
+  );
+}
+
+FileDoneRegister _wire2api_file_done_register(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return FileDoneRegister(
+    fileId: _wire2api_String(arr[0]),
+    sessionId: _wire2api_String(arr[1]),
+  );
+}
+
+FilePartListItem _wire2api_file_part_list_item(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  return FilePartListItem(
+    partId: _wire2api_String(arr[0]),
+    sequence: _wire2api_i32(arr[1]),
+    externStorage: _wire2api_bool(arr[2]),
+  );
+}
+
+FilePrepareRegister _wire2api_file_prepare_register(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 2)
+    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  return FilePrepareRegister(
+    encryptedFileName: _wire2api_String(arr[0]),
+    serverInput: _wire2api_String(arr[1]),
+  );
+}
+
+FileRegisterOutput _wire2api_file_register_output(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  return FileRegisterOutput(
+    fileId: _wire2api_String(arr[0]),
+    sessionId: _wire2api_String(arr[1]),
+    encryptedFileName: _wire2api_String(arr[2]),
   );
 }
 
@@ -4040,6 +4597,10 @@ KeysToMasterKeyFetch _wire2api_keys_to_master_key_fetch(dynamic raw) {
     lastKeyId: _wire2api_String(arr[1]),
     keys: _wire2api_StringList(arr[2]),
   );
+}
+
+List<FilePartListItem> _wire2api_list_file_part_list_item(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_file_part_list_item).toList();
 }
 
 List<GroupInviteReqList> _wire2api_list_group_invite_req_list(dynamic raw) {
@@ -7098,6 +7659,358 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
   late final _wire_delete_sym_key = _wire_delete_sym_keyPtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_download_file_meta(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_id,
+  ) {
+    return _wire_file_download_file_meta(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      group_id,
+    );
+  }
+
+  late final _wire_file_download_file_metaPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_download_file_meta');
+  late final _wire_file_download_file_meta =
+      _wire_file_download_file_metaPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_download_and_decrypt_file_part(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> url_prefix,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> part_id,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_file_download_and_decrypt_file_part(
+      port_,
+      base_url,
+      url_prefix,
+      auth_token,
+      part_id,
+      content_key,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_file_download_and_decrypt_file_partPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_file_download_and_decrypt_file_part');
+  late final _wire_file_download_and_decrypt_file_part =
+      _wire_file_download_and_decrypt_file_partPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_download_part_list(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> file_id,
+    ffi.Pointer<wire_uint_8_list> last_sequence,
+  ) {
+    return _wire_file_download_part_list(
+      port_,
+      base_url,
+      auth_token,
+      file_id,
+      last_sequence,
+    );
+  }
+
+  late final _wire_file_download_part_listPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_download_part_list');
+  late final _wire_file_download_part_list =
+      _wire_file_download_part_listPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_register_file(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> master_key_id,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> belongs_to_id,
+    ffi.Pointer<wire_uint_8_list> belongs_to_type,
+    ffi.Pointer<wire_uint_8_list> file_name,
+    ffi.Pointer<wire_uint_8_list> group_id,
+  ) {
+    return _wire_file_register_file(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      master_key_id,
+      content_key,
+      belongs_to_id,
+      belongs_to_type,
+      file_name,
+      group_id,
+    );
+  }
+
+  late final _wire_file_register_filePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_register_file');
+  late final _wire_file_register_file = _wire_file_register_filePtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_prepare_register_file(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> master_key_id,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> belongs_to_id,
+    ffi.Pointer<wire_uint_8_list> belongs_to_type,
+    ffi.Pointer<wire_uint_8_list> file_name,
+  ) {
+    return _wire_file_prepare_register_file(
+      port_,
+      master_key_id,
+      content_key,
+      belongs_to_id,
+      belongs_to_type,
+      file_name,
+    );
+  }
+
+  late final _wire_file_prepare_register_filePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_file_prepare_register_file');
+  late final _wire_file_prepare_register_file =
+      _wire_file_prepare_register_filePtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_done_register_file(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> server_output,
+  ) {
+    return _wire_file_done_register_file(
+      port_,
+      server_output,
+    );
+  }
+
+  late final _wire_file_done_register_filePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_done_register_file');
+  late final _wire_file_done_register_file = _wire_file_done_register_filePtr
+      .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_upload_part(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> url_prefix,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> session_id,
+    bool end,
+    int sequence,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+    ffi.Pointer<wire_uint_8_list> part1,
+  ) {
+    return _wire_file_upload_part(
+      port_,
+      base_url,
+      url_prefix,
+      auth_token,
+      jwt,
+      session_id,
+      end ? 1 : 0,
+      sequence,
+      content_key,
+      sign_key,
+      part1,
+    );
+  }
+
+  late final _wire_file_upload_partPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Uint8,
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_upload_part');
+  late final _wire_file_upload_part = _wire_file_upload_partPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          int,
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_file_name_update(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> file_id,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> file_name,
+  ) {
+    return _wire_file_file_name_update(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      file_id,
+      content_key,
+      file_name,
+    );
+  }
+
+  late final _wire_file_file_name_updatePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_file_name_update');
+  late final _wire_file_file_name_update =
+      _wire_file_file_name_updatePtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_delete_file(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> file_id,
+    ffi.Pointer<wire_uint_8_list> group_id,
+  ) {
+    return _wire_file_delete_file(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      file_id,
+      group_id,
+    );
+  }
+
+  late final _wire_file_delete_filePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_delete_file');
+  late final _wire_file_delete_file = _wire_file_delete_filePtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
