@@ -12,6 +12,10 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'dart:ffi' as ffi;
 
 abstract class SentcFlutter {
+  Future<Claims> decodeJwt({required String jwt, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDecodeJwtConstMeta;
+
   ///
   ///# Check if the identifier is available for this app
   ///
@@ -883,6 +887,24 @@ abstract class SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta;
 }
 
+class Claims {
+  final String aud;
+  final String sub;
+  final int exp;
+  final int iat;
+  final String groupId;
+  final bool fresh;
+
+  Claims({
+    required this.aud,
+    required this.sub,
+    required this.exp,
+    required this.iat,
+    required this.groupId,
+    required this.fresh,
+  });
+}
+
 class CryptoRawOutput {
   final String head;
   final Uint8List data;
@@ -1221,6 +1243,21 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
       SentcFlutterImpl.raw(SentcFlutterWire(dylib));
 
   SentcFlutterImpl.raw(SentcFlutterWire inner) : super(inner);
+
+  Future<Claims> decodeJwt({required String jwt, dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_decode_jwt(port_, _api2wire_String(jwt)),
+        parseSuccessData: _wire2api_claims,
+        constMeta: kDecodeJwtConstMeta,
+        argValues: [jwt],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kDecodeJwtConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "decode_jwt",
+        argNames: ["jwt"],
+      );
 
   Future<bool> checkUserIdentifierAvailable(
           {required String baseUrl,
@@ -3815,6 +3852,20 @@ SignHead _wire2api_box_autoadd_sign_head(dynamic raw) {
   return _wire2api_sign_head(raw);
 }
 
+Claims _wire2api_claims(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 6)
+    throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+  return Claims(
+    aud: _wire2api_String(arr[0]),
+    sub: _wire2api_String(arr[1]),
+    exp: _wire2api_usize(arr[2]),
+    iat: _wire2api_usize(arr[3]),
+    groupId: _wire2api_String(arr[4]),
+    fresh: _wire2api_bool(arr[5]),
+  );
+}
+
 CryptoRawOutput _wire2api_crypto_raw_output(dynamic raw) {
   final arr = raw as List<dynamic>;
   if (arr.length != 2)
@@ -4168,6 +4219,10 @@ UserPublicKeyData _wire2api_user_public_key_data(dynamic raw) {
   );
 }
 
+int _wire2api_usize(dynamic raw) {
+  return raw as int;
+}
+
 // ignore_for_file: camel_case_types, non_constant_identifier_names, avoid_positional_boolean_parameters, annotate_overrides, constant_identifier_names
 
 // AUTO GENERATED FILE, DO NOT EDIT.
@@ -4189,6 +4244,23 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
+
+  void wire_decode_jwt(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> jwt,
+  ) {
+    return _wire_decode_jwt(
+      port_,
+      jwt,
+    );
+  }
+
+  late final _wire_decode_jwtPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_decode_jwt');
+  late final _wire_decode_jwt = _wire_decode_jwtPtr
+      .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_check_user_identifier_available(
     int port_,
