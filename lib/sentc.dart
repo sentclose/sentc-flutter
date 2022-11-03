@@ -61,12 +61,10 @@ class Sentc {
     final SentcFlutterImpl api = SentcFlutterImpl(dylib);
     baseUrl = base_url ?? "https://api.sentc.com";
 
-    REFRESH_OPTIONS _refresh_endpoint =
-        refresh_options != null ? refresh_options.endpoint : REFRESH_OPTIONS.api;
+    REFRESH_OPTIONS _refresh_endpoint = refresh_options != null ? refresh_options.endpoint : REFRESH_OPTIONS.api;
 
-    String refresh_endpoint_url = refresh_options != null
-        ? refresh_options.endpoint_url ?? "/api/v1/refresh"
-        : "/api/v1/refresh";
+    String refresh_endpoint_url =
+        refresh_options != null ? refresh_options.endpoint_url ?? "/api/v1/refresh" : "/api/v1/refresh";
 
     var refresh_endpoint_fn = refresh_options != null
         ? refresh_options.endpoint_fn ??
@@ -225,11 +223,7 @@ class Sentc {
   }
 
   static Future<String> prepareLoginStart(String userIdentifier) {
-    return getApi().prepareLoginStart(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      userIdentifier: userIdentifier,
-    );
+    return getApi().prepareLoginStart(baseUrl: baseUrl, authToken: appToken, userIdentifier: userIdentifier);
   }
 
   static Future<PrepareLoginOutput> prepareLogin(
@@ -243,8 +237,7 @@ class Sentc {
       serverOutput: prepare_login_server_output,
     );
 
-    return PrepareLoginOutput(
-        authKey: data.authKey, masterKeyEncryptionKey: data.masterKeyEncryptionKey);
+    return PrepareLoginOutput(authKey: data.authKey, masterKeyEncryptionKey: data.masterKeyEncryptionKey);
   }
 
   static Future<User> doneLogin(
@@ -285,11 +278,7 @@ class Sentc {
       return UserPublicKey.fromJson(jsonDecode(key));
     }
 
-    final fetchedKey = await getApi().userFetchPublicKey(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      userId: userId,
-    );
+    final fetchedKey = await getApi().userFetchPublicKey(baseUrl: baseUrl, authToken: appToken, userId: userId);
 
     final k = UserPublicKey._(fetchedKey.publicKey, fetchedKey.publicKeyId);
 
@@ -321,12 +310,7 @@ class Sentc {
 
   static Future<String> refreshJwt(String oldJwt, String refreshToken) {
     if (refresh_endpoint == REFRESH_OPTIONS.api) {
-      return getApi().refreshJwt(
-        baseUrl: baseUrl,
-        authToken: appToken,
-        jwt: oldJwt,
-        refreshToken: refreshToken,
-      );
+      return getApi().refreshJwt(baseUrl: baseUrl, authToken: appToken, jwt: oldJwt, refreshToken: refreshToken);
     }
 
     if (refresh_endpoint == REFRESH_OPTIONS.cookie_fn) {
@@ -337,7 +321,7 @@ class Sentc {
   }
 }
 
-//__________________________________________________________________________________________________
+//______________________________________________________________________________________________________________________
 
 class GeneratedRegisterData {
   final String userIdentifier;
