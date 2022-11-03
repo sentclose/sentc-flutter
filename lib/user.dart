@@ -197,9 +197,18 @@ class User {
   }
 
   Future<String> getJwt() async {
-    //TODO
+    final jwtData = await Sentc.getApi().decodeJwt(jwt: jwt);
 
-    //TODO save the new jwt in storage too
-    return "";
+    if (jwtData.exp <= 1000 + 30) {
+      jwt = await Sentc.refreshJwt(jwt, refreshToken);
+
+      final storage = Sentc.getStorage();
+
+      await storage.set("user_data_$_userIdentifier", jsonEncode(this));
+    }
+
+    return jwt;
   }
+
+  //________________________________________________________________________________________________
 }
