@@ -175,8 +175,7 @@ class User {
         groupInvites = [],
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
-        _userKeys =
-            (jsonDecode(json["userKeys"]) as List).map((e) => UserKeyData.fromJson(e)).toList();
+        _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKeyData.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -261,5 +260,114 @@ class User {
     await storage.set("user_data_$_userIdentifier", jsonEncode(this));
   }
 
-  //________________________________________________________________________________________________
+  Future<void> doneFetchUserKey(String serverOutput) async {
+    final key = await Sentc.getApi().doneFetchUserKey(
+      privateKey: _privateDeviceKey,
+      serverOutput: serverOutput,
+    );
+
+    final lastIndex = _userKeys.length;
+
+    _userKeys.add(UserKeyData._(
+      key.privateKey,
+      key.publicKey,
+      key.groupKey,
+      key.time,
+      key.groupKeyId,
+      key.signKey,
+      key.verifyKey,
+      key.exportedPublicKey,
+      key.exportedVerifyKey,
+    ));
+
+    _keyMap[key.groupKeyId] = lastIndex;
+  }
+
+  Future<String> getPrivateKey(String keyId) async {
+    final key = await _getUserKeys(keyId);
+
+    return key.privateKey;
+  }
+
+  Future<UserPublicKey> getPublicKey(String replyId) {
+    return Sentc.getUserPublicKey(replyId);
+  }
+
+  String getNewestPublicKey() {
+    return _userKeys[0].publicKey;
+  }
+
+  String getNewestSignKey() {
+    return _userKeys[0].signKey;
+  }
+
+  Future<String> getSignKey() async {
+    return getNewestSignKey();
+  }
+
+  //____________________________________________________________________________________________________________________
+
+  Future<void> updateUser(String newIdentifier) {
+    return Sentc.getApi().updateUser(baseUrl: _baseUrl, authToken: _appToken, jwt: jwt, userIdentifier: newIdentifier);
+  }
+
+  Future<void> resetPassword(String newPassword) async {
+    final jwt = await getJwt();
+
+    final decryptedPrivateKey = _privateDeviceKey;
+    final decryptedSignKey = _signDeviceKey;
+
+    return Sentc.getApi().resetPassword(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      newPassword: newPassword,
+      decryptedPrivateKey: decryptedPrivateKey,
+      decryptedSignKey: decryptedSignKey,
+    );
+  }
+
+  Future<void> changePassword(String oldPassword, String newPassword) {
+    return Sentc.getApi().changePassword(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      userIdentifier: _userIdentifier,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    );
+  }
+
+  Future<void> logOut() {
+    final storage = Sentc.getStorage();
+
+    return storage.delete("user_data_$_userIdentifier");
+  }
+
+  Future<void> deleteUser(String password) async {
+    await Sentc.getApi().deleteUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      userIdentifier: _userIdentifier,
+      password: password,
+    );
+
+    return logOut();
+  }
+
+  Future<void> deleteDevice(String password, String deviceId) async {
+    await Sentc.getApi().deleteDevice(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      deviceIdentifier: _userIdentifier,
+      password: password,
+      deviceId: deviceId,
+    );
+
+    if (deviceId == _deviceId) {
+      //only log the device out if it is the actual used device
+      return logOut();
+    }
+  }
+
+  //____________________________________________________________________________________________________________________
 }
