@@ -126,7 +126,7 @@ class User {
   final List<UserKeyData> _userKeys;
   final Map<String, int> _keyMap;
 
-  late List<GroupInviteListItem> _groupInvites;
+  late List<GroupInviteListItem> groupInvites;
 
   void setGroupInvites(List<GroupInviteReqList> invites) {
     final List<GroupInviteListItem> list = [];
@@ -137,7 +137,7 @@ class User {
       list.add(GroupInviteListItem(invite.groupId, invite.time));
     }
 
-    _groupInvites = list;
+    groupInvites = list;
   }
 
   User._(
@@ -155,7 +155,7 @@ class User {
     this._exportedPublicDeviceKey,
     this._exportedVerifyDeviceKey,
     this._userKeys,
-    this._groupInvites,
+    this.groupInvites,
     this._keyMap,
   );
 
@@ -172,7 +172,7 @@ class User {
         _verifyDeviceKey = json["verifyDeviceKey"],
         _exportedPublicDeviceKey = json["exportedPublicDeviceKey"],
         _exportedVerifyDeviceKey = json["exportedVerifyDeviceKey"],
-        _groupInvites = [],
+        groupInvites = [],
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
         _userKeys =
