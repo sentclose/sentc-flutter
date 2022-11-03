@@ -199,7 +199,7 @@ class User {
   Future<String> getJwt() async {
     final jwtData = await Sentc.getApi().decodeJwt(jwt: jwt);
 
-    if (jwtData.exp <= 1000 + 30) {
+    if (jwtData.exp <= DateTime.now().millisecondsSinceEpoch / 1000 + 30) {
       jwt = await Sentc.refreshJwt(jwt, refreshToken);
 
       final storage = Sentc.getStorage();
