@@ -56,39 +56,36 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 }
 
 /// Keys from the user group
-class UserKeyData {
-  final String privateKey;
-  final String publicKey;
-  final String groupKey;
-  final String time;
-  final String groupKeyId;
+class UserKeyData extends GroupKey {
   final String signKey;
   final String verifyKey;
   final String exportedPublicKey;
   final String exportedVerifyKey;
 
-  const UserKeyData._(
-    this.privateKey,
-    this.publicKey,
-    this.groupKey,
-    this.time,
-    this.groupKeyId,
+  UserKeyData._(
+    String privateKey,
+    String publicKey,
+    String groupKey,
+    String time,
+    String groupKeyId,
     this.signKey,
     this.verifyKey,
     this.exportedPublicKey,
     this.exportedVerifyKey,
-  );
+  ) : super(privateKey, publicKey, groupKey, time, groupKeyId);
 
   UserKeyData.fromJson(Map<String, dynamic> json)
-      : privateKey = json["privateKey"],
-        publicKey = json["publicKey"],
-        groupKey = json["groupKey"],
-        time = json["time"],
-        groupKeyId = json["groupKeyId"],
-        signKey = json["signKey"],
+      : signKey = json["signKey"],
         verifyKey = json["verifyKey"],
         exportedPublicKey = json["exportedPublicKey"],
-        exportedVerifyKey = json["exportedVerifyKey"];
+        exportedVerifyKey = json["exportedVerifyKey"],
+        super(
+          json["privateKey"],
+          json["publicKey"],
+          json["groupKey"],
+          json["time"],
+          json["groupKeyId"],
+        );
 
   Map<String, dynamic> toJson() {
     return {
@@ -370,4 +367,181 @@ class User {
   }
 
   //____________________________________________________________________________________________________________________
+
+  Future<PreRegisterDeviceData> prepareRegisterDevice(String serverOutput, int page) async {
+    final keyCount = _userKeys.length;
+
+    final keyString = prepareKeys(_userKeys, page).str;
+
+    final out = await Sentc.getApi().prepareRegisterDevice(
+      serverOutput: serverOutput,
+      userKeys: keyString,
+      keyCount: keyCount,
+    );
+
+    return PreRegisterDeviceData(input: out.input, exportedPublicKey: out.exportedPublicKey);
+  }
+
+  Future<void> registerDevice(String serverOutput) async {
+    final keyCount = _userKeys.length;
+
+    final keyString = prepareKeys(_userKeys, 0).str;
+
+    final jwt = await getJwt();
+
+    final out = await Sentc.getApi().registerDevice(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      serverOutput: serverOutput,
+      keyCount: keyCount,
+      userKeys: keyString,
+    );
+
+    final sessionId = out.sessionId;
+    final publicKey = out.exportedPublicKey;
+
+    if (sessionId == "") {
+      return;
+    }
+
+    bool nextPage = true;
+    int i = 1;
+    final List<Future<void>> p = [];
+
+    while (nextPage) {
+      final nextKeys = prepareKeys(_userKeys, i);
+
+      nextPage = nextKeys.end;
+
+      p.add(Sentc.getApi().userDeviceKeySessionUpload(
+        baseUrl: _baseUrl,
+        authToken: _appToken,
+        jwt: jwt,
+        sessionId: sessionId,
+        userPublicKey: publicKey,
+        groupKeys: nextKeys.str,
+      ));
+
+      i++;
+    }
+
+    await Future.wait(p);
+  }
+
+  Future<List<UserDeviceList>> getDevices(UserDeviceList? lastFetchedItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time ?? "0";
+    final lastId = lastFetchedItem?.deviceId ?? "none";
+
+    final out = await Sentc.getApi().getUserDevices(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedId: lastId,
+    );
+
+    final List<UserDeviceList> devices = [];
+
+    for (var i = 0; i < out.length; ++i) {
+      var device = out[i];
+
+      devices.add(UserDeviceList(device.time, device.deviceId, device.deviceIdentifier));
+    }
+
+    return devices;
+  }
+
+  //____________________________________________________________________________________________________________________
+
+  Future<void> keyRotation() async {
+    final jwt = await getJwt();
+
+    final keyId = await Sentc.getApi().userKeyRotation(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      publicDeviceKey: _publicDeviceKey,
+      preUserKey: _userKeys[0].groupKey,
+    );
+
+    return fetchUserKey(keyId);
+  }
+
+  Future<void> finishKeyRotation() async {
+    final jwt = await getJwt();
+
+    List<KeyRotationGetOut> keys =
+        await Sentc.getApi().userPreDoneKeyRotation(baseUrl: _baseUrl, authToken: _appToken, jwt: jwt);
+
+    bool nextRound = false;
+    int roundsLeft = 10;
+
+    final publicKey = _publicDeviceKey;
+    final privateKey = _privateDeviceKey;
+
+    do {
+      final List<KeyRotationGetOut> leftKeys = [];
+
+      for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+
+        UserKeyData preKey;
+
+        try {
+          preKey = await _getUserKeys(key.preGroupKeyId);
+        } catch (e) {
+          //key not found -> try next round
+          leftKeys.add(key);
+          continue;
+        }
+
+        await Sentc.getApi().userFinishKeyRotation(
+          baseUrl: _baseUrl,
+          authToken: _appToken,
+          jwt: jwt,
+          serverOutput: key.serverOutput,
+          preGroupKey: preKey.groupKey,
+          publicKey: publicKey,
+          privateKey: privateKey,
+        );
+
+        await _getUserKeys(key.newGroupKeyId);
+      }
+
+      roundsLeft--;
+
+      if (leftKeys.length > 0) {
+        keys = [];
+        //push the not found keys into the key array, maybe the pre group keys are in the next round
+        keys.addAll(leftKeys);
+
+        nextRound = true;
+      } else {
+        nextRound = false;
+      }
+    } while (nextRound && roundsLeft > 0);
+  }
+}
+
+//______________________________________________________________________________________________________________________
+
+class PreRegisterDeviceData {
+  final String input;
+  final String exportedPublicKey;
+
+  PreRegisterDeviceData({
+    required this.input,
+    required this.exportedPublicKey,
+  });
+}
+
+class UserDeviceList {
+  final String deviceId;
+  final String time;
+  final String deviceIdentifier;
+
+  UserDeviceList(this.time, this.deviceId, this.deviceIdentifier);
 }
