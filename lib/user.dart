@@ -7,14 +7,14 @@ import 'package:sentc/sentc.dart';
 Future<User> getUser(String deviceIdentifier, UserData data) async {
   final Map<String, int> keyMap = {};
 
-  final List<_UserKeyData> userKeys = [];
+  final List<UserKeyData> userKeys = [];
 
   for (var i = 0; i < data.userKeys.length; ++i) {
     var key = data.userKeys[i];
 
     keyMap[key.groupKeyId] = i;
 
-    userKeys.add(_UserKeyData._(
+    userKeys.add(UserKeyData._(
       key.privateKey,
       key.publicKey,
       key.groupKey,
@@ -56,7 +56,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 }
 
 /// Keys from the user group
-class _UserKeyData {
+class UserKeyData {
   final String privateKey;
   final String publicKey;
   final String groupKey;
@@ -67,7 +67,7 @@ class _UserKeyData {
   final String exportedPublicKey;
   final String exportedVerifyKey;
 
-  const _UserKeyData._(
+  const UserKeyData._(
     this.privateKey,
     this.publicKey,
     this.groupKey,
@@ -79,7 +79,7 @@ class _UserKeyData {
     this.exportedVerifyKey,
   );
 
-  _UserKeyData.fromJson(Map<String, dynamic> json)
+  UserKeyData.fromJson(Map<String, dynamic> json)
       : privateKey = json["privateKey"],
         publicKey = json["publicKey"],
         groupKey = json["groupKey"],
@@ -123,7 +123,7 @@ class User {
   final String _exportedVerifyDeviceKey;
 
   //user keys
-  final List<_UserKeyData> _userKeys;
+  final List<UserKeyData> _userKeys;
   final Map<String, int> _keyMap;
 
   late List<GroupInviteListItem> _groupInvites;
@@ -176,7 +176,7 @@ class User {
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
         _userKeys =
-            (jsonDecode(json["userKeys"]) as List).map((e) => _UserKeyData.fromJson(e)).toList();
+            (jsonDecode(json["userKeys"]) as List).map((e) => UserKeyData.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -208,6 +208,57 @@ class User {
     }
 
     return jwt;
+  }
+
+  /// Fetch key for the actual user group
+  Future<UserKeyData> _getUserKeys(String keyId) async {
+    var index = _keyMap[keyId];
+
+    if (index == null) {
+      //try to fetch the key
+      await fetchUserKey(keyId);
+
+      index = _keyMap[keyId];
+
+      if (index == null) {
+        //key not found
+        throw Exception("Key not found");
+      }
+    }
+
+    try {
+      return _userKeys[index];
+    } catch (e) {
+      throw Exception("Key not found");
+    }
+  }
+
+  fetchUserKey(String keyId) async {
+    final jwt = await getJwt();
+
+    final userKeys = await Sentc.getApi().fetchUserKey(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      keyId: keyId,
+      privateKey: _privateDeviceKey,
+    );
+
+    _userKeys.add(UserKeyData._(
+      userKeys.privateKey,
+      userKeys.publicKey,
+      userKeys.groupKey,
+      userKeys.time,
+      userKeys.groupKeyId,
+      userKeys.signKey,
+      userKeys.verifyKey,
+      userKeys.exportedPublicKey,
+      userKeys.exportedVerifyKey,
+    ));
+
+    final storage = Sentc.getStorage();
+
+    await storage.set("user_data_$_userIdentifier", jsonEncode(this));
   }
 
   //________________________________________________________________________________________________
