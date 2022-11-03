@@ -1,7 +1,13 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
 import 'package:sentc/generated.dart';
+import 'package:sentc/storage/shared_preferences_storage.dart';
+import 'package:sentc/storage/storage_interface.dart';
+import 'package:sentc/user.dart';
+
+export 'package:sentc/storage/storage_interface.dart';
 
 enum REFRESH_OPTIONS { cookie, cookie_fn, api }
 
@@ -15,10 +21,11 @@ class RefreshOptions {
 
 class Sentc {
   static SentcFlutterImpl? _api;
+  static StorageInterface? _storage;
 
-  static String _base_url = "";
-  static String _app_token = "";
-  static REFRESH_OPTIONS _refresh_endpoint = REFRESH_OPTIONS.api;
+  static String baseUrl = "";
+  static String appToken = "";
+  static REFRESH_OPTIONS refresh_endpoint = REFRESH_OPTIONS.api;
   static String _refresh_endpoint_url = "";
   static Future<String> Function(String old_jwt) _endpoint_fn = (String old_jwt) async {
     return "";
@@ -26,15 +33,20 @@ class Sentc {
 
   const Sentc._();
 
-  static Future<void> init({
+  static Future<User?> init({
     String? base_url,
     required String app_token,
     String? file_part_url,
     RefreshOptions? refresh_options,
+    StorageInterface? storage,
   }) async {
     if (_api != null) {
       //no Init, only once
-      return;
+      try {
+        return await getActualUser(jwt: true);
+      } catch (e) {
+        return null;
+      }
     }
 
     //load the ffi lib
@@ -47,9 +59,9 @@ class Sentc {
             : DynamicLibrary.open(path);
 
     final SentcFlutterImpl api = SentcFlutterImpl(dylib);
-    _base_url = base_url ?? "https://api.sentc.com";
+    baseUrl = base_url ?? "https://api.sentc.com";
 
-    REFRESH_OPTIONS refresh_endpoint =
+    REFRESH_OPTIONS _refresh_endpoint =
         refresh_options != null ? refresh_options.endpoint : REFRESH_OPTIONS.api;
 
     String refresh_endpoint_url = refresh_options != null
@@ -66,29 +78,295 @@ class Sentc {
           };
 
     _api = api;
-    _app_token = app_token;
-    _refresh_endpoint = refresh_endpoint;
+    appToken = app_token;
+    refresh_endpoint = _refresh_endpoint;
     _refresh_endpoint_url = refresh_endpoint_url;
     _endpoint_fn = refresh_endpoint_fn;
 
-    /*
-    TODO
-      get actual user
-      if user not logged in, do nothing
-      if not then refresh the jwt
-     */
+    _storage = storage ?? SharedPreferencesStorage();
+    await _storage!.init();
+
+    try {
+      final user = await getActualUser();
+
+      if (refresh_endpoint == REFRESH_OPTIONS.api) {
+        //do init only when refresh endpoint is api
+        final out = await getApi().initUser(
+          baseUrl: baseUrl,
+          authToken: app_token,
+          jwt: user.jwt,
+          refreshToken: user.refreshToken,
+        );
+
+        user.jwt = out.jwt;
+        user.setGroupInvites(out.invites);
+      } else {
+        //do normal refresh (maybe with another strategy)
+        await user.getJwt();
+
+        return user;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
-  static SentcFlutterImpl _getApi() {
+  static StorageInterface getStorage() {
+    return _storage!;
+  }
+
+  static SentcFlutterImpl getApi() {
     return _api ?? (throw Exception("Not init"));
   }
 
+  static Future<User> getActualUser({bool? jwt}) async {
+    final storage = Sentc.getStorage();
+
+    final actualUser = await storage.getItem("actual_user");
+
+    if (actualUser == null) {
+      throw Exception("No actual user found");
+    }
+
+    final userJson = await storage.getItem("user_data_$actualUser");
+
+    if (userJson == null) {
+      throw Exception("The actual user data was not found");
+    }
+
+    final user = User.fromJson(jsonDecode(userJson), baseUrl, appToken);
+
+    if (jwt ?? false) {
+      await user.getJwt();
+    }
+
+    return user;
+  }
+
+  //________________________________________________________________________________________________
+
+  static Future<bool> checkUserIdentifierAvailable(String userIdentifier) {
+    if (userIdentifier == "") {
+      return Future(() => false);
+    }
+
+    return getApi().checkUserIdentifierAvailable(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userIdentifier: userIdentifier,
+    );
+  }
+
+  static Future<String> prepareCheckUserIdentifierAvailable(String userIdentifier) {
+    return getApi().prepareCheckUserIdentifierAvailable(userIdentifier: userIdentifier);
+  }
+
+  static Future<bool> doneCheckUserIdentifierAvailable(String serverOutput) {
+    return getApi().doneCheckUserIdentifierAvailable(serverOutput: serverOutput);
+  }
+
+  static Future<GeneratedRegisterData> generateRegisterData() async {
+    final out = await getApi().generateUserRegisterData();
+
+    return GeneratedRegisterData(out.identifier, out.password);
+  }
+
+  static Future<String> prepareRegister(String userIdentifier, String password) {
+    if (userIdentifier == "" || password == "") {
+      throw const FormatException();
+    }
+
+    return getApi().prepareRegister(userIdentifier: userIdentifier, password: password);
+  }
+
+  static Future<String> doneRegister(String serverOutput) {
+    return getApi().doneRegister(serverOutput: serverOutput);
+  }
+
   static Future<String> register(String userIdentifier, String password) {
-    return _getApi().register(
-      baseUrl: _base_url,
-      authToken: _app_token,
+    if (userIdentifier == "" || password == "") {
+      throw const FormatException();
+    }
+
+    return getApi().register(
+      baseUrl: baseUrl,
+      authToken: appToken,
       password: password,
       userIdentifier: userIdentifier,
     );
+  }
+
+  static Future<String> prepareRegisterDeviceStart(String deviceIdentifier, String password) {
+    if (deviceIdentifier == "" || password == "") {
+      throw const FormatException();
+    }
+
+    return getApi().prepareRegisterDeviceStart(
+      deviceIdentifier: deviceIdentifier,
+      password: password,
+    );
+  }
+
+  static Future<void> doneRegisterDeviceStart(String serverOutput) {
+    return getApi().doneRegisterDeviceStart(serverOutput: serverOutput);
+  }
+
+  static Future<String> registerDeviceStart(String deviceIdentifier, String password) {
+    if (deviceIdentifier == "" || password == "") {
+      throw const FormatException();
+    }
+
+    return getApi().registerDeviceStart(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      deviceIdentifier: deviceIdentifier,
+      password: password,
+    );
+  }
+
+  static Future<String> prepareLoginStart(String userIdentifier) {
+    return getApi().prepareLoginStart(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userIdentifier: userIdentifier,
+    );
+  }
+
+  static Future<PrepareLoginOutput> prepareLogin(
+    String userIdentifier,
+    String password,
+    String prepare_login_server_output,
+  ) async {
+    final data = await getApi().prepareLogin(
+      userIdentifier: userIdentifier,
+      password: password,
+      serverOutput: prepare_login_server_output,
+    );
+
+    return PrepareLoginOutput(
+        authKey: data.authKey, masterKeyEncryptionKey: data.masterKeyEncryptionKey);
+  }
+
+  static Future<User> doneLogin(
+    String deviceIdentifier,
+    String master_key_encryption_key,
+    String done_login_server_output,
+  ) async {
+    final out = await getApi().doneLogin(
+      masterKeyEncryption: master_key_encryption_key,
+      serverOutput: done_login_server_output,
+    );
+
+    return getUser(deviceIdentifier, out);
+  }
+
+  static Future<User> login(
+    String deviceIdentifier,
+    String password,
+  ) async {
+    final out = await getApi().login(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userIdentifier: deviceIdentifier,
+      password: password,
+    );
+
+    return getUser(deviceIdentifier, out);
+  }
+
+  //________________________________________________________________________________________________
+
+  static Future<UserPublicKey> getUserPublicKey(String userId) async {
+    final storage = Sentc.getStorage();
+
+    final key = await storage.getItem("user_public_key_$userId");
+
+    if (key != null) {
+      return UserPublicKey.fromJson(jsonDecode(key));
+    }
+
+    final fetchedKey = await getApi().userFetchPublicKey(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userId: userId,
+    );
+
+    final k = UserPublicKey._(fetchedKey.publicKey, fetchedKey.publicKeyId);
+
+    await storage.set("user_public_key_$userId", jsonEncode(k));
+
+    return k;
+  }
+
+  static Future<String> getUserVerifyKey(String userId, String verifyKeyId) async {
+    final storage = Sentc.getStorage();
+
+    final key = await storage.getItem("user_verify_key_${userId}_$verifyKeyId");
+
+    if (key != null) {
+      return key;
+    }
+
+    final fetchedKey = await getApi().userFetchVerifyKey(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userId: userId,
+      verifyKeyId: verifyKeyId,
+    );
+
+    await storage.set("user_verify_key_${userId}_$verifyKeyId", fetchedKey);
+
+    return fetchedKey;
+  }
+
+  static Future<String> refreshJwt(String oldJwt, String refreshToken) {
+    if (refresh_endpoint == REFRESH_OPTIONS.api) {
+      return getApi().refreshJwt(
+        baseUrl: baseUrl,
+        authToken: appToken,
+        jwt: oldJwt,
+        refreshToken: refreshToken,
+      );
+    }
+
+    if (refresh_endpoint == REFRESH_OPTIONS.cookie_fn) {
+      return _endpoint_fn(oldJwt);
+    }
+
+    throw UnimplementedError();
+  }
+}
+
+//__________________________________________________________________________________________________
+
+class GeneratedRegisterData {
+  final String userIdentifier;
+  final String password;
+
+  GeneratedRegisterData(this.userIdentifier, this.password);
+}
+
+class PrepareLoginOutput {
+  final String authKey;
+  final String masterKeyEncryptionKey;
+
+  PrepareLoginOutput({
+    required this.authKey,
+    required this.masterKeyEncryptionKey,
+  });
+}
+
+class UserPublicKey {
+  final String id;
+  final String key;
+
+  UserPublicKey._(this.id, this.key);
+
+  UserPublicKey.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        key = json["key"];
+
+  Map<String, dynamic> toJson() {
+    return {"id": id, "key": key};
   }
 }
