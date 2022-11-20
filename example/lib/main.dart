@@ -28,9 +28,14 @@ class _MyAppState extends State<MyApp> {
 
     print(reg);
 
+    print("Login user");
+    final user = await Sentc.login("userIdentifier", "password");
+
+    print("delete user");
+    await user.deleteUser("password");
+
     //set here the futures
     setState(() {
-      register = Sentc.register("abc", "def");
       print("init");
     });
   }
