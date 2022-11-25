@@ -733,6 +733,15 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta;
 
+  Future<UserPublicKeyData> groupGetPublicKeyData(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetPublicKeyDataConstMeta;
+
   Future<EncryptedHead> splitHeadAndEncryptedData(
       {required Uint8List data, dynamic hint});
 
@@ -1185,10 +1194,12 @@ class GroupInviteReqList {
 class GroupJoinReqList {
   final String userId;
   final String time;
+  final int userType;
 
   GroupJoinReqList({
     required this.userId,
     required this.time,
+    required this.userType,
   });
 }
 
@@ -3589,6 +3600,31 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
         argNames: ["baseUrl", "authToken", "jwt", "id", "adminRank"],
       );
 
+  Future<UserPublicKeyData> groupGetPublicKeyData(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_public_key_data(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id)),
+        parseSuccessData: _wire2api_user_public_key_data,
+        constMeta: kGroupGetPublicKeyDataConstMeta,
+        argValues: [baseUrl, authToken, jwt, id],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetPublicKeyDataConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_public_key_data",
+        argNames: ["baseUrl", "authToken", "jwt", "id"],
+      );
+
   Future<EncryptedHead> splitHeadAndEncryptedData(
           {required Uint8List data, dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
@@ -4683,11 +4719,12 @@ GroupInviteReqList _wire2api_group_invite_req_list(dynamic raw) {
 
 GroupJoinReqList _wire2api_group_join_req_list(dynamic raw) {
   final arr = raw as List<dynamic>;
-  if (arr.length != 2)
-    throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
   return GroupJoinReqList(
     userId: _wire2api_String(arr[0]),
     time: _wire2api_String(arr[1]),
+    userType: _wire2api_i32(arr[2]),
   );
 }
 
@@ -7354,6 +7391,40 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           int)>();
+
+  void wire_group_get_public_key_data(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+  ) {
+    return _wire_group_get_public_key_data(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+    );
+  }
+
+  late final _wire_group_get_public_key_dataPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_get_public_key_data');
+  late final _wire_group_get_public_key_data =
+      _wire_group_get_public_key_dataPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_split_head_and_encrypted_data(
     int port_,
