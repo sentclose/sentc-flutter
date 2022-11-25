@@ -1256,11 +1256,13 @@ class GroupUserListItem {
   final String userId;
   final int rank;
   final String joinedTime;
+  final int userType;
 
   GroupUserListItem({
     required this.userId,
     required this.rank,
     required this.joinedTime,
+    required this.userType,
   });
 }
 
@@ -4767,12 +4769,13 @@ GroupOutDataKeys _wire2api_group_out_data_keys(dynamic raw) {
 
 GroupUserListItem _wire2api_group_user_list_item(dynamic raw) {
   final arr = raw as List<dynamic>;
-  if (arr.length != 3)
-    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  if (arr.length != 4)
+    throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
   return GroupUserListItem(
     userId: _wire2api_String(arr[0]),
     rank: _wire2api_i32(arr[1]),
     joinedTime: _wire2api_String(arr[2]),
+    userType: _wire2api_i32(arr[3]),
   );
 }
 
