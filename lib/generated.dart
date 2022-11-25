@@ -736,7 +736,6 @@ abstract class SentcFlutter {
   Future<UserPublicKeyData> groupGetPublicKeyData(
       {required String baseUrl,
       required String authToken,
-      required String jwt,
       required String id,
       dynamic hint});
 
@@ -3603,7 +3602,6 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
   Future<UserPublicKeyData> groupGetPublicKeyData(
           {required String baseUrl,
           required String authToken,
-          required String jwt,
           required String id,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
@@ -3611,18 +3609,17 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             port_,
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
-            _api2wire_String(jwt),
             _api2wire_String(id)),
         parseSuccessData: _wire2api_user_public_key_data,
         constMeta: kGroupGetPublicKeyDataConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, id],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupGetPublicKeyDataConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_get_public_key_data",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: ["baseUrl", "authToken", "id"],
       );
 
   Future<EncryptedHead> splitHeadAndEncryptedData(
@@ -7396,14 +7393,12 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int port_,
     ffi.Pointer<wire_uint_8_list> base_url,
     ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
   ) {
     return _wire_group_get_public_key_data(
       port_,
       base_url,
       auth_token,
-      jwt,
       id,
     );
   }
@@ -7414,17 +7409,12 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Int64,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_get_public_key_data');
   late final _wire_group_get_public_key_data =
       _wire_group_get_public_key_dataPtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>();
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_split_head_and_encrypted_data(
     int port_,
