@@ -348,6 +348,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String creatorsPublicKey,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateGroupConstMeta;
@@ -359,6 +360,7 @@ abstract class SentcFlutter {
       required String parentPublicKey,
       required String parentId,
       required int adminRank,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateChildGroupConstMeta;
@@ -388,6 +390,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupDataConstMeta;
@@ -399,6 +402,7 @@ abstract class SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedKeyId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeysConstMeta;
@@ -409,6 +413,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required String keyId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeyConstMeta;
@@ -427,6 +432,7 @@ abstract class SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetMemberConstMeta;
@@ -436,6 +442,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupUpdatesConstMeta;
@@ -473,8 +480,10 @@ abstract class SentcFlutter {
       required int keyCount,
       required int adminRank,
       required bool autoInvite,
+      required bool groupInvite,
       required String userPublicKey,
       required String groupKeys,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupInviteUserConstMeta;
@@ -488,6 +497,7 @@ abstract class SentcFlutter {
       required String sessionId,
       required String userPublicKey,
       required String groupKeys,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupInviteUserSessionConstMeta;
@@ -498,6 +508,8 @@ abstract class SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
+      required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetInvitesForUserConstMeta;
@@ -507,6 +519,8 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupAcceptInviteConstMeta;
@@ -516,6 +530,8 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupRejectInviteConstMeta;
@@ -526,6 +542,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetSentJoinReqUserConstMeta;
@@ -538,6 +555,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetSentJoinReqConstMeta;
@@ -547,6 +565,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String joinReqGroupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteSentJoinReqUserConstMeta;
@@ -558,6 +577,7 @@ abstract class SentcFlutter {
       required String id,
       required int adminRank,
       required String joinReqGroupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteSentJoinReqConstMeta;
@@ -567,6 +587,8 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupJoinReqConstMeta;
@@ -579,6 +601,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required String lastFetchedTime,
       required String lastFetchedId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetJoinReqsConstMeta;
@@ -590,6 +613,7 @@ abstract class SentcFlutter {
       required String id,
       required int adminRank,
       required String rejectedUserId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupRejectJoinReqConstMeta;
@@ -604,6 +628,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required String userPublicKey,
       required String groupKeys,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupAcceptJoinReqConstMeta;
@@ -616,6 +641,7 @@ abstract class SentcFlutter {
       required String sessionId,
       required String userPublicKey,
       required String groupKeys,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupJoinUserSessionConstMeta;
@@ -626,6 +652,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required int adminRank,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupStopGroupInvitesConstMeta;
@@ -635,6 +662,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kLeaveGroupConstMeta;
@@ -660,6 +688,7 @@ abstract class SentcFlutter {
       required String id,
       required String publicKey,
       required String preGroupKey,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupKeyRotationConstMeta;
@@ -669,6 +698,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupPreDoneKeyRotationConstMeta;
@@ -688,6 +718,7 @@ abstract class SentcFlutter {
       required String preGroupKey,
       required String publicKey,
       required String privateKey,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupFinishKeyRotationConstMeta;
@@ -708,6 +739,7 @@ abstract class SentcFlutter {
       required String userId,
       required int rank,
       required int adminRank,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupUpdateRankConstMeta;
@@ -719,6 +751,7 @@ abstract class SentcFlutter {
       required String id,
       required String userId,
       required int adminRank,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupKickUserConstMeta;
@@ -729,6 +762,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required int adminRank,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta;
@@ -942,6 +976,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileDownloadFileMetaConstMeta;
@@ -976,6 +1011,7 @@ abstract class SentcFlutter {
       required String belongsToType,
       required String fileName,
       required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileRegisterFileConstMeta;
@@ -1027,6 +1063,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String fileId,
       required String groupId,
+      required String groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileDeleteFileConstMeta;
@@ -2358,6 +2395,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String creatorsPublicKey,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_create_group(
@@ -2365,17 +2403,24 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(creatorsPublicKey)),
+            _api2wire_String(creatorsPublicKey),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_String,
         constMeta: kGroupCreateGroupConstMeta,
-        argValues: [baseUrl, authToken, jwt, creatorsPublicKey],
+        argValues: [baseUrl, authToken, jwt, creatorsPublicKey, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateGroupConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_create_group",
-        argNames: ["baseUrl", "authToken", "jwt", "creatorsPublicKey"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "creatorsPublicKey",
+          "groupAsMember"
+        ],
       );
 
   Future<String> groupCreateChildGroup(
@@ -2385,6 +2430,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String parentPublicKey,
           required String parentId,
           required int adminRank,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_create_child_group(
@@ -2394,7 +2440,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(parentPublicKey),
             _api2wire_String(parentId),
-            _api2wire_i32(adminRank)),
+            _api2wire_i32(adminRank),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_String,
         constMeta: kGroupCreateChildGroupConstMeta,
         argValues: [
@@ -2403,7 +2450,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           jwt,
           parentPublicKey,
           parentId,
-          adminRank
+          adminRank,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2417,7 +2465,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "jwt",
           "parentPublicKey",
           "parentId",
-          "adminRank"
+          "adminRank",
+          "groupAsMember"
         ],
       );
 
@@ -2460,6 +2509,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_group_data(
@@ -2467,17 +2517,18 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_group_out_data,
         constMeta: kGroupGetGroupDataConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupDataConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_get_group_data",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: ["baseUrl", "authToken", "jwt", "id", "groupAsMember"],
       );
 
   Future<List<GroupOutDataKeys>> groupGetGroupKeys(
@@ -2487,6 +2538,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String id,
           required String lastFetchedTime,
           required String lastFetchedKeyId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_group_keys(
@@ -2496,7 +2548,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(id),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedKeyId)),
+            _api2wire_String(lastFetchedKeyId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_group_out_data_keys,
         constMeta: kGroupGetGroupKeysConstMeta,
         argValues: [
@@ -2505,7 +2558,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           jwt,
           id,
           lastFetchedTime,
-          lastFetchedKeyId
+          lastFetchedKeyId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2519,7 +2573,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "jwt",
           "id",
           "lastFetchedTime",
-          "lastFetchedKeyId"
+          "lastFetchedKeyId",
+          "groupAsMember"
         ],
       );
 
@@ -2529,6 +2584,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String id,
           required String keyId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_group_key(
@@ -2537,17 +2593,25 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(id),
-            _api2wire_String(keyId)),
+            _api2wire_String(keyId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_group_out_data_keys,
         constMeta: kGroupGetGroupKeyConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, keyId],
+        argValues: [baseUrl, authToken, jwt, id, keyId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeyConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_get_group_key",
-        argNames: ["baseUrl", "authToken", "jwt", "id", "keyId"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "keyId",
+          "groupAsMember"
+        ],
       );
 
   Future<GroupKeyData> groupDecryptKey(
@@ -2576,6 +2640,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String id,
           required String lastFetchedTime,
           required String lastFetchedId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_member(
@@ -2585,7 +2650,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(id),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedId)),
+            _api2wire_String(lastFetchedId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_group_user_list_item,
         constMeta: kGroupGetMemberConstMeta,
         argValues: [
@@ -2594,7 +2660,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           jwt,
           id,
           lastFetchedTime,
-          lastFetchedId
+          lastFetchedId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2608,7 +2675,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "jwt",
           "id",
           "lastFetchedTime",
-          "lastFetchedId"
+          "lastFetchedId",
+          "groupAsMember"
         ],
       );
 
@@ -2617,6 +2685,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_group_updates(
@@ -2624,17 +2693,18 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_group_data_check_update_server_output,
         constMeta: kGroupGetGroupUpdatesConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupUpdatesConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_get_group_updates",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: ["baseUrl", "authToken", "jwt", "id", "groupAsMember"],
       );
 
   Future<List<ListGroups>> groupGetGroupsForUser(
@@ -2710,8 +2780,10 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required int keyCount,
           required int adminRank,
           required bool autoInvite,
+          required bool groupInvite,
           required String userPublicKey,
           required String groupKeys,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_invite_user(
@@ -2724,8 +2796,10 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_i32(keyCount),
             _api2wire_i32(adminRank),
             autoInvite,
+            groupInvite,
             _api2wire_String(userPublicKey),
-            _api2wire_String(groupKeys)),
+            _api2wire_String(groupKeys),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_String,
         constMeta: kGroupInviteUserConstMeta,
         argValues: [
@@ -2737,8 +2811,10 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           keyCount,
           adminRank,
           autoInvite,
+          groupInvite,
           userPublicKey,
-          groupKeys
+          groupKeys,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2755,8 +2831,10 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "keyCount",
           "adminRank",
           "autoInvite",
+          "groupInvite",
           "userPublicKey",
-          "groupKeys"
+          "groupKeys",
+          "groupAsMember"
         ],
       );
 
@@ -2769,6 +2847,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String sessionId,
           required String userPublicKey,
           required String groupKeys,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_invite_user_session(
@@ -2780,7 +2859,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             autoInvite,
             _api2wire_String(sessionId),
             _api2wire_String(userPublicKey),
-            _api2wire_String(groupKeys)),
+            _api2wire_String(groupKeys),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupInviteUserSessionConstMeta,
         argValues: [
@@ -2791,7 +2871,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           autoInvite,
           sessionId,
           userPublicKey,
-          groupKeys
+          groupKeys,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2807,7 +2888,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "autoInvite",
           "sessionId",
           "userPublicKey",
-          "groupKeys"
+          "groupKeys",
+          "groupAsMember"
         ],
       );
 
@@ -2817,6 +2899,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String lastFetchedTime,
           required String lastFetchedGroupId,
+          required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_invites_for_user(
@@ -2825,7 +2909,9 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedGroupId)),
+            _api2wire_String(lastFetchedGroupId),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_group_invite_req_list,
         constMeta: kGroupGetInvitesForUserConstMeta,
         argValues: [
@@ -2833,7 +2919,9 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           authToken,
           jwt,
           lastFetchedTime,
-          lastFetchedGroupId
+          lastFetchedGroupId,
+          groupId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2846,7 +2934,9 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "authToken",
           "jwt",
           "lastFetchedTime",
-          "lastFetchedGroupId"
+          "lastFetchedGroupId",
+          "groupId",
+          "groupAsMember"
         ],
       );
 
@@ -2855,6 +2945,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_accept_invite(
@@ -2862,17 +2954,26 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupAcceptInviteConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupAcceptInviteConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_accept_invite",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "groupId",
+          "groupAsMember"
+        ],
       );
 
   Future<void> groupRejectInvite(
@@ -2880,6 +2981,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_reject_invite(
@@ -2887,17 +2990,26 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupRejectInviteConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupRejectInviteConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_reject_invite",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "groupId",
+          "groupAsMember"
+        ],
       );
 
   Future<List<GroupInviteReqList>> groupGetSentJoinReqUser(
@@ -2906,6 +3018,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String lastFetchedTime,
           required String lastFetchedGroupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_sent_join_req_user(
@@ -2914,7 +3027,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedGroupId)),
+            _api2wire_String(lastFetchedGroupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_group_invite_req_list,
         constMeta: kGroupGetSentJoinReqUserConstMeta,
         argValues: [
@@ -2922,7 +3036,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           authToken,
           jwt,
           lastFetchedTime,
-          lastFetchedGroupId
+          lastFetchedGroupId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2935,7 +3050,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "authToken",
           "jwt",
           "lastFetchedTime",
-          "lastFetchedGroupId"
+          "lastFetchedGroupId",
+          "groupAsMember"
         ],
       );
 
@@ -2947,6 +3063,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required int adminRank,
           required String lastFetchedTime,
           required String lastFetchedGroupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_sent_join_req(
@@ -2957,7 +3074,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(id),
             _api2wire_i32(adminRank),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedGroupId)),
+            _api2wire_String(lastFetchedGroupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_group_invite_req_list,
         constMeta: kGroupGetSentJoinReqConstMeta,
         argValues: [
@@ -2967,7 +3085,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           id,
           adminRank,
           lastFetchedTime,
-          lastFetchedGroupId
+          lastFetchedGroupId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -2982,7 +3101,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "id",
           "adminRank",
           "lastFetchedTime",
-          "lastFetchedGroupId"
+          "lastFetchedGroupId",
+          "groupAsMember"
         ],
       );
 
@@ -2991,6 +3111,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String joinReqGroupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_delete_sent_join_req_user(
@@ -2998,17 +3119,24 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(joinReqGroupId)),
+            _api2wire_String(joinReqGroupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupDeleteSentJoinReqUserConstMeta,
-        argValues: [baseUrl, authToken, jwt, joinReqGroupId],
+        argValues: [baseUrl, authToken, jwt, joinReqGroupId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteSentJoinReqUserConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_delete_sent_join_req_user",
-        argNames: ["baseUrl", "authToken", "jwt", "joinReqGroupId"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "joinReqGroupId",
+          "groupAsMember"
+        ],
       );
 
   Future<void> groupDeleteSentJoinReq(
@@ -3018,6 +3146,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String id,
           required int adminRank,
           required String joinReqGroupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_delete_sent_join_req(
@@ -3027,10 +3156,19 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(id),
             _api2wire_i32(adminRank),
-            _api2wire_String(joinReqGroupId)),
+            _api2wire_String(joinReqGroupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupDeleteSentJoinReqConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, adminRank, joinReqGroupId],
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          adminRank,
+          joinReqGroupId,
+          groupAsMember
+        ],
         hint: hint,
       ));
 
@@ -3043,7 +3181,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "jwt",
           "id",
           "adminRank",
-          "joinReqGroupId"
+          "joinReqGroupId",
+          "groupAsMember"
         ],
       );
 
@@ -3052,6 +3191,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_join_req(
@@ -3059,17 +3200,26 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupJoinReqConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupJoinReqConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_join_req",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "groupId",
+          "groupAsMember"
+        ],
       );
 
   Future<List<GroupJoinReqList>> groupGetJoinReqs(
@@ -3080,6 +3230,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required int adminRank,
           required String lastFetchedTime,
           required String lastFetchedId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_join_reqs(
@@ -3090,7 +3241,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(id),
             _api2wire_i32(adminRank),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedId)),
+            _api2wire_String(lastFetchedId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_group_join_req_list,
         constMeta: kGroupGetJoinReqsConstMeta,
         argValues: [
@@ -3100,7 +3252,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           id,
           adminRank,
           lastFetchedTime,
-          lastFetchedId
+          lastFetchedId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -3115,7 +3268,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "id",
           "adminRank",
           "lastFetchedTime",
-          "lastFetchedId"
+          "lastFetchedId",
+          "groupAsMember"
         ],
       );
 
@@ -3126,6 +3280,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String id,
           required int adminRank,
           required String rejectedUserId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_reject_join_req(
@@ -3135,10 +3290,19 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(id),
             _api2wire_i32(adminRank),
-            _api2wire_String(rejectedUserId)),
+            _api2wire_String(rejectedUserId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupRejectJoinReqConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, adminRank, rejectedUserId],
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          adminRank,
+          rejectedUserId,
+          groupAsMember
+        ],
         hint: hint,
       ));
 
@@ -3151,7 +3315,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "jwt",
           "id",
           "adminRank",
-          "rejectedUserId"
+          "rejectedUserId",
+          "groupAsMember"
         ],
       );
 
@@ -3165,6 +3330,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required int adminRank,
           required String userPublicKey,
           required String groupKeys,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_accept_join_req(
@@ -3177,7 +3343,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_i32(keyCount),
             _api2wire_i32(adminRank),
             _api2wire_String(userPublicKey),
-            _api2wire_String(groupKeys)),
+            _api2wire_String(groupKeys),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_String,
         constMeta: kGroupAcceptJoinReqConstMeta,
         argValues: [
@@ -3189,7 +3356,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           keyCount,
           adminRank,
           userPublicKey,
-          groupKeys
+          groupKeys,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -3206,7 +3374,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "keyCount",
           "adminRank",
           "userPublicKey",
-          "groupKeys"
+          "groupKeys",
+          "groupAsMember"
         ],
       );
 
@@ -3218,6 +3387,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String sessionId,
           required String userPublicKey,
           required String groupKeys,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_join_user_session(
@@ -3228,7 +3398,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(id),
             _api2wire_String(sessionId),
             _api2wire_String(userPublicKey),
-            _api2wire_String(groupKeys)),
+            _api2wire_String(groupKeys),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupJoinUserSessionConstMeta,
         argValues: [
@@ -3238,7 +3409,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           id,
           sessionId,
           userPublicKey,
-          groupKeys
+          groupKeys,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -3253,7 +3425,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "id",
           "sessionId",
           "userPublicKey",
-          "groupKeys"
+          "groupKeys",
+          "groupAsMember"
         ],
       );
 
@@ -3263,6 +3436,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String id,
           required int adminRank,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_stop_group_invites(
@@ -3271,17 +3445,25 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(id),
-            _api2wire_i32(adminRank)),
+            _api2wire_i32(adminRank),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupStopGroupInvitesConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, adminRank],
+        argValues: [baseUrl, authToken, jwt, id, adminRank, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupStopGroupInvitesConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_stop_group_invites",
-        argNames: ["baseUrl", "authToken", "jwt", "id", "adminRank"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "adminRank",
+          "groupAsMember"
+        ],
       );
 
   Future<void> leaveGroup(
@@ -3289,6 +3471,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_leave_group(
@@ -3296,17 +3479,18 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kLeaveGroupConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kLeaveGroupConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "leave_group",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: ["baseUrl", "authToken", "jwt", "id", "groupAsMember"],
       );
 
   Future<String> groupPrepareKeyRotation(
@@ -3360,6 +3544,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String id,
           required String publicKey,
           required String preGroupKey,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_key_rotation(
@@ -3369,10 +3554,19 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(id),
             _api2wire_String(publicKey),
-            _api2wire_String(preGroupKey)),
+            _api2wire_String(preGroupKey),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_String,
         constMeta: kGroupKeyRotationConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, publicKey, preGroupKey],
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          publicKey,
+          preGroupKey,
+          groupAsMember
+        ],
         hint: hint,
       ));
 
@@ -3385,7 +3579,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "jwt",
           "id",
           "publicKey",
-          "preGroupKey"
+          "preGroupKey",
+          "groupAsMember"
         ],
       );
 
@@ -3394,6 +3589,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String authToken,
           required String jwt,
           required String id,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_pre_done_key_rotation(
@@ -3401,17 +3597,18 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(baseUrl),
             _api2wire_String(authToken),
             _api2wire_String(jwt),
-            _api2wire_String(id)),
+            _api2wire_String(id),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_list_key_rotation_get_out,
         constMeta: kGroupPreDoneKeyRotationConstMeta,
-        argValues: [baseUrl, authToken, jwt, id],
+        argValues: [baseUrl, authToken, jwt, id, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupPreDoneKeyRotationConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_pre_done_key_rotation",
-        argNames: ["baseUrl", "authToken", "jwt", "id"],
+        argNames: ["baseUrl", "authToken", "jwt", "id", "groupAsMember"],
       );
 
   Future<KeyRotationInput> groupGetDoneKeyRotationServerInput(
@@ -3441,6 +3638,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String preGroupKey,
           required String publicKey,
           required String privateKey,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_finish_key_rotation(
@@ -3452,7 +3650,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(serverOutput),
             _api2wire_String(preGroupKey),
             _api2wire_String(publicKey),
-            _api2wire_String(privateKey)),
+            _api2wire_String(privateKey),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupFinishKeyRotationConstMeta,
         argValues: [
@@ -3463,7 +3662,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           serverOutput,
           preGroupKey,
           publicKey,
-          privateKey
+          privateKey,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -3479,7 +3679,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "serverOutput",
           "preGroupKey",
           "publicKey",
-          "privateKey"
+          "privateKey",
+          "groupAsMember"
         ],
       );
 
@@ -3514,6 +3715,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String userId,
           required int rank,
           required int adminRank,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_update_rank(
@@ -3524,10 +3726,20 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(id),
             _api2wire_String(userId),
             _api2wire_i32(rank),
-            _api2wire_i32(adminRank)),
+            _api2wire_i32(adminRank),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupUpdateRankConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, userId, rank, adminRank],
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          userId,
+          rank,
+          adminRank,
+          groupAsMember
+        ],
         hint: hint,
       ));
 
@@ -3541,7 +3753,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "id",
           "userId",
           "rank",
-          "adminRank"
+          "adminRank",
+          "groupAsMember"
         ],
       );
 
@@ -3552,6 +3765,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String id,
           required String userId,
           required int adminRank,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_kick_user(
@@ -3561,17 +3775,34 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(jwt),
             _api2wire_String(id),
             _api2wire_String(userId),
-            _api2wire_i32(adminRank)),
+            _api2wire_i32(adminRank),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupKickUserConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, userId, adminRank],
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          userId,
+          adminRank,
+          groupAsMember
+        ],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupKickUserConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_kick_user",
-        argNames: ["baseUrl", "authToken", "jwt", "id", "userId", "adminRank"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "userId",
+          "adminRank",
+          "groupAsMember"
+        ],
       );
 
   Future<void> groupDeleteGroup(
@@ -3580,6 +3811,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String id,
           required int adminRank,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_delete_group(
@@ -3588,17 +3820,25 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(id),
-            _api2wire_i32(adminRank)),
+            _api2wire_i32(adminRank),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kGroupDeleteGroupConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, adminRank],
+        argValues: [baseUrl, authToken, jwt, id, adminRank, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_delete_group",
-        argNames: ["baseUrl", "authToken", "jwt", "id", "adminRank"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "adminRank",
+          "groupAsMember"
+        ],
       );
 
   Future<UserPublicKeyData> groupGetPublicKeyData(
@@ -4209,6 +4449,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String id,
           required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_file_download_file_meta(
@@ -4217,17 +4458,25 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(id),
-            _api2wire_String(groupId)),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_file_data,
         constMeta: kFileDownloadFileMetaConstMeta,
-        argValues: [baseUrl, authToken, jwt, id, groupId],
+        argValues: [baseUrl, authToken, jwt, id, groupId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kFileDownloadFileMetaConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "file_download_file_meta",
-        argNames: ["baseUrl", "authToken", "jwt", "id", "groupId"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "groupId",
+          "groupAsMember"
+        ],
       );
 
   Future<Uint8List> fileDownloadAndDecryptFilePart(
@@ -4308,6 +4557,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String belongsToType,
           required String fileName,
           required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_file_register_file(
@@ -4320,7 +4570,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(belongsToId),
             _api2wire_String(belongsToType),
             _api2wire_String(fileName),
-            _api2wire_String(groupId)),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_file_register_output,
         constMeta: kFileRegisterFileConstMeta,
         argValues: [
@@ -4332,7 +4583,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           belongsToId,
           belongsToType,
           fileName,
-          groupId
+          groupId,
+          groupAsMember
         ],
         hint: hint,
       ));
@@ -4349,7 +4601,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "belongsToId",
           "belongsToType",
           "fileName",
-          "groupId"
+          "groupId",
+          "groupAsMember"
         ],
       );
 
@@ -4510,6 +4763,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String fileId,
           required String groupId,
+          required String groupAsMember,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_file_delete_file(
@@ -4518,17 +4772,25 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(fileId),
-            _api2wire_String(groupId)),
+            _api2wire_String(groupId),
+            _api2wire_String(groupAsMember)),
         parseSuccessData: _wire2api_unit,
         constMeta: kFileDeleteFileConstMeta,
-        argValues: [baseUrl, authToken, jwt, fileId, groupId],
+        argValues: [baseUrl, authToken, jwt, fileId, groupId, groupAsMember],
         hint: hint,
       ));
 
   FlutterRustBridgeTaskConstMeta get kFileDeleteFileConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "file_delete_file",
-        argNames: ["baseUrl", "authToken", "jwt", "fileId", "groupId"],
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "fileId",
+          "groupId",
+          "groupAsMember"
+        ],
       );
 
   // Section: api2wire
@@ -6027,6 +6289,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> creators_public_key,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_create_group(
       port_,
@@ -6034,6 +6297,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       creators_public_key,
+      group_as_member,
     );
   }
 
@@ -6044,10 +6308,12 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_create_group');
   late final _wire_group_create_group = _wire_group_create_groupPtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
@@ -6061,6 +6327,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> parent_public_key,
     ffi.Pointer<wire_uint_8_list> parent_id,
     int admin_rank,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_create_child_group(
       port_,
@@ -6070,6 +6337,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       parent_public_key,
       parent_id,
       admin_rank,
+      group_as_member,
     );
   }
 
@@ -6082,7 +6350,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Int32)>>('wire_group_create_child_group');
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_create_child_group');
   late final _wire_group_create_child_group =
       _wire_group_create_child_groupPtr.asFunction<
           void Function(
@@ -6092,7 +6361,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              int)>();
+              int,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_extract_group_data(
     int port_,
@@ -6134,6 +6404,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_group_data(
       port_,
@@ -6141,6 +6412,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_as_member,
     );
   }
 
@@ -6151,11 +6423,13 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_data');
   late final _wire_group_get_group_data =
       _wire_group_get_group_dataPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6169,6 +6443,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_key_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_group_keys(
       port_,
@@ -6178,6 +6453,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       last_fetched_time,
       last_fetched_key_id,
+      group_as_member,
     );
   }
 
@@ -6185,6 +6461,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6200,6 +6477,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_get_group_key(
@@ -6209,6 +6487,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> key_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_group_key(
       port_,
@@ -6217,6 +6496,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       id,
       key_id,
+      group_as_member,
     );
   }
 
@@ -6228,11 +6508,13 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_key');
   late final _wire_group_get_group_key =
       _wire_group_get_group_keyPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6267,6 +6549,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_member(
       port_,
@@ -6276,6 +6559,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       last_fetched_time,
       last_fetched_id,
+      group_as_member,
     );
   }
 
@@ -6283,6 +6567,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6297,6 +6582,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_get_group_updates(
@@ -6305,6 +6591,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_group_updates(
       port_,
@@ -6312,6 +6599,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_as_member,
     );
   }
 
@@ -6322,11 +6610,13 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_group_updates');
   late final _wire_group_get_group_updates =
       _wire_group_get_group_updatesPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6409,8 +6699,10 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int key_count,
     int admin_rank,
     bool auto_invite,
+    bool group_invite,
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_invite_user(
       port_,
@@ -6422,8 +6714,10 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       key_count,
       admin_rank,
       auto_invite ? 1 : 0,
+      group_invite ? 1 : 0,
       user_public_key,
       group_keys,
+      group_as_member,
     );
   }
 
@@ -6439,6 +6733,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Int32,
               ffi.Int32,
               ffi.Uint8,
+              ffi.Uint8,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_invite_user');
   late final _wire_group_invite_user = _wire_group_invite_userPtr.asFunction<
@@ -6452,6 +6748,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           int,
           int,
           int,
+          int,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
@@ -6465,6 +6763,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> session_id,
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_invite_user_session(
       port_,
@@ -6476,6 +6775,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       session_id,
       user_public_key,
       group_keys,
+      group_as_member,
     );
   }
 
@@ -6488,6 +6788,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Uint8,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
@@ -6503,6 +6804,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               int,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_get_invites_for_user(
@@ -6512,6 +6814,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+    ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_invites_for_user(
       port_,
@@ -6520,6 +6824,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       last_fetched_time,
       last_fetched_group_id,
+      group_id,
+      group_as_member,
     );
   }
 
@@ -6527,6 +6833,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.NativeFunction<
               ffi.Void Function(
                   ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
@@ -6541,6 +6849,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_accept_invite(
@@ -6549,6 +6859,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_accept_invite(
       port_,
@@ -6556,6 +6868,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_id,
+      group_as_member,
     );
   }
 
@@ -6563,6 +6877,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6574,6 +6890,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_reject_invite(
@@ -6582,6 +6900,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_reject_invite(
       port_,
@@ -6589,6 +6909,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_id,
+      group_as_member,
     );
   }
 
@@ -6599,11 +6921,15 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_reject_invite');
   late final _wire_group_reject_invite =
       _wire_group_reject_invitePtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6616,6 +6942,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_sent_join_req_user(
       port_,
@@ -6624,6 +6951,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       last_fetched_time,
       last_fetched_group_id,
+      group_as_member,
     );
   }
 
@@ -6635,12 +6963,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_get_sent_join_req_user');
   late final _wire_group_get_sent_join_req_user =
       _wire_group_get_sent_join_req_userPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6656,6 +6986,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int admin_rank,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_sent_join_req(
       port_,
@@ -6666,6 +6997,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       admin_rank,
       last_fetched_time,
       last_fetched_group_id,
+      group_as_member,
     );
   }
 
@@ -6679,6 +7011,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_sent_join_req');
   late final _wire_group_get_sent_join_req =
       _wire_group_get_sent_join_reqPtr.asFunction<
@@ -6690,6 +7023,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               int,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_delete_sent_join_req_user(
@@ -6698,6 +7032,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> join_req_group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_delete_sent_join_req_user(
       port_,
@@ -6705,6 +7040,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       join_req_group_id,
+      group_as_member,
     );
   }
 
@@ -6715,12 +7051,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_delete_sent_join_req_user');
   late final _wire_group_delete_sent_join_req_user =
       _wire_group_delete_sent_join_req_userPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6734,6 +7072,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     int admin_rank,
     ffi.Pointer<wire_uint_8_list> join_req_group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_delete_sent_join_req(
       port_,
@@ -6743,6 +7082,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       admin_rank,
       join_req_group_id,
+      group_as_member,
     );
   }
 
@@ -6755,6 +7095,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Int32,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_delete_sent_join_req');
   late final _wire_group_delete_sent_join_req =
@@ -6766,6 +7107,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_join_req(
@@ -6774,6 +7116,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_join_req(
       port_,
@@ -6781,6 +7125,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_id,
+      group_as_member,
     );
   }
 
@@ -6791,10 +7137,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_join_req');
   late final _wire_group_join_req = _wire_group_join_reqPtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
@@ -6809,6 +7159,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int admin_rank,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_get_join_reqs(
       port_,
@@ -6819,6 +7170,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       admin_rank,
       last_fetched_time,
       last_fetched_id,
+      group_as_member,
     );
   }
 
@@ -6832,6 +7184,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_get_join_reqs');
   late final _wire_group_get_join_reqs =
       _wire_group_get_join_reqsPtr.asFunction<
@@ -6843,6 +7196,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               int,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_reject_join_req(
@@ -6853,6 +7207,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     int admin_rank,
     ffi.Pointer<wire_uint_8_list> rejected_user_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_reject_join_req(
       port_,
@@ -6862,6 +7217,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       admin_rank,
       rejected_user_id,
+      group_as_member,
     );
   }
 
@@ -6874,6 +7230,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_reject_join_req');
   late final _wire_group_reject_join_req =
       _wire_group_reject_join_reqPtr.asFunction<
@@ -6884,6 +7241,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_accept_join_req(
@@ -6897,6 +7255,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int admin_rank,
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_accept_join_req(
       port_,
@@ -6909,6 +7268,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       admin_rank,
       user_public_key,
       group_keys,
+      group_as_member,
     );
   }
 
@@ -6924,6 +7284,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Int32,
               ffi.Int32,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_accept_join_req');
   late final _wire_group_accept_join_req =
       _wire_group_accept_join_reqPtr.asFunction<
@@ -6937,6 +7298,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               int,
               int,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_join_user_session(
@@ -6948,6 +7310,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> session_id,
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_join_user_session(
       port_,
@@ -6958,6 +7321,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       session_id,
       user_public_key,
       group_keys,
+      group_as_member,
     );
   }
 
@@ -6965,6 +7329,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -6982,6 +7347,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_stop_group_invites(
@@ -6991,6 +7357,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
     int admin_rank,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_stop_group_invites(
       port_,
@@ -6999,6 +7366,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       id,
       admin_rank,
+      group_as_member,
     );
   }
 
@@ -7010,7 +7378,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Int32)>>('wire_group_stop_group_invites');
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_stop_group_invites');
   late final _wire_group_stop_group_invites =
       _wire_group_stop_group_invitesPtr.asFunction<
           void Function(
@@ -7019,7 +7388,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              int)>();
+              int,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_leave_group(
     int port_,
@@ -7027,6 +7397,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_leave_group(
       port_,
@@ -7034,6 +7405,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_as_member,
     );
   }
 
@@ -7044,10 +7416,12 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_leave_group');
   late final _wire_leave_group = _wire_leave_groupPtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
@@ -7116,6 +7490,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> public_key,
     ffi.Pointer<wire_uint_8_list> pre_group_key,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_key_rotation(
       port_,
@@ -7125,6 +7500,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       public_key,
       pre_group_key,
+      group_as_member,
     );
   }
 
@@ -7132,6 +7508,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -7146,6 +7523,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_pre_done_key_rotation(
@@ -7154,6 +7532,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> auth_token,
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_pre_done_key_rotation(
       port_,
@@ -7161,6 +7540,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       auth_token,
       jwt,
       id,
+      group_as_member,
     );
   }
 
@@ -7171,12 +7551,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_pre_done_key_rotation');
   late final _wire_group_pre_done_key_rotation =
       _wire_group_pre_done_key_rotationPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -7210,6 +7592,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> pre_group_key,
     ffi.Pointer<wire_uint_8_list> public_key,
     ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_finish_key_rotation(
       port_,
@@ -7221,6 +7604,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       pre_group_key,
       public_key,
       private_key,
+      group_as_member,
     );
   }
 
@@ -7235,12 +7619,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_finish_key_rotation');
   late final _wire_group_finish_key_rotation =
       _wire_group_finish_key_rotationPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -7281,6 +7667,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> user_id,
     int rank,
     int admin_rank,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_update_rank(
       port_,
@@ -7291,6 +7678,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       user_id,
       rank,
       admin_rank,
+      group_as_member,
     );
   }
 
@@ -7304,7 +7692,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
-              ffi.Int32)>>('wire_group_update_rank');
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_update_rank');
   late final _wire_group_update_rank = _wire_group_update_rankPtr.asFunction<
       void Function(
           int,
@@ -7314,7 +7703,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           int,
-          int)>();
+          int,
+          ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_kick_user(
     int port_,
@@ -7324,6 +7714,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> user_id,
     int admin_rank,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_kick_user(
       port_,
@@ -7333,6 +7724,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       user_id,
       admin_rank,
+      group_as_member,
     );
   }
 
@@ -7345,7 +7737,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Int32)>>('wire_group_kick_user');
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_kick_user');
   late final _wire_group_kick_user = _wire_group_kick_userPtr.asFunction<
       void Function(
           int,
@@ -7354,7 +7747,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
-          int)>();
+          int,
+          ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_delete_group(
     int port_,
@@ -7363,6 +7757,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
     int admin_rank,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_delete_group(
       port_,
@@ -7371,6 +7766,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       id,
       admin_rank,
+      group_as_member,
     );
   }
 
@@ -7382,7 +7778,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Int32)>>('wire_group_delete_group');
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_delete_group');
   late final _wire_group_delete_group = _wire_group_delete_groupPtr.asFunction<
       void Function(
           int,
@@ -7390,7 +7787,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
-          int)>();
+          int,
+          ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_get_public_key_data(
     int port_,
@@ -8089,6 +8487,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_file_download_file_meta(
       port_,
@@ -8097,6 +8496,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       id,
       group_id,
+      group_as_member,
     );
   }
 
@@ -8108,11 +8508,13 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_file_download_file_meta');
   late final _wire_file_download_file_meta =
       _wire_file_download_file_metaPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -8205,6 +8607,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> belongs_to_type,
     ffi.Pointer<wire_uint_8_list> file_name,
     ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_file_register_file(
       port_,
@@ -8217,6 +8620,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       belongs_to_type,
       file_name,
       group_id,
+      group_as_member,
     );
   }
 
@@ -8232,10 +8636,12 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_file_register_file');
   late final _wire_file_register_file = _wire_file_register_filePtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
@@ -8405,6 +8811,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> file_id,
     ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_file_delete_file(
       port_,
@@ -8413,6 +8820,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       file_id,
       group_id,
+      group_as_member,
     );
   }
 
@@ -8424,10 +8832,12 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_file_delete_file');
   late final _wire_file_delete_file = _wire_file_delete_filePtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
