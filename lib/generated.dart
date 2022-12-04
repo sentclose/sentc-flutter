@@ -447,6 +447,18 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupUpdatesConstMeta;
 
+  Future<List<GroupChildrenList>> groupGetAllFirstLevelChildren(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String id,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      required String groupAsMember,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetAllFirstLevelChildrenConstMeta;
+
   Future<List<ListGroups>> groupGetGroupsForUser(
       {required String baseUrl,
       required String authToken,
@@ -1205,6 +1217,18 @@ class GeneratedRegisterData {
   GeneratedRegisterData({
     required this.identifier,
     required this.password,
+  });
+}
+
+class GroupChildrenList {
+  final String groupId;
+  final String time;
+  final String? parent;
+
+  GroupChildrenList({
+    required this.groupId,
+    required this.time,
+    this.parent,
   });
 }
 
@@ -2706,6 +2730,53 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_get_group_updates",
         argNames: ["baseUrl", "authToken", "jwt", "id", "groupAsMember"],
+      );
+
+  Future<List<GroupChildrenList>> groupGetAllFirstLevelChildren(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String id,
+          required String lastFetchedTime,
+          required String lastFetchedGroupId,
+          required String groupAsMember,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_get_all_first_level_children(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(id),
+            _api2wire_String(lastFetchedTime),
+            _api2wire_String(lastFetchedGroupId),
+            _api2wire_String(groupAsMember)),
+        parseSuccessData: _wire2api_list_group_children_list,
+        constMeta: kGroupGetAllFirstLevelChildrenConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          id,
+          lastFetchedTime,
+          lastFetchedGroupId,
+          groupAsMember
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupGetAllFirstLevelChildrenConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_get_all_first_level_children",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "id",
+          "lastFetchedTime",
+          "lastFetchedGroupId",
+          "groupAsMember"
+        ],
       );
 
   Future<List<ListGroups>> groupGetGroupsForUser(
@@ -4962,6 +5033,17 @@ GeneratedRegisterData _wire2api_generated_register_data(dynamic raw) {
   );
 }
 
+GroupChildrenList _wire2api_group_children_list(dynamic raw) {
+  final arr = raw as List<dynamic>;
+  if (arr.length != 3)
+    throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+  return GroupChildrenList(
+    groupId: _wire2api_String(arr[0]),
+    time: _wire2api_String(arr[1]),
+    parent: _wire2api_opt_String(arr[2]),
+  );
+}
+
 GroupDataCheckUpdateServerOutput
     _wire2api_group_data_check_update_server_output(dynamic raw) {
   final arr = raw as List<dynamic>;
@@ -5100,6 +5182,10 @@ KeysToMasterKeyFetch _wire2api_keys_to_master_key_fetch(dynamic raw) {
 
 List<FilePartListItem> _wire2api_list_file_part_list_item(dynamic raw) {
   return (raw as List<dynamic>).map(_wire2api_file_part_list_item).toList();
+}
+
+List<GroupChildrenList> _wire2api_list_group_children_list(dynamic raw) {
+  return (raw as List<dynamic>).map(_wire2api_group_children_list).toList();
 }
 
 List<GroupInviteReqList> _wire2api_list_group_invite_req_list(dynamic raw) {
@@ -6621,6 +6707,52 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       _wire_group_get_group_updatesPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_get_all_first_level_children(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> id,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
+  ) {
+    return _wire_group_get_all_first_level_children(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      id,
+      last_fetched_time,
+      last_fetched_group_id,
+      group_as_member,
+    );
+  }
+
+  late final _wire_group_get_all_first_level_childrenPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_get_all_first_level_children');
+  late final _wire_group_get_all_first_level_children =
+      _wire_group_get_all_first_level_childrenPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
