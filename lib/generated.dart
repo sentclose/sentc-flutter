@@ -453,6 +453,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
+      required String groupId,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupsForUserConstMeta;
@@ -2713,6 +2714,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           required String jwt,
           required String lastFetchedTime,
           required String lastFetchedGroupId,
+          required String groupId,
           dynamic hint}) =>
       executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) => inner.wire_group_get_groups_for_user(
@@ -2721,7 +2723,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(authToken),
             _api2wire_String(jwt),
             _api2wire_String(lastFetchedTime),
-            _api2wire_String(lastFetchedGroupId)),
+            _api2wire_String(lastFetchedGroupId),
+            _api2wire_String(groupId)),
         parseSuccessData: _wire2api_list_list_groups,
         constMeta: kGroupGetGroupsForUserConstMeta,
         argValues: [
@@ -2729,7 +2732,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           authToken,
           jwt,
           lastFetchedTime,
-          lastFetchedGroupId
+          lastFetchedGroupId,
+          groupId
         ],
         hint: hint,
       ));
@@ -2742,7 +2746,8 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "authToken",
           "jwt",
           "lastFetchedTime",
-          "lastFetchedGroupId"
+          "lastFetchedGroupId",
+          "groupId"
         ],
       );
 
@@ -6629,6 +6634,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+    ffi.Pointer<wire_uint_8_list> group_id,
   ) {
     return _wire_group_get_groups_for_user(
       port_,
@@ -6637,6 +6643,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       last_fetched_time,
       last_fetched_group_id,
+      group_id,
     );
   }
 
@@ -6648,12 +6655,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_get_groups_for_user');
   late final _wire_group_get_groups_for_user =
       _wire_group_get_groups_for_userPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
