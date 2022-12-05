@@ -29,6 +29,9 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 
   final refreshToken = (Sentc.refresh_endpoint != REFRESH_OPTIONS.api) ? "" : data.refreshToken;
 
+  //when getting the user the first time this is always the newest key id
+  final newestKeyId = data.userKeys[0].groupKeyId;
+
   final user = User._(
     Sentc.baseUrl,
     Sentc.appToken,
@@ -46,6 +49,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
     userKeys,
     [],
     keyMap,
+    newestKeyId,
   );
 
   final storage = Sentc.getStorage();
@@ -122,6 +126,7 @@ class User {
   //user keys
   final List<UserKeyData> _userKeys;
   final Map<String, int> _keyMap;
+  String _newestKeyId;
 
   late List<GroupInviteListItem> groupInvites;
 
@@ -154,6 +159,7 @@ class User {
     this._userKeys,
     this.groupInvites,
     this._keyMap,
+    this._newestKeyId,
   );
 
   User.fromJson(Map<String, dynamic> json, String baseUrl, String appToken)
@@ -172,6 +178,7 @@ class User {
         groupInvites = [],
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
+        _newestKeyId = jsonDecode(json["newestKeyId"]),
         _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKeyData.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() {
@@ -188,7 +195,8 @@ class User {
       "exportedVerifyDeviceKey": _exportedVerifyDeviceKey,
       "userIdentifier": _userIdentifier,
       "keyMap": jsonEncode(_keyMap),
-      "userKeys": jsonEncode(_userKeys)
+      "userKeys": jsonEncode(_userKeys),
+      "newestKeyId": _newestKeyId,
     };
   }
 
@@ -207,12 +215,12 @@ class User {
   }
 
   /// Fetch key for the actual user group
-  Future<UserKeyData> _getUserKeys(String keyId) async {
+  Future<UserKeyData> _getUserKeys(String keyId, [bool? first]) async {
     var index = _keyMap[keyId];
 
     if (index == null) {
       //try to fetch the key
-      await fetchUserKey(keyId);
+      await fetchUserKey(keyId, first);
 
       index = _keyMap[keyId];
 
@@ -229,7 +237,7 @@ class User {
     }
   }
 
-  fetchUserKey(String keyId) async {
+  fetchUserKey(String keyId, [bool? first]) async {
     final jwt = await getJwt();
 
     final userKeys = await Sentc.getApi().fetchUserKey(
@@ -251,6 +259,10 @@ class User {
       userKeys.exportedPublicKey,
       userKeys.exportedVerifyKey,
     ));
+
+    if (first != null && first) {
+      _newestKeyId = userKeys.groupKeyId;
+    }
 
     final storage = Sentc.getStorage();
 
@@ -290,12 +302,18 @@ class User {
     return Sentc.getUserPublicKey(replyId);
   }
 
+  UserKeyData _getNewestKey() {
+    final index = _keyMap[_newestKeyId] ??= 0;
+
+    return _userKeys[index];
+  }
+
   String getNewestPublicKey() {
-    return _userKeys[0].publicKey;
+    return _getNewestKey().publicKey;
   }
 
   String getNewestSignKey() {
-    return _userKeys[0].signKey;
+    return _getNewestKey().signKey;
   }
 
   Future<String> getSignKey() async {
@@ -464,10 +482,10 @@ class User {
       authToken: _appToken,
       jwt: jwt,
       publicDeviceKey: _publicDeviceKey,
-      preUserKey: _userKeys[0].groupKey,
+      preUserKey: _getNewestKey().groupKey,
     );
 
-    return fetchUserKey(keyId);
+    return fetchUserKey(keyId, true);
   }
 
   Future<void> finishKeyRotation() async {
@@ -508,7 +526,7 @@ class User {
           privateKey: privateKey,
         );
 
-        await _getUserKeys(key.newGroupKeyId);
+        await _getUserKeys(key.newGroupKeyId, true);
       }
 
       roundsLeft--;
