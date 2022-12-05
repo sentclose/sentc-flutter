@@ -107,6 +107,8 @@ class Sentc {
     } catch (e) {
       return null;
     }
+
+    return null;
   }
 
   static StorageInterface getStorage() {
@@ -319,6 +321,23 @@ class Sentc {
 
     throw UnimplementedError();
   }
+
+  static Future<GroupPublicKey> getGroupPublicKeyData(String groupId) async {
+    final storage = Sentc.getStorage();
+    final key = await storage.getItem("group_public_key_$groupId");
+
+    if (key != null) {
+      return GroupPublicKey.fromJson(jsonDecode(key));
+    }
+
+    final fetchedKey = await getApi().groupGetPublicKeyData(baseUrl: baseUrl, authToken: appToken, id: groupId);
+
+    final k = GroupPublicKey._(fetchedKey.publicKeyId, fetchedKey.publicKey);
+
+    await storage.set("group_public_key_$groupId", jsonEncode(k));
+
+    return k;
+  }
 }
 
 //______________________________________________________________________________________________________________________
@@ -347,6 +366,21 @@ class UserPublicKey {
   UserPublicKey._(this.id, this.key);
 
   UserPublicKey.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        key = json["key"];
+
+  Map<String, dynamic> toJson() {
+    return {"id": id, "key": key};
+  }
+}
+
+class GroupPublicKey {
+  final String id;
+  final String key;
+
+  GroupPublicKey._(this.id, this.key);
+
+  GroupPublicKey.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         key = json["key"];
 

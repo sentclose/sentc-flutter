@@ -513,7 +513,7 @@ class User {
 
       roundsLeft--;
 
-      if (leftKeys.length > 0) {
+      if (leftKeys.isNotEmpty) {
         keys = [];
         //push the not found keys into the key array, maybe the pre group keys are in the next round
         keys.addAll(leftKeys);
