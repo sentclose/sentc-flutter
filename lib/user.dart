@@ -91,6 +91,7 @@ class UserKeyData extends GroupKey {
           json["groupKeyId"],
         );
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "privateKey": privateKey,
@@ -112,7 +113,7 @@ class User {
   final String _userIdentifier;
   late String jwt;
   final String refreshToken;
-  final String _userId;
+  final String userId;
   final String _deviceId;
 
   //device keys
@@ -148,7 +149,7 @@ class User {
     this._userIdentifier,
     this.jwt,
     this.refreshToken,
-    this._userId,
+    this.userId,
     this._deviceId,
     this._privateDeviceKey,
     this._publicDeviceKey,
@@ -167,7 +168,7 @@ class User {
         _appToken = appToken,
         jwt = json["jwt"],
         refreshToken = json["refreshToken"],
-        _userId = json["userId"],
+        userId = json["userId"],
         _deviceId = json["deviceId"],
         _privateDeviceKey = json["privateDeviceKey"],
         _publicDeviceKey = json["publicDeviceKey"],
@@ -178,14 +179,14 @@ class User {
         groupInvites = [],
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
-        _newestKeyId = jsonDecode(json["newestKeyId"]),
+        _newestKeyId = json["newestKeyId"],
         _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKeyData.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() {
     return {
       "jwt": jwt,
       "refreshToken": refreshToken,
-      "userId": _userId,
+      "userId": userId,
       "deviceId": _deviceId,
       "privateDeviceKey": _privateDeviceKey,
       "publicDeviceKey": _publicDeviceKey,
