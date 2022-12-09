@@ -8,6 +8,7 @@ import 'package:sentc/storage/storage_interface.dart';
 import 'package:sentc/user.dart';
 
 export 'package:sentc/storage/storage_interface.dart';
+export 'package:sentc/generated.dart';
 
 enum REFRESH_OPTIONS { cookie, cookie_fn, api }
 
