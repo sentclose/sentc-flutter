@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:sentc/generated.dart';
-import 'package:sentc/group.dart';
+import 'package:sentc/group.dart' as group;
 import 'package:sentc/sentc.dart';
 
 Future<User> getUser(String deviceIdentifier, UserData data) async {
@@ -60,7 +60,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 }
 
 /// Keys from the user group
-class UserKeyData extends GroupKey {
+class UserKeyData extends group.GroupKey {
   final String signKey;
   final String verifyKey;
   final String exportedPublicKey;
@@ -129,15 +129,15 @@ class User {
   final Map<String, int> _keyMap;
   String _newestKeyId;
 
-  late List<GroupInviteListItem> groupInvites;
+  late List<group.GroupInviteListItem> groupInvites;
 
   void setGroupInvites(List<GroupInviteReqList> invites) {
-    final List<GroupInviteListItem> list = [];
+    final List<group.GroupInviteListItem> list = [];
 
     for (var i = 0; i < invites.length; ++i) {
       var invite = invites[i];
 
-      list.add(GroupInviteListItem(invite.groupId, invite.time));
+      list.add(group.GroupInviteListItem(invite.groupId, invite.time));
     }
 
     groupInvites = list;
@@ -390,7 +390,7 @@ class User {
   Future<PreRegisterDeviceData> prepareRegisterDevice(String serverOutput, int page) async {
     final keyCount = _userKeys.length;
 
-    final keyString = prepareKeys(_userKeys, page).str;
+    final keyString = group.prepareKeys(_userKeys, page).str;
 
     final out = await Sentc.getApi().prepareRegisterDevice(
       serverOutput: serverOutput,
@@ -404,7 +404,7 @@ class User {
   Future<void> registerDevice(String serverOutput) async {
     final keyCount = _userKeys.length;
 
-    final keyString = prepareKeys(_userKeys, 0).str;
+    final keyString = group.prepareKeys(_userKeys, 0).str;
 
     final jwt = await getJwt();
 
@@ -429,7 +429,7 @@ class User {
     final List<Future<void>> p = [];
 
     while (nextPage) {
-      final nextKeys = prepareKeys(_userKeys, i);
+      final nextKeys = group.prepareKeys(_userKeys, i);
 
       nextPage = nextKeys.end;
 
@@ -542,6 +542,28 @@ class User {
         nextRound = false;
       }
     } while (nextRound && roundsLeft > 0);
+  }
+
+  //____________________________________________________________________________________________________________________
+
+  Future<String> prepareGroupCreate() {
+    return Sentc.getApi().groupPrepareCreateGroup(creatorsPublicKey: getNewestPublicKey());
+  }
+
+  Future<String> createGroup() async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupCreateGroup(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      creatorsPublicKey: getNewestPublicKey(),
+      groupAsMember: "",
+    );
+  }
+
+  Future<group.Group> getGroup(String groupId, [String groupAsMember = ""]) {
+    return group.getGroup(groupId, _baseUrl, _appToken, this, false, groupAsMember);
   }
 }
 
