@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:sentc/generated.dart';
 import 'package:sentc/group.dart' as group;
 import 'package:sentc/sentc.dart';
 
@@ -564,6 +563,65 @@ class User {
 
   Future<group.Group> getGroup(String groupId, [String groupAsMember = ""]) {
     return group.getGroup(groupId, _baseUrl, _appToken, this, false, groupAsMember);
+  }
+
+  Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
+    final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetGroupsForUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedGroupId,
+      groupId: "",
+    );
+  }
+
+  Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastItem?.time.toString() ?? "0";
+    final lastFetchedGroupId = lastItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetInvitesForUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedGroupId,
+      groupId: "",
+      groupAsMember: "",
+    );
+  }
+
+  Future<void> acceptGroupInvites(String groupIdToAccept) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupAcceptInvite(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupIdToAccept,
+      groupId: "",
+      groupAsMember: "",
+    );
+  }
+
+  Future<void> rejectGroupInvite(groupIdToReject) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupRejectInvite(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupIdToReject,
+      groupId: "",
+      groupAsMember: "",
+    );
   }
 }
 
