@@ -426,4 +426,21 @@ class Group {
 
     _keys.addAll(keys);
   }
+
+  //____________________________________________________________________________________________________________________
+
+  deleteGroup() async {
+    final jwt = await _user.getJwt();
+
+    return Sentc.getApi().groupDeleteGroup(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      adminRank: rank,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  //____________________________________________________________________________________________________________________
 }
