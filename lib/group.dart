@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:sentc/generated.dart';
 import 'package:sentc/sentc.dart';
 import 'package:sentc/user.dart';
 
@@ -304,43 +303,45 @@ class Group {
     }
   }
 
-  Future<String> _getPrivateKey(String keyId) async {
-    if (!_fromParent && (accessByGroupAsMember == "")) {
-      return _user.getPrivateKey(keyId);
+  GroupKey? _getNewestKey() {
+    final index = _keyMap[_newestKeyId] ?? 0;
+
+    try {
+      return _keys[index];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Group> _getGroupRefFromParent() async {
+    String userId;
+    if (accessByGroupAsMember == "") {
+      userId = _user.userId;
+    } else {
+      userId = accessByGroupAsMember;
     }
 
-    if (_fromParent) {
-      String userId;
-      if (accessByGroupAsMember == "") {
-        userId = _user.userId;
-      } else {
-        userId = accessByGroupAsMember;
-      }
+    final storage = Sentc.getStorage();
+    final groupKey = "group_data_user_${userId}_id_$parentGroupId";
+    final groupJson = await storage.getItem(groupKey);
 
-      final storage = Sentc.getStorage();
-      final groupKey = "group_data_user_${userId}_id_$parentGroupId";
-      final groupJson = await storage.getItem(groupKey);
-
-      if (groupJson == null) {
-        throw Exception(
-          "Parent group not found. THis group was access from parent group but the parent group data is gone",
-        );
-      }
-
-      final parentGroup = Group.fromJson(
-        jsonDecode(groupJson),
-        _baseUrl,
-        _appToken,
-        _user,
-        false,
-        false,
+    if (groupJson == null) {
+      throw Exception(
+        "Parent group not found. THis group was access from parent group but the parent group data is gone",
       );
-
-      final parentGroupKey = await parentGroup.getGroupKey(keyId);
-
-      return parentGroupKey.privateKey;
     }
 
+    return Group.fromJson(
+      jsonDecode(groupJson),
+      _baseUrl,
+      _appToken,
+      _user,
+      false,
+      false,
+    );
+  }
+
+  Future<Group> _getGroupRefFromGroupAsMember() async {
     //access over group as member
     final storage = Sentc.getStorage();
     final groupKey = "group_data_user_${_user.userId}_id_$accessByGroupAsMember";
@@ -352,7 +353,7 @@ class Group {
       );
     }
 
-    final connectedGroup = Group.fromJson(
+    return Group.fromJson(
       jsonDecode(groupJson),
       _baseUrl,
       _appToken,
@@ -360,6 +361,56 @@ class Group {
       false,
       false,
     );
+  }
+
+  Future<String> _getPublicKey() async {
+    if (!_fromParent && (accessByGroupAsMember == "")) {
+      return _user.getNewestPublicKey();
+    }
+
+    if (_fromParent) {
+      final parentGroup = await _getGroupRefFromParent();
+
+      //get the newest key from parent
+      final newestKey = parentGroup._getNewestKey();
+
+      if (newestKey == null) {
+        throw Exception(
+          "Parent group not found. This group was access from parent group but the parent group data is gone.",
+        );
+      }
+
+      return newestKey.publicKey;
+    }
+
+    final connectedGroup = await _getGroupRefFromGroupAsMember();
+
+    final newestKey = connectedGroup._getNewestKey();
+
+    if (newestKey == null) {
+      throw Exception(
+        "Connected group not found. This group was access from a connected group but the group data is gone.",
+      );
+    }
+
+    return newestKey.publicKey;
+  }
+
+  Future<String> _getPrivateKey(String keyId) async {
+    if (!_fromParent && (accessByGroupAsMember == "")) {
+      return _user.getPrivateKey(keyId);
+    }
+
+    if (_fromParent) {
+      final parentGroup = await _getGroupRefFromParent();
+
+      final parentGroupKey = await parentGroup.getGroupKey(keyId);
+
+      return parentGroupKey.privateKey;
+    }
+
+    //access over group as member
+    final connectedGroup = await _getGroupRefFromGroupAsMember();
 
     final connectedGroupKey = await connectedGroup.getGroupKey(keyId);
 
@@ -443,4 +494,246 @@ class Group {
   }
 
   //____________________________________________________________________________________________________________________
+  //key rotation
+
+  Future<String> prepareKeyRotation() async {
+    final publicKey = await _getPublicKey();
+
+    return Sentc.getApi().groupPrepareKeyRotation(preGroupKey: _getNewestKey()!.groupKey, publicKey: publicKey);
+  }
+
+  Future<String> doneKeyRotation(String serverOutput) async {
+    final out = await Sentc.getApi().groupGetDoneKeyRotationServerInput(serverOutput: serverOutput);
+
+    final keys = await Future.wait([_getPublicKey(), _getPrivateKey(out.encryptedEphKeyKeyId)]);
+    final publicKey = keys[0];
+    final privateKey = keys[1];
+
+    return Sentc.getApi().groupDoneKeyRotation(
+      privateKey: privateKey,
+      publicKey: publicKey,
+      preGroupKey: _getNewestKey()!.groupKey,
+      serverOutput: serverOutput,
+    );
+  }
+
+  Future<GroupKey> keyRotation() async {
+    final jwt = await _user.getJwt();
+    final publicKey = await _getPublicKey();
+
+    final keyId = await Sentc.getApi().groupKeyRotation(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      publicKey: publicKey,
+      preGroupKey: _getNewestKey()!.groupKey,
+      groupAsMember: accessByGroupAsMember,
+    );
+
+    return getGroupKey(keyId, true);
+  }
+
+  finishKeyRotation() async {
+    final jwt = await _user.getJwt();
+
+    final api = Sentc.getApi();
+
+    var keys = await api.groupPreDoneKeyRotation(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+
+    if (keys.isEmpty) {
+      return;
+    }
+
+    bool nextRound = false;
+    int roundsLeft = 10;
+
+    final publicKey = await _getPublicKey();
+
+    do {
+      List<KeyRotationGetOut> leftKeys = [];
+
+      for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+
+        GroupKey? preKey;
+
+        try {
+          preKey = await getGroupKey(key.preGroupKeyId);
+        } catch (e) {}
+
+        if (preKey == null) {
+          leftKeys.add(key);
+          continue;
+        }
+
+        //get the right used private key for each key
+        final privateKey = await _getPrivateKey(key.encryptedEphKeyKeyId);
+
+        await api.groupFinishKeyRotation(
+          baseUrl: _baseUrl,
+          authToken: _appToken,
+          jwt: jwt,
+          id: groupId,
+          serverOutput: key.serverOutput,
+          preGroupKey: preKey.groupKey,
+          publicKey: publicKey,
+          privateKey: privateKey,
+          groupAsMember: accessByGroupAsMember,
+        );
+
+        //now get the new key and safe it
+        await getGroupKey(key.newGroupKeyId, true);
+      }
+
+      roundsLeft--;
+
+      if (leftKeys.isNotEmpty) {
+        keys = [];
+        keys.addAll(leftKeys);
+
+        nextRound = true;
+      } else {
+        nextRound = false;
+      }
+    } while (nextRound && roundsLeft > 0);
+
+    String userId;
+    if (accessByGroupAsMember == "") {
+      userId = _user.userId;
+    } else {
+      userId = accessByGroupAsMember;
+    }
+
+    //after a key rotation -> save the new group data in the store
+    final groupKey = "group_data_user_${userId}_id_$groupId";
+
+    final storage = Sentc.getStorage();
+    await storage.set(groupKey, jsonEncode(this));
+  }
+
+  //____________________________________________________________________________________________________________________
+  //admin fn for user management
+
+  Future<String> prepareUpdateRank(String userId, int newRank) {
+    return Sentc.getApi().groupPrepareUpdateRank(userId: userId, rank: rank, adminRank: rank);
+  }
+
+  Future<void> updateRank(String userId, int newRank) async {
+    final jwt = await _user.getJwt();
+
+    await Sentc.getApi().groupUpdateRank(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      userId: userId,
+      rank: rank,
+      adminRank: rank,
+      groupAsMember: accessByGroupAsMember,
+    );
+
+    String actualUserId;
+    if (accessByGroupAsMember == "") {
+      actualUserId = _user.userId;
+    } else {
+      actualUserId = accessByGroupAsMember;
+    }
+
+    //check if the updated user is the actual user -> then update the group store
+
+    if (actualUserId == userId) {
+      final groupKey = "group_data_user_${actualUserId}_id_$groupId";
+
+      final storage = Sentc.getStorage();
+
+      rank = newRank;
+
+      await storage.set(groupKey, jsonEncode(this));
+    }
+  }
+
+  Future<void> kickUser(String userId) async {
+    final jwt = await _user.getJwt();
+
+    return Sentc.getApi().groupKickUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      userId: userId,
+      adminRank: rank,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  //____________________________________________________________________________________________________________________
+  //group as member
+
+  Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
+    final jwt = await _user.getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
+    final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetGroupsForUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedGroupId,
+      groupId: groupId,
+    );
+  }
+
+  Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
+    final jwt = await _user.getJwt();
+
+    final lastFetchedTime = lastItem?.time.toString() ?? "0";
+    final lastFetchedGroupId = lastItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetInvitesForUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedGroupId,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<void> acceptGroupInvites(String groupIdToAccept) async {
+    final jwt = await _user.getJwt();
+
+    return Sentc.getApi().groupAcceptInvite(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupIdToAccept,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<void> rejectGroupInvite(groupIdToReject) async {
+    final jwt = await _user.getJwt();
+
+    return Sentc.getApi().groupRejectInvite(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupIdToReject,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  //join req
 }
