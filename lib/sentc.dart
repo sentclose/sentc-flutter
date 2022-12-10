@@ -31,6 +31,7 @@ class Sentc {
   static Future<String> Function(String old_jwt) _endpoint_fn = (String old_jwt) async {
     return "";
   };
+  static String? file_part_url;
 
   const Sentc._();
 
@@ -81,6 +82,7 @@ class Sentc {
     refresh_endpoint = _refresh_endpoint;
     _refresh_endpoint_url = refresh_endpoint_url;
     _endpoint_fn = refresh_endpoint_fn;
+    Sentc.file_part_url = file_part_url;
 
     _storage = storage ?? SharedPreferencesStorage();
     await _storage!.init();
