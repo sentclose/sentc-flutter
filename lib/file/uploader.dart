@@ -39,8 +39,8 @@ class Uploader {
     this._appToken,
     this._user,
     this._groupId,
-    this._otherUserId,
-    this.uploadCallback, [
+    this._otherUserId, [
+    this.uploadCallback,
     String groupAsMember = "",
     int chunkSize = 1024 * 1024 * 4,
   ]) {
@@ -128,6 +128,12 @@ class Uploader {
         break;
       }
     }
+  }
+
+  Future<UploadResult> uploadFileWithPath(String path, String contentKey, String masterKeyId, [bool sign = false]) {
+    final file = File(path);
+
+    return uploadFile(file, contentKey, masterKeyId, sign);
   }
 
   Future<UploadResult> uploadFile(File file, String contentKey, String masterKeyId, [bool sign = false]) async {
