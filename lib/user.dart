@@ -316,8 +316,8 @@ class User {
     return _getNewestKey().signKey;
   }
 
-  Future<String> getSignKey() async {
-    return getNewestSignKey();
+  Future<String> getSignKey() {
+    return Future.value(getNewestSignKey());
   }
 
   //____________________________________________________________________________________________________________________
