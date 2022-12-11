@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:sentc/crypto/abstract_sym_crypto.dart';
+import 'package:sentc/crypto/sym_key.dart';
+import 'package:sentc/file/downloader.dart';
+import 'package:sentc/file/uploader.dart';
 import 'package:sentc/sentc.dart';
 import 'package:sentc/user.dart';
 
@@ -763,5 +767,69 @@ class Group extends AbstractSymCrypto {
     );
   }
 
+  //____________________________________________________________________________________________________________________
   //join req
+
+  //____________________________________________________________________________________________________________________
+  //file handling
+
+  Future<UploadResult> uploadFile({
+    required File file,
+    required SymKey contentKey,
+    bool sign = false,
+    void Function(double progress)? uploadCallback,
+  }) {
+    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
+
+    return uploader.uploadFile(file, contentKey.key, contentKey.masterKeyId, sign);
+  }
+
+  //____________________________________________________________________________________________________________________
+
+  Future<FileCreateOutput> createFile({
+    required File file,
+    bool sign = false,
+    void Function(double progress)? uploadCallback,
+  }) async {
+    final key = await registerKey();
+
+    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
+
+    final out = await uploader.uploadFile(file, key.key, key.masterKeyId, sign);
+
+    return FileCreateOutput(out.fileId, key.masterKeyId, out.encryptedFileName);
+  }
+
+  Future<DownloadResult> downloadFileWithPath({
+    required String path,
+    required String fileId,
+    String verifyKey = "",
+    void Function(double progress)? updateProgressCb,
+  }) {
+    final file = File(path);
+
+    return downloadFile(file: file, fileId: fileId, verifyKey: verifyKey, updateProgressCb: updateProgressCb);
+  }
+
+  Future<DownloadResult> downloadFile({
+    required File file,
+    required String fileId,
+    String verifyKey = "",
+    void Function(double progress)? updateProgressCb,
+  }) async {
+    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+
+    final fileMeta = await downloader.downloadFileMetaInformation(fileId);
+
+    final keyId = fileMeta.keyId;
+    final key = await fetchKey(keyId, fileMeta.masterKeyId);
+
+    if (fileMeta.encryptedFileName != null && fileMeta.encryptedFileName != "") {
+      fileMeta.fileName = await key.decryptString(fileMeta.encryptedFileName!, verifyKey);
+    }
+
+    await downloader.downloadFileParts(file, fileMeta.partList, key.key, updateProgressCb, verifyKey);
+
+    return DownloadResult(fileMeta, key);
+  }
 }
