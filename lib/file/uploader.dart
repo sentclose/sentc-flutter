@@ -15,6 +15,14 @@ class UploadResult {
   });
 }
 
+class FileCreateOutput {
+  final String fileId;
+  final String masterKeyId;
+  final String encryptedFileName;
+
+  FileCreateOutput(this.fileId, this.masterKeyId, this.encryptedFileName);
+}
+
 class Uploader {
   static bool cancelUpload = false;
 
