@@ -786,6 +786,16 @@ class Group extends AbstractSymCrypto {
 
   //____________________________________________________________________________________________________________________
 
+  Future<FileCreateOutput> createFileWithPath({
+    required String path,
+    bool sign = false,
+    void Function(double progress)? uploadCallback,
+  }) {
+    final file = File(path);
+
+    return createFile(file: file, sign: sign, uploadCallback: uploadCallback);
+  }
+
   Future<FileCreateOutput> createFile({
     required File file,
     bool sign = false,
