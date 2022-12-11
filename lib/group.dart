@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:sentc/crypto/abstract_sym_crypto.dart';
 import 'package:sentc/sentc.dart';
 import 'package:sentc/user.dart';
 
@@ -178,7 +179,7 @@ class GroupKey {
 
 //______________________________________________________________________________________________________________________
 
-class Group {
+class Group extends AbstractSymCrypto {
   final String _baseUrl;
   final String _appToken;
 
@@ -253,11 +254,38 @@ class Group {
     };
   }
 
+  @override
+  Future<String> getJwt() {
+    return _user.getJwt();
+  }
+
+  @override
+  Future<String> getSignKey() {
+    //always use the users sign key
+    return _user.getSignKey();
+  }
+
+  @override
+  Future<String> getSymKeyById(String keyId) async {
+    final key = await getGroupKey(keyId);
+
+    return key.groupKey;
+  }
+
+  @override
+  Future<SymKeyToEncryptResult> getSymKeyToEncrypt() {
+    final latestKey = _getNewestKey()!;
+
+    return Future.value(SymKeyToEncryptResult(latestKey.groupKeyId, latestKey.groupKey));
+  }
+
+  //____________________________________________________________________________________________________________________
+
   Future<GroupKey> getGroupKey(String keyId, [bool newKeys = false]) async {
     var keyIndex = _keyMap[keyId];
 
     if (keyIndex == null) {
-      final jwt = await _user.getJwt();
+      final jwt = await getJwt();
 
       final fetchedKey = await Sentc.getApi().groupGetGroupKey(
         baseUrl: _baseUrl,
@@ -439,7 +467,7 @@ class Group {
   }
 
   Future<void> fetchKeys() async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     var lastItem = _keys[_keys.length - 1];
 
@@ -481,7 +509,7 @@ class Group {
   //____________________________________________________________________________________________________________________
 
   deleteGroup() async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     return Sentc.getApi().groupDeleteGroup(
       baseUrl: _baseUrl,
@@ -518,7 +546,7 @@ class Group {
   }
 
   Future<GroupKey> keyRotation() async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
     final publicKey = await _getPublicKey();
 
     final keyId = await Sentc.getApi().groupKeyRotation(
@@ -535,7 +563,7 @@ class Group {
   }
 
   finishKeyRotation() async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     final api = Sentc.getApi();
 
@@ -626,7 +654,7 @@ class Group {
   }
 
   Future<void> updateRank(String userId, int newRank) async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     await Sentc.getApi().groupUpdateRank(
       baseUrl: _baseUrl,
@@ -660,7 +688,7 @@ class Group {
   }
 
   Future<void> kickUser(String userId) async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     return Sentc.getApi().groupKickUser(
       baseUrl: _baseUrl,
@@ -677,7 +705,7 @@ class Group {
   //group as member
 
   Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
@@ -693,7 +721,7 @@ class Group {
   }
 
   Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastItem?.groupId ?? "none";
@@ -710,7 +738,7 @@ class Group {
   }
 
   Future<void> acceptGroupInvites(String groupIdToAccept) async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     return Sentc.getApi().groupAcceptInvite(
       baseUrl: _baseUrl,
@@ -723,7 +751,7 @@ class Group {
   }
 
   Future<void> rejectGroupInvite(groupIdToReject) async {
-    final jwt = await _user.getJwt();
+    final jwt = await getJwt();
 
     return Sentc.getApi().groupRejectInvite(
       baseUrl: _baseUrl,
