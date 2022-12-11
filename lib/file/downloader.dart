@@ -1,8 +1,38 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:sentc/crypto/sym_key.dart';
 import 'package:sentc/sentc.dart';
 import 'package:sentc/user.dart';
+
+class FileMetaInformation {
+  final String fileId;
+  final String masterKeyId;
+  final String? belongsTo;
+  final BelongsToType belongsToType;
+  final String keyId;
+  final List<FilePartListItem> partList;
+  String? fileName;
+  final String? encryptedFileName;
+
+  FileMetaInformation(
+    this.fileId,
+    this.masterKeyId,
+    this.belongsTo,
+    this.belongsToType,
+    this.keyId,
+    this.partList,
+    this.fileName,
+    this.encryptedFileName,
+  );
+}
+
+class DownloadResult {
+  final FileMetaInformation meta;
+  final SymKey key;
+
+  DownloadResult(this.meta, this.key);
+}
 
 /// Downloads a file.
 /// Append the chunks to a file.
@@ -21,7 +51,7 @@ class Downloader {
 
   Downloader(this._baseUrl, this._appToken, this._user, [this._groupId = "", this._groupAsMember = ""]);
 
-  Future<FileData> downloadFileMetaInformation(String fileId) async {
+  Future<FileMetaInformation> downloadFileMetaInformation(String fileId) async {
     final jwt = await _user.getJwt();
 
     final meta = await Sentc.getApi().fileDownloadFileMeta(
@@ -49,7 +79,8 @@ class Downloader {
       }
     }
 
-    return meta;
+    return FileMetaInformation(meta.fileId, meta.masterKeyId, meta.belongsTo, meta.belongsToType, meta.keyId,
+        meta.partList, null, meta.encryptedFileName);
   }
 
   Future<List<FilePartListItem>> downloadFilePartList(String fileId, FilePartListItem? lastItem) {
