@@ -167,5 +167,7 @@ class Downloader {
         return;
       }
     }
+
+    await sink.close();
   }
 }
