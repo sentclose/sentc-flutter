@@ -4,6 +4,22 @@ import 'dart:typed_data';
 import 'package:sentc/crypto/sym_key.dart';
 import 'package:sentc/sentc.dart';
 import 'package:sentc/user.dart';
+import 'package:path/path.dart' as p;
+
+/// Gets an available file name to download the file to this location
+Future<String> findAvailableFileName(String path) async {
+  final baseName = p.basenameWithoutExtension(path);
+  final fileExtension = p.extension(path);
+  final dirName = p.dirname(path);
+
+  int i = 1;
+  String fileName = '$dirName${Platform.pathSeparator}$baseName$fileExtension';
+  while (await File(fileName).exists()) {
+    fileName = '$dirName${Platform.pathSeparator}$baseName($i)$fileExtension';
+    i++;
+  }
+  return fileName;
+}
 
 class FileMetaInformation {
   final String fileId;
@@ -79,8 +95,16 @@ class Downloader {
       }
     }
 
-    return FileMetaInformation(meta.fileId, meta.masterKeyId, meta.belongsTo, meta.belongsToType, meta.keyId,
-        meta.partList, null, meta.encryptedFileName);
+    return FileMetaInformation(
+      meta.fileId,
+      meta.masterKeyId,
+      meta.belongsTo,
+      meta.belongsToType,
+      meta.keyId,
+      meta.partList,
+      null,
+      meta.encryptedFileName,
+    );
   }
 
   Future<List<FilePartListItem>> downloadFilePartList(String fileId, FilePartListItem? lastItem) {
