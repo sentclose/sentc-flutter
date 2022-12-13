@@ -810,23 +810,15 @@ class Group extends AbstractSymCrypto {
     return FileCreateOutput(out.fileId, key.masterKeyId, out.encryptedFileName);
   }
 
-  Future<DownloadResult> downloadFileWithPath({
-    required String path,
-    required String fileId,
+  /// Get and encrypt file meta information like the real file name
+  /// This wont download the file.
+  ///
+  /// This is usefully if the user wants to show information about the file (e.g. the file name) but not download the file
+  /// The meta info is also needed for the download file functions
+  Future<DownloadResult> getFileMetaInfo(
+    String fileId, [
     String verifyKey = "",
-    void Function(double progress)? updateProgressCb,
-  }) {
-    final file = File(path);
-
-    return downloadFile(file: file, fileId: fileId, verifyKey: verifyKey, updateProgressCb: updateProgressCb);
-  }
-
-  Future<DownloadResult> downloadFile({
-    required File file,
-    required String fileId,
-    String verifyKey = "",
-    void Function(double progress)? updateProgressCb,
-  }) async {
+  ]) async {
     final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
 
     final fileMeta = await downloader.downloadFileMetaInformation(fileId);
@@ -838,8 +830,80 @@ class Group extends AbstractSymCrypto {
       fileMeta.fileName = await key.decryptString(fileMeta.encryptedFileName!, verifyKey);
     }
 
-    await downloader.downloadFileParts(file, fileMeta.partList, key.key, updateProgressCb, verifyKey);
-
     return DownloadResult(fileMeta, key);
+  }
+
+  /// Downloads a file with meta info.
+  /// This info must be fetched before.
+  /// Keep in mind that you must use a file which doesn't exists yet.
+  /// otherwise the decrypted bytes will be attached to the file
+  Future<void> downloadFileWithMeta({
+    required File file,
+    required String fileId,
+    required DownloadResult fileMeta,
+    String verifyKey = "",
+    void Function(double progress)? updateProgressCb,
+  }) {
+    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+
+    final key = fileMeta.key;
+    return downloader.downloadFileParts(file, fileMeta.meta.partList, key.key, updateProgressCb, verifyKey);
+  }
+
+  /// Downloads a file.
+  ///
+  /// This can be used if the user wants a specific file.
+  /// Need to obtain a file object
+  /// This will not check if the file exists
+  Future<DownloadResult> downloadFileWithFile({
+    required File file,
+    required String fileId,
+    String verifyKey = "",
+    void Function(double progress)? updateProgressCb,
+  }) async {
+    final fileMeta = await getFileMetaInfo(fileId, verifyKey);
+
+    await downloadFileWithMeta(
+      file: file,
+      fileId: fileId,
+      fileMeta: fileMeta,
+      verifyKey: verifyKey,
+      updateProgressCb: updateProgressCb,
+    );
+
+    return fileMeta;
+  }
+
+  /// Downloads a file
+  ///
+  /// to the given path. The path must be an directory
+  /// This functions uses the real file name.
+  /// An available file name will be selected based on the real file name
+  Future<DownloadResult> downloadFile({
+    required String path,
+    required String fileId,
+    String verifyKey = "",
+    void Function(double progress)? updateProgressCb,
+  }) async {
+    final fileMeta = await getFileMetaInfo(fileId, verifyKey);
+
+    final fileName = fileMeta.meta.fileName ?? "unnamed";
+    File file = File("$path${Platform.pathSeparator}$fileName");
+
+    if (await file.exists()) {
+      final availableFileName = await findAvailableFileName(file.path);
+
+      file = File(availableFileName);
+    }
+
+    await downloadFileWithMeta(
+      file: file,
+      fileId: fileId,
+      fileMeta: fileMeta,
+      verifyKey: verifyKey,
+      updateProgressCb: updateProgressCb,
+    );
+
+    return fileMeta;
   }
 }
