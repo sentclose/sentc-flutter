@@ -906,4 +906,17 @@ class Group extends AbstractSymCrypto {
 
     return fileMeta;
   }
+
+  Future<void> deleteFile(String fileId) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().fileDeleteFile(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      fileId: fileId,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
 }
