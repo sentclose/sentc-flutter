@@ -1,20 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:sentc/file/downloader.dart';
 import 'package:sentc/file/uploader.dart';
 import 'package:sentc/group.dart';
 import 'package:sentc/sentc.dart';
 import 'package:sentc/user.dart';
-import 'package:sentc_example/file_download_form.dart';
+import 'package:sentc_example/app/file/widgets/file_id_form.dart';
+import 'package:sentc_example/core/presentation/layouts/page_scaffold.dart';
+import 'package:sentc_example/core/presentation/styles/styles.dart' as style;
 
-class FilePickerTest extends StatefulWidget {
-  const FilePickerTest({Key? key}) : super(key: key);
+class FilePage extends StatefulWidget {
+  const FilePage({Key? key}) : super(key: key);
 
   @override
-  State<FilePickerTest> createState() => _FilePickerTestState();
+  State<FilePage> createState() => _FilePageState();
 }
 
-class _FilePickerTestState extends State<FilePickerTest> {
+class _FilePageState extends State<FilePage> {
   late User user;
   late Group group;
 
@@ -125,44 +127,50 @@ class _FilePickerTestState extends State<FilePickerTest> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: const Text("File test"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            ElevatedButton(onPressed: _prepareTest, child: const Text("Start test")),
-            const SizedBox(height: 10),
-            const Text("Upload ______________________________________________"),
-            const SizedBox(height: 10),
-            ElevatedButton(onPressed: _pickFile, child: const Text("Pick a file")),
-            const SizedBox(height: 10),
-            ElevatedButton(onPressed: _handleUpload, child: const Text("Upload file")),
-            const SizedBox(height: 20),
-            Text("upload progress: $_progressUpload"),
-            const SizedBox(height: 30),
-            const Text("Download ______________________________________________"),
-            const SizedBox(height: 10),
-            ElevatedButton(onPressed: _handleDownload, child: const Text("Download file")),
-            const SizedBox(height: 20),
-            Text("download progress: $_progressDownload"),
-            const Text("End ______________________________________________"),
-            ElevatedButton(onPressed: _doneTest, child: const Text("End test")),
-            const SizedBox(height: 10),
-            const Text("File id: "),
-            SelectableText(fileId),
-            const SizedBox(height: 20),
-            //extern file
-            const Text("extern file id"),
-            const SizedBox(height: 10),
-            //input form
-            FileIdForm(updateData: _handleDownloadExtern),
-          ],
+    return PageScaffold(
+      title: "File page",
+      openAsSubPage: true,
+      content: Container(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          primary: false,
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(onPressed: _prepareTest, child: const Text("Start test")),
+              const SizedBox(height: 10),
+              const Text("Upload ______________________________________________"),
+              const SizedBox(height: 10),
+              ElevatedButton(onPressed: _pickFile, child: const Text("Pick a file")),
+              const SizedBox(height: 10),
+              ElevatedButton(onPressed: _handleUpload, child: const Text("Upload file")),
+              const SizedBox(height: 20),
+              Text("upload progress: $_progressUpload"),
+              const SizedBox(height: 30),
+              const Text("Download ______________________________________________"),
+              const SizedBox(height: 10),
+              ElevatedButton(onPressed: _handleDownload, child: const Text("Download file")),
+              const SizedBox(height: 20),
+              Text("download progress: $_progressDownload"),
+              const Text("End ______________________________________________"),
+              ElevatedButton(onPressed: _doneTest, child: const Text("End test")),
+              const SizedBox(height: 10),
+              const Text("File id: "),
+              SelectableText(fileId),
+              const SizedBox(height: 20),
+              //extern file
+              const Text(
+                "extern file id",
+                style: style.headlineStyle,
+              ),
+              const SizedBox(height: 10),
+              //input form
+              FileIdForm(updateData: _handleDownloadExtern),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

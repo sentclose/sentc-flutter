@@ -46,6 +46,7 @@ class _FileIdFormState extends State<FileIdForm> {
     return Form(
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
             validator: _validatorString,
@@ -54,6 +55,7 @@ class _FileIdFormState extends State<FileIdForm> {
               label: Text("Extern file id to download"),
             ),
           ),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: _btnPressed,
             child: const Text("Submit"),

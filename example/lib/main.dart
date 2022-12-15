@@ -2,9 +2,22 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:sentc/sentc.dart';
+import 'package:sentc_example/core/routes/routes.dart' as routes;
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SentcExample());
+}
+
+class SentcExample extends StatelessWidget {
+  const SentcExample({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      initialRoute: routes.userR,
+      onGenerateRoute: routes.generateRoutes,
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -30,6 +43,15 @@ class _MyAppState extends State<MyApp> {
 
     print("Login user");
     final user = await Sentc.login("userIdentifier", "password");
+
+    print("create group");
+
+    final groupId = await user.createGroup();
+    final group = await user.getGroup(groupId);
+
+    print("delete group");
+
+    await group.deleteGroup();
 
     print("delete user");
     await user.deleteUser("password");
