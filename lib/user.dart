@@ -6,14 +6,14 @@ import 'package:sentc/sentc.dart';
 Future<User> getUser(String deviceIdentifier, UserData data) async {
   final Map<String, int> keyMap = {};
 
-  final List<UserKeyData> userKeys = [];
+  final List<UserKey> userKeys = [];
 
   for (var i = 0; i < data.userKeys.length; ++i) {
     var key = data.userKeys[i];
 
     keyMap[key.groupKeyId] = i;
 
-    userKeys.add(UserKeyData._(
+    userKeys.add(UserKey._(
       key.privateKey,
       key.publicKey,
       key.groupKey,
@@ -59,13 +59,13 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 }
 
 /// Keys from the user group
-class UserKeyData extends group.GroupKey {
+class UserKey extends group.GroupKey {
   final String signKey;
   final String verifyKey;
   final String exportedPublicKey;
   final String exportedVerifyKey;
 
-  UserKeyData._(
+  UserKey._(
     String privateKey,
     String publicKey,
     String groupKey,
@@ -77,7 +77,7 @@ class UserKeyData extends group.GroupKey {
     this.exportedVerifyKey,
   ) : super(privateKey, publicKey, groupKey, time, groupKeyId);
 
-  UserKeyData.fromJson(Map<String, dynamic> json)
+  UserKey.fromJson(Map<String, dynamic> json)
       : signKey = json["signKey"],
         verifyKey = json["verifyKey"],
         exportedPublicKey = json["exportedPublicKey"],
@@ -124,7 +124,7 @@ class User {
   final String _exportedVerifyDeviceKey;
 
   //user keys
-  final List<UserKeyData> _userKeys;
+  final List<UserKey> _userKeys;
   final Map<String, int> _keyMap;
   String _newestKeyId;
 
@@ -167,7 +167,7 @@ class User {
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
         _newestKeyId = json["newestKeyId"],
-        _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKeyData.fromJson(e)).toList();
+        _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKey.fromJson(e)).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -203,7 +203,7 @@ class User {
   }
 
   /// Fetch key for the actual user group
-  Future<UserKeyData> _getUserKeys(String keyId, [bool? first]) async {
+  Future<UserKey> _getUserKeys(String keyId, [bool? first]) async {
     var index = _keyMap[keyId];
 
     if (index == null) {
@@ -236,7 +236,7 @@ class User {
       privateKey: _privateDeviceKey,
     );
 
-    _userKeys.add(UserKeyData._(
+    _userKeys.add(UserKey._(
       userKeys.privateKey,
       userKeys.publicKey,
       userKeys.groupKey,
@@ -265,7 +265,7 @@ class User {
 
     final lastIndex = _userKeys.length;
 
-    _userKeys.add(UserKeyData._(
+    _userKeys.add(UserKey._(
       key.privateKey,
       key.publicKey,
       key.groupKey,
@@ -290,7 +290,7 @@ class User {
     return Sentc.getUserPublicKey(replyId);
   }
 
-  UserKeyData _getNewestKey() {
+  UserKey _getNewestKey() {
     final index = _keyMap[_newestKeyId] ??= 0;
 
     return _userKeys[index];
@@ -379,13 +379,11 @@ class User {
 
     final keyString = group.prepareKeys(_userKeys, page).str;
 
-    final out = await Sentc.getApi().prepareRegisterDevice(
+    return Sentc.getApi().prepareRegisterDevice(
       serverOutput: serverOutput,
       userKeys: keyString,
       keyCount: keyCount,
     );
-
-    return PreRegisterDeviceData(input: out.input, exportedPublicKey: out.exportedPublicKey);
   }
 
   Future<void> registerDevice(String serverOutput) async {
@@ -441,23 +439,13 @@ class User {
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastId = lastFetchedItem?.deviceId ?? "none";
 
-    final out = await Sentc.getApi().getUserDevices(
+    return Sentc.getApi().getUserDevices(
       baseUrl: _baseUrl,
       authToken: _appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedId: lastId,
     );
-
-    final List<UserDeviceList> devices = [];
-
-    for (var i = 0; i < out.length; ++i) {
-      var device = out[i];
-
-      devices.add(UserDeviceList(device.time, device.deviceId, device.deviceIdentifier));
-    }
-
-    return devices;
   }
 
   //____________________________________________________________________________________________________________________
@@ -494,7 +482,7 @@ class User {
       for (var i = 0; i < keys.length; ++i) {
         var key = keys[i];
 
-        UserKeyData preKey;
+        UserKey preKey;
 
         try {
           preKey = await _getUserKeys(key.preGroupKeyId);
@@ -611,24 +599,4 @@ class User {
       groupAsMember: "",
     );
   }
-}
-
-//______________________________________________________________________________________________________________________
-
-class PreRegisterDeviceData {
-  final String input;
-  final String exportedPublicKey;
-
-  PreRegisterDeviceData({
-    required this.input,
-    required this.exportedPublicKey,
-  });
-}
-
-class UserDeviceList {
-  final String deviceId;
-  final String time;
-  final String deviceIdentifier;
-
-  UserDeviceList(this.time, this.deviceId, this.deviceIdentifier);
 }
