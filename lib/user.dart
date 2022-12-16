@@ -128,19 +128,7 @@ class User {
   final Map<String, int> _keyMap;
   String _newestKeyId;
 
-  late List<group.GroupInviteListItem> groupInvites;
-
-  void setGroupInvites(List<GroupInviteReqList> invites) {
-    final List<group.GroupInviteListItem> list = [];
-
-    for (var i = 0; i < invites.length; ++i) {
-      var invite = invites[i];
-
-      list.add(group.GroupInviteListItem(invite.groupId, invite.time));
-    }
-
-    groupInvites = list;
-  }
+  late List<GroupInviteReqList> groupInvites;
 
   User._(
     this._baseUrl,

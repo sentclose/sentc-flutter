@@ -100,7 +100,7 @@ class Sentc {
         );
 
         user.jwt = out.jwt;
-        user.setGroupInvites(out.invites);
+        user.groupInvites = out.invites;
       } else {
         //do normal refresh (maybe with another strategy)
         await user.getJwt();
