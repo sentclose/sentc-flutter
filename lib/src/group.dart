@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:sentc/crypto/abstract_sym_crypto.dart';
-import 'package:sentc/crypto/sym_key.dart';
-import 'package:sentc/file/downloader.dart';
-import 'package:sentc/file/uploader.dart';
+import 'package:sentc/src/crypto/abstract_sym_crypto.dart';
 import 'package:sentc/sentc.dart';
-import 'package:sentc/user.dart';
 
 PrepareKeysResult prepareKeys(List<GroupKey> keys, int page) {
   final offset = page * 50;

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 
 import 'package:sentc/sentc.dart';
-import 'package:sentc/user.dart';
 
 class UploadResult {
   final String fileId;

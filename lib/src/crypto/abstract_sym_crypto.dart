@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:sentc/crypto/sym_key.dart';
 import 'package:sentc/sentc.dart';
 
 class SymKeyToEncryptResult {

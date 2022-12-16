@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:sentc/crypto/sym_key.dart';
 import 'package:sentc/sentc.dart';
-import 'package:sentc/user.dart';
 import 'package:path/path.dart' as p;
 
 /// Gets an available file name to download the file to this location

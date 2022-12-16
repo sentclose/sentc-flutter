@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:sentc/group.dart' as group;
+import 'package:sentc/src/group.dart' as group;
 import 'package:sentc/sentc.dart';
 
 Future<User> getUser(String deviceIdentifier, UserData data) async {
