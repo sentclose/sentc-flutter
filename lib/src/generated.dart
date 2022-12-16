@@ -365,6 +365,18 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateChildGroupConstMeta;
 
+  Future<String> groupCreateConnectedGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String connectedGroupId,
+      required int adminRank,
+      required String parentPublicKey,
+      required String groupAsMember,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupCreateConnectedGroupConstMeta;
+
   ///
   ///Get the group data without request.
   ///
@@ -2491,6 +2503,53 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
           "parentPublicKey",
           "parentId",
           "adminRank",
+          "groupAsMember"
+        ],
+      );
+
+  Future<String> groupCreateConnectedGroup(
+          {required String baseUrl,
+          required String authToken,
+          required String jwt,
+          required String connectedGroupId,
+          required int adminRank,
+          required String parentPublicKey,
+          required String groupAsMember,
+          dynamic hint}) =>
+      executeNormal(FlutterRustBridgeTask(
+        callFfi: (port_) => inner.wire_group_create_connected_group(
+            port_,
+            _api2wire_String(baseUrl),
+            _api2wire_String(authToken),
+            _api2wire_String(jwt),
+            _api2wire_String(connectedGroupId),
+            _api2wire_i32(adminRank),
+            _api2wire_String(parentPublicKey),
+            _api2wire_String(groupAsMember)),
+        parseSuccessData: _wire2api_String,
+        constMeta: kGroupCreateConnectedGroupConstMeta,
+        argValues: [
+          baseUrl,
+          authToken,
+          jwt,
+          connectedGroupId,
+          adminRank,
+          parentPublicKey,
+          groupAsMember
+        ],
+        hint: hint,
+      ));
+
+  FlutterRustBridgeTaskConstMeta get kGroupCreateConnectedGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_create_connected_group",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "connectedGroupId",
+          "adminRank",
+          "parentPublicKey",
           "groupAsMember"
         ],
       );
@@ -6453,6 +6512,52 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               int,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_create_connected_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> connected_group_id,
+    int admin_rank,
+    ffi.Pointer<wire_uint_8_list> parent_public_key,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
+  ) {
+    return _wire_group_create_connected_group(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      connected_group_id,
+      admin_rank,
+      parent_public_key,
+      group_as_member,
+    );
+  }
+
+  late final _wire_group_create_connected_groupPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Int32,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_create_connected_group');
+  late final _wire_group_create_connected_group =
+      _wire_group_create_connected_groupPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_extract_group_data(

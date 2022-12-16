@@ -38,9 +38,15 @@ class PrepareKeysResult {
 }
 
 //______________________________________________________________________________________________________________________
-Future<Group> getGroup(String groupId, String baseUrl, String appToken, User user,
-    [bool parent = false, String groupAsMember = "", bool rek = false]) async {
-  //
+Future<Group> getGroup(
+  String groupId,
+  String baseUrl,
+  String appToken,
+  User user, [
+  bool parent = false,
+  String groupAsMember = "",
+  bool rek = false,
+]) async {
   final storage = Sentc.getStorage();
 
   String userId;
@@ -85,7 +91,7 @@ Future<Group> getGroup(String groupId, String baseUrl, String appToken, User use
 
   final accessByGroupAsMember = out.accessByGroupAsMember ?? "";
 
-  if (accessByGroupAsMember != "" && rek) {
+  if (accessByGroupAsMember != "" && !rek) {
     //only load the group once even for rek. calls.
     //if group as member set. load this group first to get the keys
     //no group as member flag
@@ -514,6 +520,84 @@ class Group extends AbstractSymCrypto {
     );
   }
 
+  Future<Group> getChildGroup(String groupId) {
+    return getGroup(groupId, _baseUrl, _appToken, _user, true, accessByGroupAsMember);
+  }
+
+  Future<Group> getConnectedGroup(String groupId) {
+    return getGroup(groupId, _baseUrl, _appToken, _user, false, this.groupId);
+  }
+
+  Future<List<GroupChildrenList>> getChildren(GroupChildrenList? lastFetchedItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time ?? "0";
+    final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetAllFirstLevelChildren(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedGroupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<String> prepareCreateChildGroup() {
+    final lastKey = _getNewestKey()!.publicKey;
+
+    return Sentc.getApi().groupPrepareCreateGroup(creatorsPublicKey: lastKey);
+  }
+
+  Future<String> createChildGroup() async {
+    final jwt = await getJwt();
+    final lastKey = _getNewestKey()!.publicKey;
+
+    return Sentc.getApi().groupCreateChildGroup(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      parentPublicKey: lastKey,
+      parentId: groupId,
+      adminRank: rank,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<String> createConnectedGroup() async {
+    final jwt = await getJwt();
+    final lastKey = _getNewestKey()!.publicKey;
+
+    return Sentc.getApi().groupCreateConnectedGroup(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      connectedGroupId: groupId,
+      adminRank: rank,
+      parentPublicKey: lastKey,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<List<GroupUserListItem>> getMember(GroupUserListItem? lastFetchedItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.joinedTime ?? "0";
+    final lastFetchedId = lastFetchedItem?.userId ?? "none";
+
+    return Sentc.getApi().groupGetMember(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedId: lastFetchedId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
   //____________________________________________________________________________________________________________________
   //key rotation
 
@@ -555,7 +639,7 @@ class Group extends AbstractSymCrypto {
     return getGroupKey(keyId, true);
   }
 
-  finishKeyRotation() async {
+  Future<void> finishKeyRotation() async {
     final jwt = await getJwt();
 
     final api = Sentc.getApi();
@@ -744,7 +828,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<void> acceptGroupInvites(String groupIdToAccept) async {
+  Future<void> acceptGroupInvite(String groupIdToAccept) async {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupAcceptInvite(
