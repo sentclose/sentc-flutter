@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sentc/sentc.dart';
-import 'package:sentc/user.dart';
 import 'package:sentc_example/core/presentation/layouts/page_scaffold.dart';
 
 class UserPage extends StatefulWidget {

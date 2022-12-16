@@ -1,10 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:sentc/file/downloader.dart';
-import 'package:sentc/file/uploader.dart';
-import 'package:sentc/group.dart';
 import 'package:sentc/sentc.dart';
-import 'package:sentc/user.dart';
 import 'package:sentc_example/app/file/widgets/file_id_form.dart';
 import 'package:sentc_example/core/presentation/layouts/page_scaffold.dart';
 import 'package:sentc_example/core/presentation/styles/styles.dart' as style;
