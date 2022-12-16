@@ -147,13 +147,6 @@ Future<Group> getGroup(String groupId, String baseUrl, String appToken, User use
 
 //______________________________________________________________________________________________________________________
 
-class GroupInviteListItem {
-  final String groupId;
-  final String time;
-
-  GroupInviteListItem(this.groupId, this.time);
-}
-
 class GroupKey {
   final String privateKey;
   final String publicKey;
@@ -777,6 +770,52 @@ class Group extends AbstractSymCrypto {
       jwt: jwt,
       id: groupIdToReject,
       groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  //join req to another group
+  Future<void> groupJoinRequest(String groupIdToJoin) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupIdToJoin,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<List<GroupInviteReqList>> sentJoinReq(GroupInviteReqList? lastFetchedItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
+    final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetSentJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      adminRank: rank,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedGroupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<void> deleteJoinReq(String id) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupDeleteSentJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      adminRank: rank,
+      joinReqGroupId: id,
       groupAsMember: accessByGroupAsMember,
     );
   }
