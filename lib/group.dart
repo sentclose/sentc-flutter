@@ -706,6 +706,20 @@ class Group extends AbstractSymCrypto {
   }
 
   //____________________________________________________________________________________________________________________
+
+  Future<void> leave() async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().leaveGroup(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  //____________________________________________________________________________________________________________________
   //group as member
 
   Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
@@ -768,7 +782,209 @@ class Group extends AbstractSymCrypto {
   }
 
   //____________________________________________________________________________________________________________________
+  //send invite to user
+
+  Future<void> stopInvites() async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupStopGroupInvites(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      adminRank: rank,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<String> prepareKeysForNewMember(String userId, [int page = 0, bool group = false]) async {
+    final keyCount = _keys.length;
+
+    PublicKeyData publicKey;
+
+    if (group) {
+      publicKey = await Sentc.getGroupPublicKeyData(userId);
+    } else {
+      publicKey = await Sentc.getUserPublicKey(userId);
+    }
+
+    final keyString = prepareKeys(_keys, page).str;
+
+    return Sentc.getApi().groupPrepareKeysForNewMember(
+      userPublicKey: publicKey.key,
+      groupKeys: keyString,
+      keyCount: keyCount,
+      adminRank: rank,
+    );
+  }
+
+  Future<void> invite(String userId) {
+    return _inviteUserInternally(userId);
+  }
+
+  Future<void> inviteAuto(String userId) {
+    return _inviteUserInternally(userId, true);
+  }
+
+  Future<void> inviteGroup(String groupId) {
+    return _inviteUserInternally(groupId, false, true);
+  }
+
+  Future<void> inviteGroupAuto(String groupId) {
+    return _inviteUserInternally(groupId, true, true);
+  }
+
+  Future<void> _inviteUserInternally(String userId, [bool auto = false, bool group = false]) async {
+    PublicKeyData publicKey;
+
+    if (group) {
+      publicKey = await Sentc.getGroupPublicKeyData(userId);
+    } else {
+      publicKey = await Sentc.getUserPublicKey(userId);
+    }
+
+    final keyCount = _keys.length;
+    final keyString = prepareKeys(_keys, 0).str;
+
+    final jwt = await getJwt();
+    final api = Sentc.getApi();
+
+    final sessionId = await api.groupInviteUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      userId: userId,
+      keyCount: keyCount,
+      adminRank: rank,
+      autoInvite: auto,
+      groupInvite: group,
+      userPublicKey: publicKey.key,
+      groupKeys: keyString,
+      groupAsMember: accessByGroupAsMember,
+    );
+
+    if (sessionId == "") {
+      return;
+    }
+
+    bool nextPage = true;
+    int i = 1;
+    final p = <Future>[];
+
+    while (nextPage) {
+      final nextKeys = prepareKeys(_keys, i);
+      nextPage = nextKeys.end;
+
+      p.add(api.groupInviteUserSession(
+        baseUrl: _baseUrl,
+        authToken: _appToken,
+        jwt: jwt,
+        id: groupId,
+        autoInvite: auto,
+        sessionId: sessionId,
+        userPublicKey: publicKey.key,
+        groupKeys: nextKeys.str,
+        groupAsMember: accessByGroupAsMember,
+      ));
+
+      i++;
+    }
+
+    await Future.wait(p);
+  }
+
+  //____________________________________________________________________________________________________________________
   //join req
+
+  Future<List<GroupJoinReqList>> getJoinRequests(GroupJoinReqList? lastFetchedItem) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time ?? "0";
+    final lastFetchedId = lastFetchedItem?.userId ?? "none";
+
+    return Sentc.getApi().groupGetJoinReqs(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      adminRank: rank,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedId: lastFetchedId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<void> rejectJoinRequest(String userId) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupRejectJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      adminRank: rank,
+      rejectedUserId: userId,
+      groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<void> acceptJoinRequest(String userId, [int userType = 0]) async {
+    final jwt = await getJwt();
+    final api = Sentc.getApi();
+
+    final keyCount = _keys.length;
+    final keyString = prepareKeys(_keys, 0).str;
+
+    PublicKeyData publicKey;
+
+    if (userType == 2) {
+      publicKey = await Sentc.getGroupPublicKeyData(userId);
+    } else {
+      publicKey = await Sentc.getUserPublicKey(userId);
+    }
+
+    final sessionId = await api.groupAcceptJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      userId: userId,
+      keyCount: keyCount,
+      adminRank: rank,
+      userPublicKey: publicKey.key,
+      groupKeys: keyString,
+      groupAsMember: accessByGroupAsMember,
+    );
+
+    if (sessionId == "") {
+      return;
+    }
+
+    bool nextPage = true;
+    int i = 1;
+    final p = <Future>[];
+
+    while (nextPage) {
+      final nextKeys = prepareKeys(_keys, i);
+      nextPage = nextKeys.end;
+
+      p.add(api.groupJoinUserSession(
+        baseUrl: _baseUrl,
+        authToken: _appToken,
+        jwt: jwt,
+        id: groupId,
+        sessionId: sessionId,
+        userPublicKey: publicKey.key,
+        groupKeys: nextKeys.str,
+        groupAsMember: accessByGroupAsMember,
+      ));
+
+      i++;
+    }
+
+    await Future.wait(p);
+  }
 
   //____________________________________________________________________________________________________________________
   //file handling
