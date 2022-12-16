@@ -298,7 +298,7 @@ class User {
     return key.privateKey;
   }
 
-  Future<UserPublicKey> getPublicKey(String replyId) {
+  Future<PublicKeyData> getPublicKey(String replyId) {
     return Sentc.getUserPublicKey(replyId);
   }
 

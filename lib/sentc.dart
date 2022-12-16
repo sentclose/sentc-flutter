@@ -274,18 +274,18 @@ class Sentc {
 
   //________________________________________________________________________________________________
 
-  static Future<UserPublicKey> getUserPublicKey(String userId) async {
+  static Future<PublicKeyData> getUserPublicKey(String userId) async {
     final storage = Sentc.getStorage();
 
     final key = await storage.getItem("user_public_key_$userId");
 
     if (key != null) {
-      return UserPublicKey.fromJson(jsonDecode(key));
+      return PublicKeyData.fromJson(jsonDecode(key));
     }
 
     final fetchedKey = await getApi().userFetchPublicKey(baseUrl: baseUrl, authToken: appToken, userId: userId);
 
-    final k = UserPublicKey._(fetchedKey.publicKey, fetchedKey.publicKeyId);
+    final k = PublicKeyData._(fetchedKey.publicKey, fetchedKey.publicKeyId);
 
     await storage.set("user_public_key_$userId", jsonEncode(k));
 
@@ -325,17 +325,17 @@ class Sentc {
     throw UnimplementedError();
   }
 
-  static Future<GroupPublicKey> getGroupPublicKeyData(String groupId) async {
+  static Future<PublicKeyData> getGroupPublicKeyData(String groupId) async {
     final storage = Sentc.getStorage();
     final key = await storage.getItem("group_public_key_$groupId");
 
     if (key != null) {
-      return GroupPublicKey.fromJson(jsonDecode(key));
+      return PublicKeyData.fromJson(jsonDecode(key));
     }
 
     final fetchedKey = await getApi().groupGetPublicKeyData(baseUrl: baseUrl, authToken: appToken, id: groupId);
 
-    final k = GroupPublicKey._(fetchedKey.publicKeyId, fetchedKey.publicKey);
+    final k = PublicKeyData._(fetchedKey.publicKeyId, fetchedKey.publicKey);
 
     await storage.set("group_public_key_$groupId", jsonEncode(k));
 
@@ -362,28 +362,13 @@ class PrepareLoginOutput {
   });
 }
 
-class UserPublicKey {
+class PublicKeyData {
   final String id;
   final String key;
 
-  UserPublicKey._(this.id, this.key);
+  PublicKeyData._(this.id, this.key);
 
-  UserPublicKey.fromJson(Map<String, dynamic> json)
-      : id = json["id"],
-        key = json["key"];
-
-  Map<String, dynamic> toJson() {
-    return {"id": id, "key": key};
-  }
-}
-
-class GroupPublicKey {
-  final String id;
-  final String key;
-
-  GroupPublicKey._(this.id, this.key);
-
-  GroupPublicKey.fromJson(Map<String, dynamic> json)
+  PublicKeyData.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         key = json["key"];
 
