@@ -1302,6 +1302,7 @@ class GroupOutData {
   final List<GroupOutDataKeys> keys;
   final String? accessByGroupAsMember;
   final String? accessByParentGroup;
+  final bool isConnectedGroup;
 
   GroupOutData({
     required this.groupId,
@@ -1313,6 +1314,7 @@ class GroupOutData {
     required this.keys,
     this.accessByGroupAsMember,
     this.accessByParentGroup,
+    required this.isConnectedGroup,
   });
 }
 
@@ -5150,8 +5152,8 @@ GroupKeyData _wire2api_group_key_data(dynamic raw) {
 
 GroupOutData _wire2api_group_out_data(dynamic raw) {
   final arr = raw as List<dynamic>;
-  if (arr.length != 9)
-    throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+  if (arr.length != 10)
+    throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
   return GroupOutData(
     groupId: _wire2api_String(arr[0]),
     parentGroupId: _wire2api_String(arr[1]),
@@ -5162,6 +5164,7 @@ GroupOutData _wire2api_group_out_data(dynamic raw) {
     keys: _wire2api_list_group_out_data_keys(arr[6]),
     accessByGroupAsMember: _wire2api_opt_String(arr[7]),
     accessByParentGroup: _wire2api_opt_String(arr[8]),
+    isConnectedGroup: _wire2api_bool(arr[9]),
   );
 }
 
