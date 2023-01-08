@@ -4088,7 +4088,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_uint_8_list(encryptedData),
             _api2wire_String(head),
             _api2wire_String(verifyKeyData)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kDecryptRawSymmetricConstMeta,
         argValues: [key, encryptedData, head, verifyKeyData],
         hint: hint,
@@ -4111,7 +4111,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(key),
             _api2wire_uint_8_list(data),
             _api2wire_String(signKey)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kEncryptSymmetricConstMeta,
         argValues: [key, data, signKey],
         hint: hint,
@@ -4134,7 +4134,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(key),
             _api2wire_uint_8_list(encryptedData),
             _api2wire_String(verifyKeyData)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kDecryptSymmetricConstMeta,
         argValues: [key, encryptedData, verifyKeyData],
         hint: hint,
@@ -4228,7 +4228,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_uint_8_list(encryptedData),
             _api2wire_String(head),
             _api2wire_String(verifyKeyData)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kDecryptRawAsymmetricConstMeta,
         argValues: [privateKey, encryptedData, head, verifyKeyData],
         hint: hint,
@@ -4251,7 +4251,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(replyPublicKeyData),
             _api2wire_uint_8_list(data),
             _api2wire_String(signKey)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kEncryptAsymmetricConstMeta,
         argValues: [replyPublicKeyData, data, signKey],
         hint: hint,
@@ -4274,7 +4274,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(privateKey),
             _api2wire_uint_8_list(encryptedData),
             _api2wire_String(verifyKeyData)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kDecryptAsymmetricConstMeta,
         argValues: [privateKey, encryptedData, verifyKeyData],
         hint: hint,
@@ -4633,7 +4633,7 @@ class SentcFlutterImpl extends FlutterRustBridgeBase<SentcFlutterWire>
             _api2wire_String(partId),
             _api2wire_String(contentKey),
             _api2wire_String(verifyKeyData)),
-        parseSuccessData: _wire2api_uint_8_list,
+        parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
         constMeta: kFileDownloadAndDecryptFilePartConstMeta,
         argValues: [
           baseUrl,
@@ -4964,6 +4964,10 @@ String _wire2api_String(dynamic raw) {
 
 List<String> _wire2api_StringList(dynamic raw) {
   return (raw as List<dynamic>).cast<String>();
+}
+
+Uint8List _wire2api_ZeroCopyBuffer_Uint8List(dynamic raw) {
+  return raw as Uint8List;
 }
 
 BelongsToType _wire2api_belongs_to_type(dynamic raw) {
