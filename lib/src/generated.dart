@@ -436,6 +436,14 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGroupDecryptKeyConstMeta;
 
+  Future<String> groupDecryptHmacKey(
+      {required String groupKey,
+      required String encryptedHmacKey,
+      required String encryptedHmacAlg,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupDecryptHmacKeyConstMeta;
+
   Future<List<GroupUserListItem>> groupGetMember(
       {required String baseUrl,
       required String authToken,
@@ -1302,6 +1310,9 @@ class GroupOutData {
   final String? accessByGroupAsMember;
   final String? accessByParentGroup;
   final bool isConnectedGroup;
+  final String encryptedHmacKey;
+  final String encryptedHmacAlg;
+  final String encryptedHmacEncryptionKeyId;
 
   GroupOutData({
     required this.groupId,
@@ -1314,6 +1325,9 @@ class GroupOutData {
     this.accessByGroupAsMember,
     this.accessByParentGroup,
     required this.isConnectedGroup,
+    required this.encryptedHmacKey,
+    required this.encryptedHmacAlg,
+    required this.encryptedHmacEncryptionKeyId,
   });
 }
 
@@ -1470,6 +1484,9 @@ class UserData {
   final String refreshToken;
   final DeviceKeyData keys;
   final List<UserKeyData> userKeys;
+  final String encryptedHmacKey;
+  final String encryptedHmacAlg;
+  final String encryptedHmacEncryptionKeyId;
 
   UserData({
     required this.jwt,
@@ -1478,6 +1495,9 @@ class UserData {
     required this.refreshToken,
     required this.keys,
     required this.userKeys,
+    required this.encryptedHmacKey,
+    required this.encryptedHmacAlg,
+    required this.encryptedHmacEncryptionKeyId,
   });
 }
 
@@ -2765,6 +2785,30 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_decrypt_key",
         argNames: ["privateKey", "serverKeyData"],
+      );
+
+  Future<String> groupDecryptHmacKey(
+      {required String groupKey,
+      required String encryptedHmacKey,
+      required String encryptedHmacAlg,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(groupKey);
+    var arg1 = _platform.api2wire_String(encryptedHmacKey);
+    var arg2 = _platform.api2wire_String(encryptedHmacAlg);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_group_decrypt_hmac_key(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_String,
+      constMeta: kGroupDecryptHmacKeyConstMeta,
+      argValues: [groupKey, encryptedHmacKey, encryptedHmacAlg],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGroupDecryptHmacKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_decrypt_hmac_key",
+        argNames: ["groupKey", "encryptedHmacKey", "encryptedHmacAlg"],
       );
 
   Future<List<GroupUserListItem>> groupGetMember(
@@ -5256,8 +5300,8 @@ class SentcFlutterImpl implements SentcFlutter {
 
   GroupOutData _wire2api_group_out_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 10)
-      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    if (arr.length != 13)
+      throw Exception('unexpected arr length: expect 13 but see ${arr.length}');
     return GroupOutData(
       groupId: _wire2api_String(arr[0]),
       parentGroupId: _wire2api_String(arr[1]),
@@ -5269,6 +5313,9 @@ class SentcFlutterImpl implements SentcFlutter {
       accessByGroupAsMember: _wire2api_opt_String(arr[7]),
       accessByParentGroup: _wire2api_opt_String(arr[8]),
       isConnectedGroup: _wire2api_bool(arr[9]),
+      encryptedHmacKey: _wire2api_String(arr[10]),
+      encryptedHmacAlg: _wire2api_String(arr[11]),
+      encryptedHmacEncryptionKeyId: _wire2api_String(arr[12]),
     );
   }
 
@@ -5471,8 +5518,8 @@ class SentcFlutterImpl implements SentcFlutter {
 
   UserData _wire2api_user_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 6)
-      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
     return UserData(
       jwt: _wire2api_String(arr[0]),
       userId: _wire2api_String(arr[1]),
@@ -5480,6 +5527,9 @@ class SentcFlutterImpl implements SentcFlutter {
       refreshToken: _wire2api_String(arr[3]),
       keys: _wire2api_device_key_data(arr[4]),
       userKeys: _wire2api_list_user_key_data(arr[5]),
+      encryptedHmacKey: _wire2api_String(arr[6]),
+      encryptedHmacAlg: _wire2api_String(arr[7]),
+      encryptedHmacEncryptionKeyId: _wire2api_String(arr[8]),
     );
   }
 
@@ -6959,6 +7009,32 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
   late final _wire_group_decrypt_key = _wire_group_decrypt_keyPtr.asFunction<
       void Function(
           int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_decrypt_hmac_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> group_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_hmac_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_hmac_alg,
+  ) {
+    return _wire_group_decrypt_hmac_key(
+      port_,
+      group_key,
+      encrypted_hmac_key,
+      encrypted_hmac_alg,
+    );
+  }
+
+  late final _wire_group_decrypt_hmac_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_group_decrypt_hmac_key');
+  late final _wire_group_decrypt_hmac_key =
+      _wire_group_decrypt_hmac_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_get_member(
     int port_,
