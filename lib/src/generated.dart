@@ -999,6 +999,37 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta;
 
+  Future<String> prepareCreateSearchable(
+      {required String key,
+      required String itemRef,
+      required String category,
+      required String data,
+      required bool full,
+      int? limit,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableConstMeta;
+
+  Future<String> prepareSearch(
+      {required String key, required String data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kPrepareSearchConstMeta;
+
+  Future<List<ListSearchItem>> search(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String groupId,
+      required String groupAsMember,
+      required String key,
+      required String data,
+      required String catId,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSearchConstMeta;
+
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
       required String authToken,
@@ -1427,6 +1458,18 @@ class ListGroups {
     required this.joinedTime,
     required this.rank,
     this.parent,
+  });
+}
+
+class ListSearchItem {
+  final String id;
+  final String itemRef;
+  final String time;
+
+  ListSearchItem({
+    required this.id,
+    required this.itemRef,
+    required this.time,
   });
 }
 
@@ -4731,6 +4774,116 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: ["baseUrl", "authToken", "jwt", "keyId"],
       );
 
+  Future<String> prepareCreateSearchable(
+      {required String key,
+      required String itemRef,
+      required String category,
+      required String data,
+      required bool full,
+      int? limit,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_String(itemRef);
+    var arg2 = _platform.api2wire_String(category);
+    var arg3 = _platform.api2wire_String(data);
+    var arg4 = full;
+    var arg5 = _platform.api2wire_opt_box_autoadd_usize(limit);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_prepare_create_searchable(
+          port_, arg0, arg1, arg2, arg3, arg4, arg5),
+      parseSuccessData: _wire2api_String,
+      constMeta: kPrepareCreateSearchableConstMeta,
+      argValues: [key, itemRef, category, data, full, limit],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "prepare_create_searchable",
+        argNames: ["key", "itemRef", "category", "data", "full", "limit"],
+      );
+
+  Future<String> prepareSearch(
+      {required String key, required String data, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_String(data);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_prepare_search(port_, arg0, arg1),
+      parseSuccessData: _wire2api_String,
+      constMeta: kPrepareSearchConstMeta,
+      argValues: [key, data],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kPrepareSearchConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "prepare_search",
+        argNames: ["key", "data"],
+      );
+
+  Future<List<ListSearchItem>> search(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String groupId,
+      required String groupAsMember,
+      required String key,
+      required String data,
+      required String catId,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    var arg3 = _platform.api2wire_String(groupId);
+    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_String(key);
+    var arg6 = _platform.api2wire_String(data);
+    var arg7 = _platform.api2wire_String(catId);
+    var arg8 = _platform.api2wire_String(lastFetchedTime);
+    var arg9 = _platform.api2wire_String(lastFetchedGroupId);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_search(
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
+      parseSuccessData: _wire2api_list_list_search_item,
+      constMeta: kSearchConstMeta,
+      argValues: [
+        baseUrl,
+        authToken,
+        jwt,
+        groupId,
+        groupAsMember,
+        key,
+        data,
+        catId,
+        lastFetchedTime,
+        lastFetchedGroupId
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSearchConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "search",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "groupId",
+          "groupAsMember",
+          "key",
+          "data",
+          "catId",
+          "lastFetchedTime",
+          "lastFetchedGroupId"
+        ],
+      );
+
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
       required String authToken,
@@ -5448,6 +5601,21 @@ class SentcFlutterImpl implements SentcFlutter {
     return (raw as List<dynamic>).map(_wire2api_list_groups).toList();
   }
 
+  List<ListSearchItem> _wire2api_list_list_search_item(dynamic raw) {
+    return (raw as List<dynamic>).map(_wire2api_list_search_item).toList();
+  }
+
+  ListSearchItem _wire2api_list_search_item(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return ListSearchItem(
+      id: _wire2api_String(arr[0]),
+      itemRef: _wire2api_String(arr[1]),
+      time: _wire2api_String(arr[2]),
+    );
+  }
+
   List<UserDeviceList> _wire2api_list_user_device_list(dynamic raw) {
     return (raw as List<dynamic>).map(_wire2api_user_device_list).toList();
   }
@@ -5611,6 +5779,10 @@ int api2wire_u8(int raw) {
   return raw;
 }
 
+@protected
+int api2wire_usize(int raw) {
+  return raw;
+}
 // Section: finalizer
 
 class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
@@ -5625,11 +5797,22 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Usize> api2wire_box_autoadd_usize(int raw) {
+    return inner.new_box_autoadd_usize_0(api2wire_usize(raw));
+  }
+
+  @protected
+  ffi.Pointer<ffi.Usize> api2wire_opt_box_autoadd_usize(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_usize(raw);
+  }
+
+  @protected
   ffi.Pointer<wire_uint_8_list> api2wire_uint_8_list(Uint8List raw) {
     final ans = inner.new_uint_8_list_0(raw.length);
     ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
     return ans;
   }
+
 // Section: finalizer
 
 // Section: api_fill_to_wire
@@ -9028,6 +9211,123 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_prepare_create_searchable(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> item_ref,
+    ffi.Pointer<wire_uint_8_list> category,
+    ffi.Pointer<wire_uint_8_list> data,
+    bool full,
+    ffi.Pointer<ffi.UintPtr> limit,
+  ) {
+    return _wire_prepare_create_searchable(
+      port_,
+      key,
+      item_ref,
+      category,
+      data,
+      full,
+      limit,
+    );
+  }
+
+  late final _wire_prepare_create_searchablePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool,
+              ffi.Pointer<ffi.UintPtr>)>>('wire_prepare_create_searchable');
+  late final _wire_prepare_create_searchable =
+      _wire_prepare_create_searchablePtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              bool,
+              ffi.Pointer<ffi.UintPtr>)>();
+
+  void wire_prepare_search(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+  ) {
+    return _wire_prepare_search(
+      port_,
+      key,
+      data,
+    );
+  }
+
+  late final _wire_prepare_searchPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_prepare_search');
+  late final _wire_prepare_search = _wire_prepare_searchPtr.asFunction<
+      void Function(
+          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_search(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+    ffi.Pointer<wire_uint_8_list> cat_id,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+  ) {
+    return _wire_search(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      group_id,
+      group_as_member,
+      key,
+      data,
+      cat_id,
+      last_fetched_time,
+      last_fetched_group_id,
+    );
+  }
+
+  late final _wire_searchPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_search');
+  late final _wire_search = _wire_searchPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
   void wire_file_download_file_meta(
     int port_,
     ffi.Pointer<wire_uint_8_list> base_url,
@@ -9391,6 +9691,20 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  ffi.Pointer<ffi.UintPtr> new_box_autoadd_usize_0(
+    int value,
+  ) {
+    return _new_box_autoadd_usize_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_usize_0Ptr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<ffi.UintPtr> Function(ffi.UintPtr)>>(
+      'new_box_autoadd_usize_0');
+  late final _new_box_autoadd_usize_0 = _new_box_autoadd_usize_0Ptr
+      .asFunction<ffi.Pointer<ffi.UintPtr> Function(int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,
