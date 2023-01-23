@@ -1140,7 +1140,6 @@ class Claims {
   final String sub;
   final int exp;
   final int iat;
-  final String groupId;
   final bool fresh;
 
   Claims({
@@ -1148,7 +1147,6 @@ class Claims {
     required this.sub,
     required this.exp,
     required this.iat,
-    required this.groupId,
     required this.fresh,
   });
 }
@@ -5276,15 +5274,14 @@ class SentcFlutterImpl implements SentcFlutter {
 
   Claims _wire2api_claims(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 6)
-      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return Claims(
       aud: _wire2api_String(arr[0]),
       sub: _wire2api_String(arr[1]),
       exp: _wire2api_usize(arr[2]),
       iat: _wire2api_usize(arr[3]),
-      groupId: _wire2api_String(arr[4]),
-      fresh: _wire2api_bool(arr[5]),
+      fresh: _wire2api_bool(arr[4]),
     );
   }
 
