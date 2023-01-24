@@ -4785,7 +4785,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg2 = _platform.api2wire_String(category);
     var arg3 = _platform.api2wire_String(data);
     var arg4 = full;
-    var arg5 = _platform.api2wire_opt_box_autoadd_usize(limit);
+    var arg5 = _platform.api2wire_opt_box_autoadd_u32(limit);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_prepare_create_searchable(
           port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -5772,14 +5772,15 @@ int api2wire_i32(int raw) {
 }
 
 @protected
-int api2wire_u8(int raw) {
+int api2wire_u32(int raw) {
   return raw;
 }
 
 @protected
-int api2wire_usize(int raw) {
+int api2wire_u8(int raw) {
   return raw;
 }
+
 // Section: finalizer
 
 class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
@@ -5794,13 +5795,13 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   }
 
   @protected
-  ffi.Pointer<ffi.Usize> api2wire_box_autoadd_usize(int raw) {
-    return inner.new_box_autoadd_usize_0(api2wire_usize(raw));
+  ffi.Pointer<ffi.Uint32> api2wire_box_autoadd_u32(int raw) {
+    return inner.new_box_autoadd_u32_0(api2wire_u32(raw));
   }
 
   @protected
-  ffi.Pointer<ffi.Usize> api2wire_opt_box_autoadd_usize(int? raw) {
-    return raw == null ? ffi.nullptr : api2wire_box_autoadd_usize(raw);
+  ffi.Pointer<ffi.Uint32> api2wire_opt_box_autoadd_u32(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_u32(raw);
   }
 
   @protected
@@ -5809,7 +5810,6 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
     ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
     return ans;
   }
-
 // Section: finalizer
 
 // Section: api_fill_to_wire
@@ -9215,7 +9215,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> category,
     ffi.Pointer<wire_uint_8_list> data,
     bool full,
-    ffi.Pointer<ffi.UintPtr> limit,
+    ffi.Pointer<ffi.Uint32> limit,
   ) {
     return _wire_prepare_create_searchable(
       port_,
@@ -9237,7 +9237,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Bool,
-              ffi.Pointer<ffi.UintPtr>)>>('wire_prepare_create_searchable');
+              ffi.Pointer<ffi.Uint32>)>>('wire_prepare_create_searchable');
   late final _wire_prepare_create_searchable =
       _wire_prepare_create_searchablePtr.asFunction<
           void Function(
@@ -9247,7 +9247,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               bool,
-              ffi.Pointer<ffi.UintPtr>)>();
+              ffi.Pointer<ffi.Uint32>)>();
 
   void wire_prepare_search(
     int port_,
@@ -9689,19 +9689,19 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
-  ffi.Pointer<ffi.UintPtr> new_box_autoadd_usize_0(
+  ffi.Pointer<ffi.Uint32> new_box_autoadd_u32_0(
     int value,
   ) {
-    return _new_box_autoadd_usize_0(
+    return _new_box_autoadd_u32_0(
       value,
     );
   }
 
-  late final _new_box_autoadd_usize_0Ptr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<ffi.UintPtr> Function(ffi.UintPtr)>>(
-      'new_box_autoadd_usize_0');
-  late final _new_box_autoadd_usize_0 = _new_box_autoadd_usize_0Ptr
-      .asFunction<ffi.Pointer<ffi.UintPtr> Function(int)>();
+  late final _new_box_autoadd_u32_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Uint32> Function(ffi.Uint32)>>(
+          'new_box_autoadd_u32_0');
+  late final _new_box_autoadd_u32_0 = _new_box_autoadd_u32_0Ptr
+      .asFunction<ffi.Pointer<ffi.Uint32> Function(int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,
