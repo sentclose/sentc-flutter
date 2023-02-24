@@ -295,6 +295,10 @@ class Group extends AbstractSymCrypto {
     return Future.value(SymKeyToEncryptResult(latestKey.groupKeyId, latestKey.groupKey));
   }
 
+  String getNewestHmacKey() {
+    return _hmacKeys[0];
+  }
+
   //____________________________________________________________________________________________________________________
 
   Future<GroupKey> getGroupKey(String keyId, [bool newKeys = false]) async {
@@ -1279,6 +1283,32 @@ class Group extends AbstractSymCrypto {
       fileId: fileId,
       groupId: groupId,
       groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<String> prepareSearchItem(String data) {
+    final key = getNewestHmacKey();
+
+    return Sentc.getApi().prepareSearch(key: key, data: data);
+  }
+
+  Future<List<ListSearchItem>> searchItem(String data, ListSearchItem? lastFetchedItem, String? catId) async {
+    final jwt = await getJwt();
+
+    final lastTime = lastFetchedItem?.time ?? "0";
+    final lastId = lastFetchedItem?.id ?? "none";
+
+    return Sentc.getApi().search(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+      key: getNewestHmacKey(),
+      data: data,
+      catId: catId ?? "",
+      lastFetchedTime: lastTime,
+      lastFetchedGroupId: lastId,
     );
   }
 }
