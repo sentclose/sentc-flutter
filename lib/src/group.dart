@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:sentc/src/crypto/abstract_sym_crypto.dart';
 import 'package:sentc/sentc.dart';
+import '../src/generated.dart' as plugin;
 
 PrepareKeysResult prepareKeys(List<GroupKey> keys, int page) {
   final offset = page * 50;
@@ -149,31 +150,38 @@ Future<Group> getGroup(
 
 //______________________________________________________________________________________________________________________
 
-class GroupKey {
-  final String privateKey;
-  final String publicKey;
-  final String groupKey;
-  final String time;
-  final String groupKeyId;
+class GroupKey extends plugin.GroupKeyData {
+  GroupKey({
+    required super.privateGroupKey,
+    required super.publicGroupKey,
+    required super.groupKey,
+    required super.time,
+    required super.groupKeyId,
+  });
 
-  GroupKey(this.privateKey, this.publicKey, this.groupKey, this.time, this.groupKeyId);
+  factory GroupKey.fromJson(Map<String, dynamic> json) => GroupKey(
+        privateGroupKey: json['privateGroupKey'] as String,
+        publicGroupKey: json['publicGroupKey'] as String,
+        groupKey: json['groupKey'] as String,
+        time: json['time'] as String,
+        groupKeyId: json['groupKeyId'] as String,
+      );
 
-  GroupKey.fromJson(Map<String, dynamic> json)
-      : privateKey = json["privateKey"],
-        publicKey = json["publicKey"],
-        groupKey = json["groupKey"],
-        time = json["time"],
-        groupKeyId = json["groupKeyId"];
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'privateGroupKey': privateGroupKey,
+        'publicGroupKey': publicGroupKey,
+        'groupKey': groupKey,
+        'time': time,
+        'groupKeyId': groupKeyId,
+      };
 
-  Map<String, dynamic> toJson() {
-    return {
-      "privateKey": privateKey,
-      "publicKey": publicKey,
-      "groupKey": groupKey,
-      "time": time,
-      "groupKeyId": groupKeyId,
-    };
-  }
+  factory GroupKey.fromServer(GroupKeyData key) => GroupKey(
+        privateGroupKey: key.privateGroupKey,
+        publicGroupKey: key.publicGroupKey,
+        groupKey: key.groupKey,
+        time: key.time,
+        groupKeyId: key.groupKeyId,
+      );
 }
 
 //______________________________________________________________________________________________________________________
@@ -407,7 +415,7 @@ class Group extends AbstractSymCrypto {
         );
       }
 
-      return newestKey.publicKey;
+      return newestKey.publicGroupKey;
     }
 
     final connectedGroup = await _getGroupRefFromGroupAsMember();
@@ -420,7 +428,7 @@ class Group extends AbstractSymCrypto {
       );
     }
 
-    return newestKey.publicKey;
+    return newestKey.publicGroupKey;
   }
 
   Future<String> _getPrivateKey(String keyId) async {
@@ -433,7 +441,7 @@ class Group extends AbstractSymCrypto {
 
       final parentGroupKey = await parentGroup.getGroupKey(keyId);
 
-      return parentGroupKey.privateKey;
+      return parentGroupKey.privateGroupKey;
     }
 
     //access over group as member
@@ -441,7 +449,7 @@ class Group extends AbstractSymCrypto {
 
     final connectedGroupKey = await connectedGroup.getGroupKey(keyId);
 
-    return connectedGroupKey.privateKey;
+    return connectedGroupKey.privateGroupKey;
   }
 
   Future<List<GroupKey>> decryptKey(List<GroupOutDataKeys> keys) async {
@@ -453,13 +461,7 @@ class Group extends AbstractSymCrypto {
 
       final decryptedKeys = await Sentc.getApi().groupDecryptKey(privateKey: privateKey, serverKeyData: key.keyData);
 
-      list.add(GroupKey(
-        decryptedKeys.privateGroupKey,
-        decryptedKeys.publicGroupKey,
-        decryptedKeys.groupKey,
-        decryptedKeys.time,
-        decryptedKeys.groupKeyId,
-      ));
+      list.add(GroupKey.fromServer(decryptedKeys));
     }
 
     return list;
@@ -546,14 +548,14 @@ class Group extends AbstractSymCrypto {
   }
 
   Future<String> prepareCreateChildGroup() {
-    final lastKey = _getNewestKey()!.publicKey;
+    final lastKey = _getNewestKey()!.publicGroupKey;
 
     return Sentc.getApi().groupPrepareCreateGroup(creatorsPublicKey: lastKey);
   }
 
   Future<String> createChildGroup() async {
     final jwt = await getJwt();
-    final lastKey = _getNewestKey()!.publicKey;
+    final lastKey = _getNewestKey()!.publicGroupKey;
 
     return Sentc.getApi().groupCreateChildGroup(
       baseUrl: _baseUrl,
@@ -568,7 +570,7 @@ class Group extends AbstractSymCrypto {
 
   Future<String> createConnectedGroup() async {
     final jwt = await getJwt();
-    final lastKey = _getNewestKey()!.publicKey;
+    final lastKey = _getNewestKey()!.publicGroupKey;
 
     return Sentc.getApi().groupCreateConnectedGroup(
       baseUrl: _baseUrl,
