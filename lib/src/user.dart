@@ -40,7 +40,11 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
     [],
     keyMap,
     newestKeyId,
+    [],
   );
+
+  //decrypt the hmac key
+  user._hmacKeys = await user.decryptHmacKeys(data.hmacKeys);
 
   final storage = Sentc.getStorage();
 
@@ -129,6 +133,7 @@ class User {
   final List<UserKey> _userKeys;
   final Map<String, int> _keyMap;
   String _newestKeyId;
+  List<String> _hmacKeys;
 
   late List<GroupInviteReqList> groupInvites;
 
@@ -150,6 +155,7 @@ class User {
     this.groupInvites,
     this._keyMap,
     this._newestKeyId,
+    this._hmacKeys,
   );
 
   User.fromJson(Map<String, dynamic> json, String baseUrl, String appToken)
@@ -169,7 +175,8 @@ class User {
         _userIdentifier = json["userIdentifier"],
         _keyMap = jsonDecode(json["keyMap"]),
         _newestKeyId = json["newestKeyId"],
-        _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKey.fromJson(e)).toList();
+        _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKey.fromJson(e)).toList(),
+        _hmacKeys = (json["hmacKeys"] as List<dynamic>).map((e) => e as String).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -187,6 +194,7 @@ class User {
       "keyMap": jsonEncode(_keyMap),
       "userKeys": jsonEncode(_userKeys),
       "newestKeyId": _newestKeyId,
+      "hmacKeys": jsonEncode(_hmacKeys),
     };
   }
 
@@ -262,6 +270,22 @@ class User {
     _keyMap[key.groupKeyId] = lastIndex;
   }
 
+  Future<List<String>> decryptHmacKeys(List<GroupOutDataHmacKeys> fetchedKeys) async {
+    final List<String> list = [];
+
+    for (var i = 0; i < fetchedKeys.length; ++i) {
+      var key = fetchedKeys[i];
+
+      final groupKey = await _getUserSymKey(key.groupKeyId);
+
+      final decryptedHmacKey = await Sentc.getApi().groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
+
+      list.add(decryptedHmacKey);
+    }
+
+    return list;
+  }
+
   Future<String> getPrivateKey(String keyId) async {
     final key = await _getUserKeys(keyId);
 
@@ -288,6 +312,16 @@ class User {
 
   Future<String> getSignKey() {
     return Future.value(getNewestSignKey());
+  }
+
+  Future<String> _getUserSymKey(String keyId) async {
+    final key = await _getUserKeys(keyId);
+
+    return key.groupKey;
+  }
+
+  String getNewestHmacKey() {
+    return _hmacKeys[0];
   }
 
   //____________________________________________________________________________________________________________________
