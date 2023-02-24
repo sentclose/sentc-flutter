@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:sentc/src/group.dart' as group;
 import 'package:sentc/sentc.dart';
+import '../src/generated.dart' as plugin;
 
 Future<User> getUser(String deviceIdentifier, UserData data) async {
   final Map<String, int> keyMap = {};
@@ -13,17 +14,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 
     keyMap[key.groupKeyId] = i;
 
-    userKeys.add(UserKey._(
-      key.privateKey,
-      key.publicKey,
-      key.groupKey,
-      key.time,
-      key.groupKeyId,
-      key.signKey,
-      key.verifyKey,
-      key.exportedPublicKey,
-      key.exportedVerifyKey,
-    ));
+    userKeys.add(UserKey.fromServer(key));
   }
 
   final refreshToken = (Sentc.refresh_endpoint != REFRESH_OPTIONS.api) ? "" : data.refreshToken;
@@ -65,36 +56,47 @@ class UserKey extends group.GroupKey {
   final String exportedPublicKey;
   final String exportedVerifyKey;
 
-  UserKey._(
-    String privateKey,
-    String publicKey,
-    String groupKey,
-    String time,
-    String groupKeyId,
-    this.signKey,
-    this.verifyKey,
-    this.exportedPublicKey,
-    this.exportedVerifyKey,
-  ) : super(privateKey, publicKey, groupKey, time, groupKeyId);
+  UserKey({
+    required super.privateGroupKey,
+    required super.publicGroupKey,
+    required super.groupKey,
+    required super.time,
+    required super.groupKeyId,
+    required this.signKey,
+    required this.verifyKey,
+    required this.exportedPublicKey,
+    required this.exportedVerifyKey,
+  });
 
-  UserKey.fromJson(Map<String, dynamic> json)
-      : signKey = json["signKey"],
-        verifyKey = json["verifyKey"],
-        exportedPublicKey = json["exportedPublicKey"],
-        exportedVerifyKey = json["exportedVerifyKey"],
-        super(
-          json["privateKey"],
-          json["publicKey"],
-          json["groupKey"],
-          json["time"],
-          json["groupKeyId"],
-        );
+  factory UserKey.fromJson(Map<String, dynamic> json) => UserKey(
+        privateGroupKey: json['privateGroupKey'] as String,
+        publicGroupKey: json['publicGroupKey'] as String,
+        groupKey: json['groupKey'] as String,
+        time: json['time'] as String,
+        groupKeyId: json['groupKeyId'] as String,
+        signKey: json['signKey'] as String,
+        verifyKey: json['verifyKey'] as String,
+        exportedPublicKey: json['exportedPublicKey'] as String,
+        exportedVerifyKey: json['exportedVerifyKey'] as String,
+      );
+
+  factory UserKey.fromServer(plugin.UserKeyData key) => UserKey(
+        privateGroupKey: key.privateKey,
+        publicGroupKey: key.publicKey,
+        groupKey: key.groupKey,
+        time: key.time,
+        groupKeyId: key.groupKeyId,
+        signKey: key.signKey,
+        verifyKey: key.verifyKey,
+        exportedPublicKey: key.exportedPublicKey,
+        exportedVerifyKey: key.exportedVerifyKey,
+      );
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "privateKey": privateKey,
-      "publicKey": publicKey,
+      "privateGroupKey": privateGroupKey,
+      "publicGroupKey": publicGroupKey,
       "groupKey": groupKey,
       "time": time,
       "groupKeyId": groupKeyId,
@@ -236,17 +238,7 @@ class User {
       privateKey: _privateDeviceKey,
     );
 
-    _userKeys.add(UserKey._(
-      userKeys.privateKey,
-      userKeys.publicKey,
-      userKeys.groupKey,
-      userKeys.time,
-      userKeys.groupKeyId,
-      userKeys.signKey,
-      userKeys.verifyKey,
-      userKeys.exportedPublicKey,
-      userKeys.exportedVerifyKey,
-    ));
+    _userKeys.add(UserKey.fromServer(userKeys));
 
     if (first != null && first) {
       _newestKeyId = userKeys.groupKeyId;
@@ -265,17 +257,7 @@ class User {
 
     final lastIndex = _userKeys.length;
 
-    _userKeys.add(UserKey._(
-      key.privateKey,
-      key.publicKey,
-      key.groupKey,
-      key.time,
-      key.groupKeyId,
-      key.signKey,
-      key.verifyKey,
-      key.exportedPublicKey,
-      key.exportedVerifyKey,
-    ));
+    _userKeys.add(UserKey.fromServer(key));
 
     _keyMap[key.groupKeyId] = lastIndex;
   }
@@ -283,7 +265,7 @@ class User {
   Future<String> getPrivateKey(String keyId) async {
     final key = await _getUserKeys(keyId);
 
-    return key.privateKey;
+    return key.publicGroupKey;
   }
 
   Future<PublicKeyData> getPublicKey(String replyId) {
@@ -297,7 +279,7 @@ class User {
   }
 
   String getNewestPublicKey() {
-    return _getNewestKey().publicKey;
+    return _getNewestKey().publicGroupKey;
   }
 
   String getNewestSignKey() {
