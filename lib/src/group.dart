@@ -124,6 +124,7 @@ Future<Group> getGroup(
     "_newestKeyId",
     out.accessByParentGroup,
     accessByGroupAsMember,
+    [],
   );
 
   final keys = await groupObj.decryptKey(out.keys);
@@ -142,6 +143,10 @@ Future<Group> getGroup(
     //fetch the rest of the keys
     await groupObj.fetchKeys();
   }
+
+  //now decrypt the hmac key for searchable encryption, the right key must be fetched before
+  final decryptedHmacKeys = await groupObj.decryptHmacKeys(out.hmacKeys);
+  groupObj._hmacKeys = decryptedHmacKeys;
 
   await storage.set(groupKey, jsonEncode(groupObj));
 
@@ -201,6 +206,7 @@ class Group extends AbstractSymCrypto {
   final String joinedTime;
 
   List<GroupKey> _keys;
+  List<String> _hmacKeys;
   Map<String, int> _keyMap;
   String _newestKeyId;
   final String? accessByParentGroup;
@@ -222,6 +228,7 @@ class Group extends AbstractSymCrypto {
     this._newestKeyId,
     this.accessByParentGroup,
     this.accessByGroupAsMember,
+    this._hmacKeys,
   );
 
   Group.fromJson(
@@ -244,7 +251,8 @@ class Group extends AbstractSymCrypto {
         _newestKeyId = json["newestKeyId"],
         accessByParentGroup = json["accessByParentGroup"],
         accessByGroupAsMember = json["accessByGroupAsMember"],
-        _keys = (jsonDecode(json["keys"]) as List).map((e) => GroupKey.fromJson(e)).toList();
+        _keys = (jsonDecode(json["keys"]) as List).map((e) => GroupKey.fromJson(e)).toList(),
+        _hmacKeys = (json["hmacKeys"] as List<dynamic>).map((e) => e as String).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -258,6 +266,7 @@ class Group extends AbstractSymCrypto {
       "keys": jsonEncode(_keys),
       "accessByParentGroup": accessByParentGroup,
       "accessByGroupAsMember": accessByGroupAsMember,
+      "hmacKeys": jsonEncode(_hmacKeys)
     };
   }
 
@@ -284,6 +293,10 @@ class Group extends AbstractSymCrypto {
     final latestKey = _getNewestKey()!;
 
     return Future.value(SymKeyToEncryptResult(latestKey.groupKeyId, latestKey.groupKey));
+  }
+
+  String getNewestHmacKey() {
+    return _hmacKeys[0];
   }
 
   //____________________________________________________________________________________________________________________
@@ -462,6 +475,22 @@ class Group extends AbstractSymCrypto {
       final decryptedKeys = await Sentc.getApi().groupDecryptKey(privateKey: privateKey, serverKeyData: key.keyData);
 
       list.add(GroupKey.fromServer(decryptedKeys));
+    }
+
+    return list;
+  }
+
+  Future<List<String>> decryptHmacKeys(List<GroupOutDataHmacKeys> keys) async {
+    List<String> list = [];
+
+    for (var i = 0; i < keys.length; ++i) {
+      var key = keys[i];
+
+      final groupKey = await getSymKeyById(key.groupKeyId);
+
+      final decryptedHamcKey = await Sentc.getApi().groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
+
+      list.add(decryptedHamcKey);
     }
 
     return list;
@@ -1254,6 +1283,32 @@ class Group extends AbstractSymCrypto {
       fileId: fileId,
       groupId: groupId,
       groupAsMember: accessByGroupAsMember,
+    );
+  }
+
+  Future<String> prepareSearchItem(String data) {
+    final key = getNewestHmacKey();
+
+    return Sentc.getApi().prepareSearch(key: key, data: data);
+  }
+
+  Future<List<ListSearchItem>> searchItem(String data, ListSearchItem? lastFetchedItem, String? catId) async {
+    final jwt = await getJwt();
+
+    final lastTime = lastFetchedItem?.time ?? "0";
+    final lastId = lastFetchedItem?.id ?? "none";
+
+    return Sentc.getApi().search(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+      key: getNewestHmacKey(),
+      data: data,
+      catId: catId ?? "",
+      lastFetchedTime: lastTime,
+      lastFetchedGroupId: lastId,
     );
   }
 }
