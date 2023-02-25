@@ -488,9 +488,9 @@ class Group extends AbstractSymCrypto {
 
       final groupKey = await getSymKeyById(key.groupKeyId);
 
-      final decryptedHamcKey = await Sentc.getApi().groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
+      final decryptedHmacKey = await Sentc.getApi().groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
 
-      list.add(decryptedHamcKey);
+      list.add(decryptedHmacKey);
     }
 
     return list;
@@ -698,13 +698,11 @@ class Group extends AbstractSymCrypto {
       for (var i = 0; i < keys.length; ++i) {
         var key = keys[i];
 
-        GroupKey? preKey;
+        GroupKey preKey;
 
         try {
           preKey = await getGroupKey(key.preGroupKeyId);
-        } catch (e) {}
-
-        if (preKey == null) {
+        } catch (e) {
           leftKeys.add(key);
           continue;
         }
