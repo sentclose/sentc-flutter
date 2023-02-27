@@ -48,7 +48,18 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 
   final storage = Sentc.getStorage();
 
-  await storage.set("user_data_$deviceIdentifier", jsonEncode(user));
+  Future.wait([
+    storage.set("user_data_$deviceIdentifier", jsonEncode(user)),
+    storage.set("actual_user", deviceIdentifier),
+    //save always the newest public key
+    storage.set(
+      "user_public_key_${user.userId}",
+      jsonEncode(PublicKeyData(
+        userKeys[0].publicGroupKey,
+        userKeys[0].groupKeyId,
+      )),
+    )
+  ]);
 
   return user;
 }
