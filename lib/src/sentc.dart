@@ -278,7 +278,7 @@ class Sentc {
 
     final fetchedKey = await getApi().userFetchPublicKey(baseUrl: baseUrl, authToken: appToken, userId: userId);
 
-    final k = PublicKeyData._(fetchedKey.publicKey, fetchedKey.publicKeyId);
+    final k = PublicKeyData(fetchedKey.publicKey, fetchedKey.publicKeyId);
 
     await storage.set("user_public_key_$userId", jsonEncode(k));
 
@@ -328,7 +328,7 @@ class Sentc {
 
     final fetchedKey = await getApi().groupGetPublicKeyData(baseUrl: baseUrl, authToken: appToken, id: groupId);
 
-    final k = PublicKeyData._(fetchedKey.publicKeyId, fetchedKey.publicKey);
+    final k = PublicKeyData(fetchedKey.publicKeyId, fetchedKey.publicKey);
 
     await storage.set("group_public_key_$groupId", jsonEncode(k));
 
@@ -342,7 +342,7 @@ class PublicKeyData {
   final String id;
   final String key;
 
-  PublicKeyData._(this.id, this.key);
+  PublicKeyData(this.id, this.key);
 
   PublicKeyData.fromJson(Map<String, dynamic> json)
       : id = json["id"],
