@@ -68,7 +68,6 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
 class UserKey extends group.GroupKey {
   final String signKey;
   final String verifyKey;
-  final String exportedPublicKey;
   final String exportedVerifyKey;
 
   UserKey({
@@ -79,7 +78,7 @@ class UserKey extends group.GroupKey {
     required super.groupKeyId,
     required this.signKey,
     required this.verifyKey,
-    required this.exportedPublicKey,
+    required super.exportedPublicKey,
     required this.exportedVerifyKey,
   });
 
@@ -300,7 +299,7 @@ class User {
   Future<String> getPrivateKey(String keyId) async {
     final key = await _getUserKeys(keyId);
 
-    return key.publicGroupKey;
+    return key.privateGroupKey;
   }
 
   Future<PublicKeyData> getPublicKey(String replyId) {

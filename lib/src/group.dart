@@ -148,7 +148,12 @@ Future<Group> getGroup(
   final decryptedHmacKeys = await groupObj.decryptHmacKeys(out.hmacKeys);
   groupObj._hmacKeys = decryptedHmacKeys;
 
-  await storage.set(groupKey, jsonEncode(groupObj));
+  await Future.wait([
+    //store the group data
+    storage.set(groupKey, jsonEncode(groupObj)),
+    //save always the newest public key
+    storage.set("group_public_key_$groupId", jsonEncode(keys[0])),
+  ]);
 
   return groupObj;
 }
@@ -162,6 +167,7 @@ class GroupKey extends plugin.GroupKeyData {
     required super.groupKey,
     required super.time,
     required super.groupKeyId,
+    required super.exportedPublicKey,
   });
 
   factory GroupKey.fromJson(Map<String, dynamic> json) => GroupKey(
@@ -170,6 +176,7 @@ class GroupKey extends plugin.GroupKeyData {
         groupKey: json['groupKey'] as String,
         time: json['time'] as String,
         groupKeyId: json['groupKeyId'] as String,
+        exportedPublicKey: json["exportedPublicKey"] as String,
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -178,6 +185,7 @@ class GroupKey extends plugin.GroupKeyData {
         'groupKey': groupKey,
         'time': time,
         'groupKeyId': groupKeyId,
+        'exportedPublicKey': exportedPublicKey
       };
 
   factory GroupKey.fromServer(GroupKeyData key) => GroupKey(
@@ -186,6 +194,7 @@ class GroupKey extends plugin.GroupKeyData {
         groupKey: key.groupKey,
         time: key.time,
         groupKeyId: key.groupKeyId,
+        exportedPublicKey: key.exportedPublicKey,
       );
 }
 
@@ -322,8 +331,13 @@ class Group extends AbstractSymCrypto {
       _keys.add(decryptedKey[0]);
       _keyMap[decryptedKey[0].groupKeyId] = lastIndex;
 
+      final storage = Sentc.getStorage();
+
       if (newKeys) {
         _newestKeyId = decryptedKey[0].groupKeyId;
+
+        //save also the newest key in the cache
+        storage.set("group_public_key_$groupId", jsonEncode(decryptedKey[0]));
       }
 
       String actualUserId;
@@ -335,7 +349,6 @@ class Group extends AbstractSymCrypto {
 
       final groupKey = "group_data_user_${actualUserId}_id_$groupId";
 
-      final storage = Sentc.getStorage();
       await storage.set(groupKey, jsonEncode(this));
 
       keyIndex = _keyMap[keyId];

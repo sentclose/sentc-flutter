@@ -1312,6 +1312,7 @@ class GroupJoinReqList {
 class GroupKeyData {
   final String privateGroupKey;
   final String publicGroupKey;
+  final String exportedPublicKey;
   final String groupKey;
   final String time;
   final String groupKeyId;
@@ -1319,6 +1320,7 @@ class GroupKeyData {
   GroupKeyData({
     required this.privateGroupKey,
     required this.publicGroupKey,
+    required this.exportedPublicKey,
     required this.groupKey,
     required this.time,
     required this.groupKeyId,
@@ -5432,14 +5434,15 @@ class SentcFlutterImpl implements SentcFlutter {
 
   GroupKeyData _wire2api_group_key_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 5)
-      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
     return GroupKeyData(
       privateGroupKey: _wire2api_String(arr[0]),
       publicGroupKey: _wire2api_String(arr[1]),
-      groupKey: _wire2api_String(arr[2]),
-      time: _wire2api_String(arr[3]),
-      groupKeyId: _wire2api_String(arr[4]),
+      exportedPublicKey: _wire2api_String(arr[2]),
+      groupKey: _wire2api_String(arr[3]),
+      time: _wire2api_String(arr[4]),
+      groupKeyId: _wire2api_String(arr[5]),
     );
   }
 
