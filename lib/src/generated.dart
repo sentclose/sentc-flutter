@@ -1010,6 +1010,15 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableConstMeta;
 
+  Future<SearchCreateDataLight> prepareCreateSearchableLight(
+      {required String key,
+      required String data,
+      required bool full,
+      int? limit,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableLightConstMeta;
+
   Future<String> prepareSearch(
       {required String key, required String data, dynamic hint});
 
@@ -1510,6 +1519,18 @@ class RegisterDeviceData {
   RegisterDeviceData({
     required this.sessionId,
     required this.exportedPublicKey,
+  });
+}
+
+class SearchCreateDataLight {
+  final List<String> hashes;
+  final String alg;
+  final String keyId;
+
+  SearchCreateDataLight({
+    required this.hashes,
+    required this.alg,
+    required this.keyId,
   });
 }
 
@@ -4804,6 +4825,32 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: ["key", "itemRef", "category", "data", "full", "limit"],
       );
 
+  Future<SearchCreateDataLight> prepareCreateSearchableLight(
+      {required String key,
+      required String data,
+      required bool full,
+      int? limit,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_String(data);
+    var arg2 = full;
+    var arg3 = _platform.api2wire_opt_box_autoadd_u32(limit);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_prepare_create_searchable_light(port_, arg0, arg1, arg2, arg3),
+      parseSuccessData: _wire2api_search_create_data_light,
+      constMeta: kPrepareCreateSearchableLightConstMeta,
+      argValues: [key, data, full, limit],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableLightConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "prepare_create_searchable_light",
+        argNames: ["key", "data", "full", "limit"],
+      );
+
   Future<String> prepareSearch(
       {required String key, required String data, dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
@@ -5669,6 +5716,17 @@ class SentcFlutterImpl implements SentcFlutter {
     return RegisterDeviceData(
       sessionId: _wire2api_String(arr[0]),
       exportedPublicKey: _wire2api_String(arr[1]),
+    );
+  }
+
+  SearchCreateDataLight _wire2api_search_create_data_light(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return SearchCreateDataLight(
+      hashes: _wire2api_StringList(arr[0]),
+      alg: _wire2api_String(arr[1]),
+      keyId: _wire2api_String(arr[2]),
     );
   }
 
@@ -9251,6 +9309,36 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               bool,
               ffi.Pointer<ffi.Uint32>)>();
+
+  void wire_prepare_create_searchable_light(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+    bool full,
+    ffi.Pointer<ffi.Uint32> limit,
+  ) {
+    return _wire_prepare_create_searchable_light(
+      port_,
+      key,
+      data,
+      full,
+      limit,
+    );
+  }
+
+  late final _wire_prepare_create_searchable_lightPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Bool,
+                  ffi.Pointer<ffi.Uint32>)>>(
+      'wire_prepare_create_searchable_light');
+  late final _wire_prepare_create_searchable_light =
+      _wire_prepare_create_searchable_lightPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, bool, ffi.Pointer<ffi.Uint32>)>();
 
   void wire_prepare_search(
     int port_,

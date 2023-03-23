@@ -1297,6 +1297,28 @@ class Group extends AbstractSymCrypto {
     );
   }
 
+  //____________________________________________________________________________________________________________________
+  //searchable encryption
+
+  Future<SearchCreateDataLight> prepareCreateSearchableItemLight(String data, bool full, int? limit) {
+    final key = getNewestHmacKey();
+
+    return Sentc.getApi().prepareCreateSearchableLight(key: key, data: data, full: full, limit: limit);
+  }
+
+  Future<String> prepareCreateSearchableItem(String itemRef, String data, bool full, String? category, int? limit) {
+    final key = getNewestHmacKey();
+
+    return Sentc.getApi().prepareCreateSearchable(
+      key: key,
+      data: data,
+      full: full,
+      limit: limit,
+      category: category ?? "",
+      itemRef: itemRef,
+    );
+  }
+
   Future<String> prepareSearchItem(String data) {
     final key = getNewestHmacKey();
 
