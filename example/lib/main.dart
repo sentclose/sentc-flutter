@@ -32,9 +32,9 @@ class _MyAppState extends State<MyApp> {
 
   _asyncInit() async {
     await Sentc.init(
-      app_token: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
-      base_url: "http://192.168.178.21:3002",
-      //base_url: "http://127.0.0.1:3002",
+      appToken: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
+      baseUrl: "http://192.168.178.21:3002",
+      //baseUrl: "http://127.0.0.1:3002",
     );
 
     var reg = await Sentc.register("userIdentifier", "password");
@@ -110,7 +110,7 @@ class _MyAppState extends State<MyApp> {
 class ListViewLayout extends StatelessWidget {
   final List<Widget> body;
 
-  const ListViewLayout(this.body);
+  const ListViewLayout(this.body, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class ListViewLayout extends StatelessWidget {
 class Layout extends StatelessWidget {
   final Widget body;
 
-  const Layout(this.body);
+  const Layout(this.body, {super.key});
 
   @override
   Widget build(BuildContext context) {

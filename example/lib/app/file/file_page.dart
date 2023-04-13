@@ -28,9 +28,9 @@ class _FilePageState extends State<FilePage> {
 
   void _prepareTest() async {
     await Sentc.init(
-      app_token: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
-      base_url: "http://192.168.178.21:3002",
-      //base_url: "http://127.0.0.1:3002",
+      appToken: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
+      baseUrl: "http://192.168.178.21:3002",
+      //baseUrl: "http://127.0.0.1:3002",
     );
 
     await Sentc.register("userIdentifier1", "password");

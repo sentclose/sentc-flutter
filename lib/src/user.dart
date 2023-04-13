@@ -17,7 +17,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
     userKeys.add(UserKey.fromServer(key));
   }
 
-  final refreshToken = (Sentc.refresh_endpoint != REFRESH_OPTIONS.api) ? "" : data.refreshToken;
+  final refreshToken = (Sentc.refreshEndpoint != RefreshOption.api) ? "" : data.refreshToken;
 
   //when getting the user the first time this is always the newest key id
   final newestKeyId = data.userKeys[0].groupKeyId;
