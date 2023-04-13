@@ -116,7 +116,7 @@ class Uploader {
     //reset it just in case it was true
     Uploader.cancelUpload = false;
 
-    final urlPrefix = Sentc.file_part_url ?? "";
+    final urlPrefix = Sentc.filePartUrl ?? "";
 
     while (start < fileSize) {
       currentChunk++;

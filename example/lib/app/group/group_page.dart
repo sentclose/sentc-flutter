@@ -16,8 +16,8 @@ class _GroupPageState extends State<GroupPage> {
       content: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
-          children: [
-            const Text("group page"),
+          children: const [
+            Text("group page"),
           ],
         ),
       ),

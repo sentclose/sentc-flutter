@@ -201,9 +201,6 @@ class GroupKey extends plugin.GroupKeyData {
 //______________________________________________________________________________________________________________________
 
 class Group extends AbstractSymCrypto {
-  final String _baseUrl;
-  final String _appToken;
-
   final User _user;
 
   final String groupId;
@@ -222,8 +219,8 @@ class Group extends AbstractSymCrypto {
   final String accessByGroupAsMember;
 
   Group._(
-    this._baseUrl,
-    this._appToken,
+    super.baseUrl,
+    super.appToken,
     this._user,
     this.groupId,
     this.parentGroupId,
@@ -242,16 +239,12 @@ class Group extends AbstractSymCrypto {
 
   Group.fromJson(
     Map<String, dynamic> json,
-    String baseUrl,
-    String appToken,
-    User user,
-    bool fromParent,
+    super.baseUrl,
+    super.appToken,
+    this._user,
+    this._fromParent,
     this.keyUpdate,
-  )   : _baseUrl = baseUrl,
-        _appToken = appToken,
-        _user = user,
-        _fromParent = fromParent,
-        groupId = json["groupId"],
+  )   : groupId = json["groupId"],
         parentGroupId = json["parentGroupId"],
         createdTime = json["createdTime"],
         joinedTime = json["joinedTime"],
@@ -317,8 +310,8 @@ class Group extends AbstractSymCrypto {
       final jwt = await getJwt();
 
       final fetchedKey = await Sentc.getApi().groupGetGroupKey(
-        baseUrl: _baseUrl,
-        authToken: _appToken,
+        baseUrl: baseUrl,
+        authToken: appToken,
         jwt: jwt,
         id: groupId,
         keyId: keyId,
@@ -394,8 +387,8 @@ class Group extends AbstractSymCrypto {
 
     return Group.fromJson(
       jsonDecode(groupJson),
-      _baseUrl,
-      _appToken,
+      baseUrl,
+      appToken,
       _user,
       false,
       false,
@@ -416,8 +409,8 @@ class Group extends AbstractSymCrypto {
 
     return Group.fromJson(
       jsonDecode(groupJson),
-      _baseUrl,
-      _appToken,
+      baseUrl,
+      appToken,
       _user,
       false,
       false,
@@ -520,8 +513,8 @@ class Group extends AbstractSymCrypto {
 
     while (nextFetch) {
       final fetchedKeys = await Sentc.getApi().groupGetGroupKeys(
-        baseUrl: _baseUrl,
-        authToken: _appToken,
+        baseUrl: baseUrl,
+        authToken: appToken,
         jwt: jwt,
         id: groupId,
         lastFetchedTime: lastItem.time,
@@ -555,8 +548,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupDeleteGroup(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       adminRank: rank,
@@ -565,11 +558,11 @@ class Group extends AbstractSymCrypto {
   }
 
   Future<Group> getChildGroup(String groupId) {
-    return getGroup(groupId, _baseUrl, _appToken, _user, true, accessByGroupAsMember);
+    return getGroup(groupId, baseUrl, appToken, _user, true, accessByGroupAsMember);
   }
 
   Future<Group> getConnectedGroup(String groupId) {
-    return getGroup(groupId, _baseUrl, _appToken, _user, false, this.groupId);
+    return getGroup(groupId, baseUrl, appToken, _user, false, this.groupId);
   }
 
   Future<List<GroupChildrenList>> getChildren(GroupChildrenList? lastFetchedItem) async {
@@ -579,8 +572,8 @@ class Group extends AbstractSymCrypto {
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetAllFirstLevelChildren(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       lastFetchedTime: lastFetchedTime,
@@ -600,8 +593,8 @@ class Group extends AbstractSymCrypto {
     final lastKey = _getNewestKey()!.publicGroupKey;
 
     return Sentc.getApi().groupCreateChildGroup(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       parentPublicKey: lastKey,
       parentId: groupId,
@@ -615,8 +608,8 @@ class Group extends AbstractSymCrypto {
     final lastKey = _getNewestKey()!.publicGroupKey;
 
     return Sentc.getApi().groupCreateConnectedGroup(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       connectedGroupId: groupId,
       adminRank: rank,
@@ -632,8 +625,8 @@ class Group extends AbstractSymCrypto {
     final lastFetchedId = lastFetchedItem?.userId ?? "none";
 
     return Sentc.getApi().groupGetMember(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       lastFetchedTime: lastFetchedTime,
@@ -671,8 +664,8 @@ class Group extends AbstractSymCrypto {
     final publicKey = await _getPublicKey();
 
     final keyId = await Sentc.getApi().groupKeyRotation(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       publicKey: publicKey,
@@ -689,8 +682,8 @@ class Group extends AbstractSymCrypto {
     final api = Sentc.getApi();
 
     var keys = await api.groupPreDoneKeyRotation(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       groupAsMember: accessByGroupAsMember,
@@ -724,8 +717,8 @@ class Group extends AbstractSymCrypto {
         final privateKey = await _getPrivateKey(key.encryptedEphKeyKeyId);
 
         await api.groupFinishKeyRotation(
-          baseUrl: _baseUrl,
-          authToken: _appToken,
+          baseUrl: baseUrl,
+          authToken: appToken,
           jwt: jwt,
           id: groupId,
           serverOutput: key.serverOutput,
@@ -776,8 +769,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     await Sentc.getApi().groupUpdateRank(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       userId: userId,
@@ -810,8 +803,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupKickUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       userId: userId,
@@ -826,8 +819,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().leaveGroup(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       groupAsMember: accessByGroupAsMember,
@@ -844,8 +837,8 @@ class Group extends AbstractSymCrypto {
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetGroupsForUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedGroupId,
@@ -860,8 +853,8 @@ class Group extends AbstractSymCrypto {
     final lastFetchedGroupId = lastItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetInvitesForUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedGroupId,
@@ -874,8 +867,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupAcceptInvite(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupIdToAccept,
       groupId: groupId,
@@ -887,8 +880,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupRejectInvite(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupIdToReject,
       groupId: groupId,
@@ -901,8 +894,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupJoinReq(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupIdToJoin,
       groupId: groupId,
@@ -917,8 +910,8 @@ class Group extends AbstractSymCrypto {
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetSentJoinReq(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       adminRank: rank,
@@ -932,8 +925,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupDeleteSentJoinReq(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       adminRank: rank,
@@ -949,8 +942,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupStopGroupInvites(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       adminRank: rank,
@@ -1011,8 +1004,8 @@ class Group extends AbstractSymCrypto {
     final api = Sentc.getApi();
 
     final sessionId = await api.groupInviteUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       userId: userId,
@@ -1038,8 +1031,8 @@ class Group extends AbstractSymCrypto {
       nextPage = nextKeys.end;
 
       p.add(api.groupInviteUserSession(
-        baseUrl: _baseUrl,
-        authToken: _appToken,
+        baseUrl: baseUrl,
+        authToken: appToken,
         jwt: jwt,
         id: groupId,
         autoInvite: auto,
@@ -1065,8 +1058,8 @@ class Group extends AbstractSymCrypto {
     final lastFetchedId = lastFetchedItem?.userId ?? "none";
 
     return Sentc.getApi().groupGetJoinReqs(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       adminRank: rank,
@@ -1080,8 +1073,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupRejectJoinReq(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       adminRank: rank,
@@ -1106,8 +1099,8 @@ class Group extends AbstractSymCrypto {
     }
 
     final sessionId = await api.groupAcceptJoinReq(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       userId: userId,
@@ -1131,8 +1124,8 @@ class Group extends AbstractSymCrypto {
       nextPage = nextKeys.end;
 
       p.add(api.groupJoinUserSession(
-        baseUrl: _baseUrl,
-        authToken: _appToken,
+        baseUrl: baseUrl,
+        authToken: appToken,
         jwt: jwt,
         id: groupId,
         sessionId: sessionId,
@@ -1156,7 +1149,7 @@ class Group extends AbstractSymCrypto {
   Future<FilePrepareCreateOutput> prepareRegisterFile(File file) async {
     final key = await registerKey();
 
-    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, null, accessByGroupAsMember);
+    final uploader = Uploader(baseUrl, appToken, _user, groupId, null, null, accessByGroupAsMember);
 
     final out = await uploader.prepareFileRegister(file, key.key, key.masterKeyId);
 
@@ -1171,7 +1164,7 @@ class Group extends AbstractSymCrypto {
   /// Validates the sentc file register output
   /// Returns the file id
   Future<FileDoneRegister> doneFileRegister(String serverOutput) {
-    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, null, accessByGroupAsMember);
+    final uploader = Uploader(baseUrl, appToken, _user, groupId, null, null, accessByGroupAsMember);
 
     return uploader.doneFileRegister(serverOutput);
   }
@@ -1190,7 +1183,7 @@ class Group extends AbstractSymCrypto {
     bool sign = false,
     void Function(double progress)? uploadCallback,
   }) {
-    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
+    final uploader = Uploader(baseUrl, appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
 
     return uploader.checkFileUpload(file, contentKey.key, sessionId, sign);
   }
@@ -1214,7 +1207,7 @@ class Group extends AbstractSymCrypto {
   }) async {
     final key = await registerKey();
 
-    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
+    final uploader = Uploader(baseUrl, appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
 
     final out = await uploader.uploadFile(file, key.key, key.masterKeyId, sign);
 
@@ -1244,7 +1237,7 @@ class Group extends AbstractSymCrypto {
   /// This is usefully if the user wants to show information about the file (e.g. the file name) but not download the file
   /// The meta info is also needed for the download file functions
   Future<DownloadResult> downloadFileMetaInfo(String fileId, [String verifyKey = ""]) {
-    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+    final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
 
     return _getFileMetaInfo(fileId, downloader, verifyKey);
   }
@@ -1261,7 +1254,7 @@ class Group extends AbstractSymCrypto {
     String verifyKey = "",
     void Function(double progress)? updateProgressCb,
   }) {
-    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+    final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
 
     return downloader.downloadFileParts(file, fileMeta.partList, key.key, updateProgressCb, verifyKey);
   }
@@ -1279,7 +1272,7 @@ class Group extends AbstractSymCrypto {
     String verifyKey = "",
     void Function(double progress)? updateProgressCb,
   }) async {
-    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+    final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
 
     final fileMeta = await _getFileMetaInfo(fileId, downloader, verifyKey);
 
@@ -1299,7 +1292,7 @@ class Group extends AbstractSymCrypto {
     String verifyKey = "",
     void Function(double progress)? updateProgressCb,
   }) async {
-    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+    final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
 
     final fileMeta = await _getFileMetaInfo(fileId, downloader, verifyKey);
 
@@ -1321,8 +1314,8 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
 
     return Sentc.getApi().fileDeleteFile(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       fileId: fileId,
       groupId: groupId,
@@ -1365,8 +1358,8 @@ class Group extends AbstractSymCrypto {
     final lastId = lastFetchedItem?.id ?? "none";
 
     return Sentc.getApi().search(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       groupId: groupId,
       groupAsMember: accessByGroupAsMember,

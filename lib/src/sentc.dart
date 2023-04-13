@@ -7,14 +7,14 @@ import 'package:sentc/src/storage/shared_preferences_storage.dart';
 import 'package:sentc/src/storage/storage_interface.dart';
 import 'package:sentc/src/user.dart';
 
-enum REFRESH_OPTIONS { cookie, cookie_fn, api }
+enum RefreshOption { cookie, cookieFn, api }
 
 class RefreshOptions {
-  REFRESH_OPTIONS endpoint;
-  String? endpoint_url;
-  Future<String> Function(String old_jwt)? endpoint_fn;
+  RefreshOption endpoint;
+  String? endpointUrl;
+  Future<String> Function(String oldJwt)? endpointFn;
 
-  RefreshOptions({required this.endpoint, this.endpoint_url, this.endpoint_fn});
+  RefreshOptions({required this.endpoint, this.endpointUrl, this.endpointFn});
 }
 
 class Sentc {
@@ -23,20 +23,20 @@ class Sentc {
 
   static String baseUrl = "";
   static String appToken = "";
-  static REFRESH_OPTIONS refresh_endpoint = REFRESH_OPTIONS.api;
-  static String _refresh_endpoint_url = "";
-  static Future<String> Function(String old_jwt) _endpoint_fn = (String old_jwt) async {
+  static RefreshOption refreshEndpoint = RefreshOption.api;
+  static String _refreshEndpointUrl = "";
+  static Future<String> Function(String oldJwt) _endpointFn = (String oldJwt) async {
     return "";
   };
-  static String? file_part_url;
+  static String? filePartUrl;
 
   const Sentc._();
 
   static Future<User?> init({
-    String? base_url,
-    required String app_token,
-    String? file_part_url,
-    RefreshOptions? refresh_options,
+    String? baseUrl,
+    required String appToken,
+    String? filePartUrl,
+    RefreshOptions? refreshOptions,
     StorageInterface? storage,
   }) async {
     if (_api != null) {
@@ -58,28 +58,28 @@ class Sentc {
             : DynamicLibrary.open(path);
 
     final SentcFlutterImpl api = SentcFlutterImpl(dylib);
-    baseUrl = base_url ?? "https://api.sentc.com";
+    Sentc.baseUrl = baseUrl ?? "https://api.sentc.com";
 
-    REFRESH_OPTIONS _refresh_endpoint = refresh_options != null ? refresh_options.endpoint : REFRESH_OPTIONS.api;
+    RefreshOption refreshEndpoint = refreshOptions != null ? refreshOptions.endpoint : RefreshOption.api;
 
-    String refresh_endpoint_url =
-        refresh_options != null ? refresh_options.endpoint_url ?? "/api/v1/refresh" : "/api/v1/refresh";
+    String refreshEndpointUrl =
+        refreshOptions != null ? refreshOptions.endpointUrl ?? "/api/v1/refresh" : "/api/v1/refresh";
 
-    var refresh_endpoint_fn = refresh_options != null
-        ? refresh_options.endpoint_fn ??
-            (String old_jwt) async {
+    var refreshEndpointFn = refreshOptions != null
+        ? refreshOptions.endpointFn ??
+            (String oldJwt) async {
               return "";
             }
-        : (String old_jwt) async {
+        : (String oldJwt) async {
             return "";
           };
 
     _api = api;
-    appToken = app_token;
-    refresh_endpoint = _refresh_endpoint;
-    _refresh_endpoint_url = refresh_endpoint_url;
-    _endpoint_fn = refresh_endpoint_fn;
-    Sentc.file_part_url = file_part_url;
+    Sentc.appToken = appToken;
+    Sentc.refreshEndpoint = refreshEndpoint;
+    _refreshEndpointUrl = refreshEndpointUrl;
+    _endpointFn = refreshEndpointFn;
+    Sentc.filePartUrl = filePartUrl;
 
     _storage = storage ?? SharedPreferencesStorage();
     await _storage!.init();
@@ -87,11 +87,11 @@ class Sentc {
     try {
       final user = await getActualUser();
 
-      if (refresh_endpoint == REFRESH_OPTIONS.api) {
+      if (refreshEndpoint == RefreshOption.api) {
         //do init only when refresh endpoint is api
         final out = await getApi().initUser(
-          baseUrl: baseUrl,
-          authToken: app_token,
+          baseUrl: Sentc.baseUrl,
+          authToken: Sentc.appToken,
           jwt: user.jwt,
           refreshToken: user.refreshToken,
         );
@@ -229,23 +229,23 @@ class Sentc {
   static Future<PrepareLoginOutput> prepareLogin(
     String userIdentifier,
     String password,
-    String prepare_login_server_output,
+    String prepareLoginServerOutput,
   ) {
     return getApi().prepareLogin(
       userIdentifier: userIdentifier,
       password: password,
-      serverOutput: prepare_login_server_output,
+      serverOutput: prepareLoginServerOutput,
     );
   }
 
   static Future<User> doneLogin(
     String deviceIdentifier,
-    String master_key_encryption_key,
-    String done_login_server_output,
+    String masterKeyEncryptionKey,
+    String doneLoginServerOutput,
   ) async {
     final out = await getApi().doneLogin(
-      masterKeyEncryption: master_key_encryption_key,
-      serverOutput: done_login_server_output,
+      masterKeyEncryption: masterKeyEncryptionKey,
+      serverOutput: doneLoginServerOutput,
     );
 
     return getUser(deviceIdentifier, out);
@@ -307,12 +307,12 @@ class Sentc {
   }
 
   static Future<String> refreshJwt(String oldJwt, String refreshToken) {
-    if (refresh_endpoint == REFRESH_OPTIONS.api) {
+    if (refreshEndpoint == RefreshOption.api) {
       return getApi().refreshJwt(baseUrl: baseUrl, authToken: appToken, jwt: oldJwt, refreshToken: refreshToken);
     }
 
-    if (refresh_endpoint == REFRESH_OPTIONS.cookie_fn) {
-      return _endpoint_fn(oldJwt);
+    if (refreshEndpoint == RefreshOption.cookieFn) {
+      return _endpointFn(oldJwt);
     }
 
     throw UnimplementedError();

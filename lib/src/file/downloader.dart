@@ -125,7 +125,7 @@ class Downloader {
   ]) async {
     final api = Sentc.getApi();
 
-    final urlPrefix = Sentc.file_part_url ?? "";
+    final urlPrefix = Sentc.filePartUrl ?? "";
 
     Downloader.cancelDownload = false;
 

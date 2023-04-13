@@ -1,12 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sentc/sentc.dart';
 import 'package:sentc/sentc_platform_interface.dart';
 import 'package:sentc/sentc_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockSentcPlatform
-    with MockPlatformInterfaceMixin
-    implements SentcPlatform {
+class MockSentcPlatform with MockPlatformInterfaceMixin implements SentcPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 }
