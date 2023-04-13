@@ -35,6 +35,38 @@ Future<SymKey> fetchSymKey(
   return symKey;
 }
 
+Future<SymKey> fetchSymKeyByPrivateKey(
+  String baseUrl,
+  String appToken,
+  String keyId,
+  String masterKey,
+  String masterKeyId,
+  String signKey,
+) async {
+  final storage = Sentc.getStorage();
+
+  final cacheKey = "sym_key_id_$keyId";
+
+  final symKeyRawString = await storage.getItem(cacheKey);
+
+  if (symKeyRawString != null) {
+    return SymKey.fromJson(jsonDecode(symKeyRawString), signKey, baseUrl, appToken);
+  }
+
+  final out = await Sentc.getApi().getSymKeyByIdByPrivateKey(
+    baseUrl: baseUrl,
+    authToken: appToken,
+    keyId: keyId,
+    privateKey: masterKey,
+  );
+
+  final symKey = SymKey(baseUrl, appToken, out, keyId, masterKeyId, signKey);
+
+  await storage.set(cacheKey, jsonEncode(symKey));
+
+  return symKey;
+}
+
 class NonRegisteredKeyOut {
   final SymKey key;
   final String encryptedKey;
