@@ -1,6 +1,39 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:sentc/sentc.dart';
+
+Future<SymKey> fetchSymKey(
+  String baseUrl,
+  String appToken,
+  String keyId,
+  String masterKey,
+  String masterKeyId,
+  String signKey,
+) async {
+  final storage = Sentc.getStorage();
+
+  final cacheKey = "sym_key_id_$keyId";
+
+  final symKeyRawString = await storage.getItem(cacheKey);
+
+  if (symKeyRawString != null) {
+    return SymKey.fromJson(jsonDecode(symKeyRawString), signKey, baseUrl, appToken);
+  }
+
+  final out = await Sentc.getApi().getSymKeyById(
+    baseUrl: baseUrl,
+    authToken: appToken,
+    keyId: keyId,
+    masterKey: masterKey,
+  );
+
+  final symKey = SymKey(baseUrl, appToken, out, keyId, masterKeyId, signKey);
+
+  await storage.set(cacheKey, jsonEncode(symKey));
+
+  return symKey;
+}
 
 class NonRegisteredKeyOut {
   final SymKey key;
@@ -10,12 +43,23 @@ class NonRegisteredKeyOut {
 }
 
 class SymKey {
+  final String baseUrl;
+  final String appToken;
   final String key;
   final String keyId;
   final String masterKeyId;
   final String _signKey;
 
-  SymKey(this.key, this.keyId, this.masterKeyId, this._signKey);
+  SymKey(this.baseUrl, this.appToken, this.key, this.keyId, this.masterKeyId, this._signKey);
+
+  SymKey.fromJson(Map<String, dynamic> json, this._signKey, this.baseUrl, this.appToken)
+      : key = json["key"],
+        keyId = json["keyId"],
+        masterKeyId = json["masterKeyId"];
+
+  Map<String, dynamic> toJson() {
+    return {"key": key, "keyId": keyId, "masterKeyId": masterKeyId};
+  }
 
   Future<CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) {
     String signKey = "";

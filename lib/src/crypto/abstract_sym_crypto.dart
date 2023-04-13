@@ -116,7 +116,7 @@ abstract class AbstractSymCrypto {
       masterKey: keyData.key,
     );
 
-    return SymKey(out.key, out.keyId, keyData.id, await getSignKey());
+    return SymKey(baseUrl, appToken, out.key, out.keyId, keyData.id, await getSignKey());
   }
 
   Future<NonRegisteredKeyOut> generateNonRegisteredKey() async {
@@ -125,7 +125,7 @@ abstract class AbstractSymCrypto {
     final out = await Sentc.getApi().generateNonRegisterSymKey(masterKey: keyData.key);
 
     return NonRegisteredKeyOut(
-      SymKey(out.key, "non_register", keyData.id, await getSignKey()),
+      SymKey(baseUrl, appToken, out.key, "non_register", keyData.id, await getSignKey()),
       out.encryptedKey,
     );
   }
@@ -133,13 +133,6 @@ abstract class AbstractSymCrypto {
   Future<SymKey> fetchKey(String keyId, String masterKeyId) async {
     final key = await getSymKeyById(masterKeyId);
 
-    final out = await Sentc.getApi().getSymKeyById(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      keyId: keyId,
-      masterKey: key,
-    );
-
-    return SymKey(out, keyId, masterKeyId, await getSignKey());
+    return fetchSymKey(baseUrl, appToken, keyId, key, masterKeyId, await getSignKey());
   }
 }
