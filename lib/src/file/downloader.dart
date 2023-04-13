@@ -116,18 +116,6 @@ class Downloader {
     );
   }
 
-  Future<void> downloadFilePartsWithPath(
-    String path,
-    List<FilePartListItem> partList,
-    String contentKey, [
-    void Function(double progress)? updateProgressCb,
-    String verifyKey = "",
-  ]) {
-    final file = File(path);
-
-    return downloadFileParts(file, partList, contentKey, updateProgressCb, verifyKey);
-  }
-
   Future<void> downloadFileParts(
     File file,
     List<FilePartListItem> partList,
