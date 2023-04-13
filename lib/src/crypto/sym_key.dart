@@ -139,4 +139,8 @@ class SymKey {
   Future<String> decryptString(String data, [String verifyKey = ""]) {
     return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
+
+  Future<void> deleteKey(String jwt) {
+    return Sentc.getApi().deleteSymKey(baseUrl: baseUrl, authToken: appToken, jwt: jwt, keyId: keyId);
+  }
 }
