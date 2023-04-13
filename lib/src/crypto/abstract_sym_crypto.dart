@@ -10,6 +10,11 @@ class SymKeyToEncryptResult {
 }
 
 abstract class AbstractSymCrypto {
+  final String baseUrl;
+  final String appToken;
+
+  AbstractSymCrypto(this.baseUrl, this.appToken);
+
   Future<SymKeyToEncryptResult> getSymKeyToEncrypt();
 
   Future<String> getSymKeyById(String keyId);
@@ -105,8 +110,8 @@ abstract class AbstractSymCrypto {
     final jwt = await getJwt();
 
     final out = await Sentc.getApi().generateAndRegisterSymKey(
-      baseUrl: Sentc.baseUrl,
-      authToken: Sentc.appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       masterKey: keyData.key,
     );
@@ -129,8 +134,8 @@ abstract class AbstractSymCrypto {
     final key = await getSymKeyById(masterKeyId);
 
     final out = await Sentc.getApi().getSymKeyById(
-      baseUrl: Sentc.baseUrl,
-      authToken: Sentc.appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       keyId: keyId,
       masterKey: key,
     );
