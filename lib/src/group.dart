@@ -1150,15 +1150,49 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //file handling
 
-  Future<UploadResult> uploadFile({
+  /// Prepare the register of a file, The server input could be passed to the sentc api from your backend
+  ///
+  /// encrypted file name, key and master key id are only for the frontend to encrypt more date if necessary
+  Future<FilePrepareCreateOutput> prepareRegisterFile(File file) async {
+    final key = await registerKey();
+
+    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, null, accessByGroupAsMember);
+
+    final out = await uploader.prepareFileRegister(file, key.key, key.masterKeyId);
+
+    return FilePrepareCreateOutput(
+      encryptedFileName: out.encryptedFileName,
+      key: key,
+      masterKeyId: key.masterKeyId,
+      serverInput: out.serverInput,
+    );
+  }
+
+  /// Validates the sentc file register output
+  /// Returns the file id
+  Future<FileDoneRegister> doneFileRegister(String serverOutput) {
+    final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, null, accessByGroupAsMember);
+
+    return uploader.doneFileRegister(serverOutput);
+  }
+
+  /// Upload a registered file.
+  ///
+  /// Session id is returned from the sentc api. The rest from @prepareRegisterFile
+  ///
+  /// upload the chunks signed by the creators sign key
+  ///
+  /// Show the upload progress of how many chunks are already uploaded with the uploadCallback
+  Future<void> uploadFile({
     required File file,
     required SymKey contentKey,
+    required String sessionId,
     bool sign = false,
     void Function(double progress)? uploadCallback,
   }) {
     final uploader = Uploader(_baseUrl, _appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
 
-    return uploader.uploadFile(file, contentKey.key, contentKey.masterKeyId, sign);
+    return uploader.checkFileUpload(file, contentKey.key, sessionId, sign);
   }
 
   //____________________________________________________________________________________________________________________
@@ -1187,17 +1221,11 @@ class Group extends AbstractSymCrypto {
     return FileCreateOutput(out.fileId, key.masterKeyId, out.encryptedFileName);
   }
 
-  /// Get and encrypt file meta information like the real file name
-  /// This wont download the file.
-  ///
-  /// This is usefully if the user wants to show information about the file (e.g. the file name) but not download the file
-  /// The meta info is also needed for the download file functions
-  Future<DownloadResult> getFileMetaInfo(
-    String fileId, [
+  Future<DownloadResult> _getFileMetaInfo(
+    String fileId,
+    Downloader downloader, [
     String verifyKey = "",
   ]) async {
-    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
-
     final fileMeta = await downloader.downloadFileMetaInformation(fileId);
 
     final keyId = fileMeta.keyId;
@@ -1210,22 +1238,35 @@ class Group extends AbstractSymCrypto {
     return DownloadResult(fileMeta, key);
   }
 
-  /// Downloads a file with meta info.
-  /// This info must be fetched before.
+  /// Get and encrypt file meta information like the real file name
+  /// This wont download the file.
+  ///
+  /// This is usefully if the user wants to show information about the file (e.g. the file name) but not download the file
+  /// The meta info is also needed for the download file functions
+  Future<DownloadResult> downloadFileMetaInfo(String fileId, [String verifyKey = ""]) {
+    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+
+    return _getFileMetaInfo(fileId, downloader, verifyKey);
+  }
+
+  /// Download a file but with already downloaded file information and the file key to not fetch the info and the key again.
+  ///
+  /// This function can be used after the downloadFileMetaInfo function
   /// Keep in mind that you must use a file which doesn't exists yet.
   /// otherwise the decrypted bytes will be attached to the file
-  Future<void> downloadFileWithMeta({
+  Future<void> downloadFileWithMetaInfo({
     required File file,
-    required String fileId,
-    required DownloadResult fileMeta,
+    required SymKey key,
+    required FileMetaInformation fileMeta,
     String verifyKey = "",
     void Function(double progress)? updateProgressCb,
   }) {
     final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
 
-    final key = fileMeta.key;
-    return downloader.downloadFileParts(file, fileMeta.meta.partList, key.key, updateProgressCb, verifyKey);
+    return downloader.downloadFileParts(file, fileMeta.partList, key.key, updateProgressCb, verifyKey);
   }
+
+  //____________________________________________________________________________________________________________________
 
   /// Downloads a file.
   ///
@@ -1238,15 +1279,11 @@ class Group extends AbstractSymCrypto {
     String verifyKey = "",
     void Function(double progress)? updateProgressCb,
   }) async {
-    final fileMeta = await getFileMetaInfo(fileId, verifyKey);
+    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
 
-    await downloadFileWithMeta(
-      file: file,
-      fileId: fileId,
-      fileMeta: fileMeta,
-      verifyKey: verifyKey,
-      updateProgressCb: updateProgressCb,
-    );
+    final fileMeta = await _getFileMetaInfo(fileId, downloader, verifyKey);
+
+    await downloader.downloadFileParts(file, fileMeta.meta.partList, fileMeta.key.key, updateProgressCb, verifyKey);
 
     return fileMeta;
   }
@@ -1262,7 +1299,9 @@ class Group extends AbstractSymCrypto {
     String verifyKey = "",
     void Function(double progress)? updateProgressCb,
   }) async {
-    final fileMeta = await getFileMetaInfo(fileId, verifyKey);
+    final downloader = Downloader(_baseUrl, _appToken, _user, groupId, accessByGroupAsMember);
+
+    final fileMeta = await _getFileMetaInfo(fileId, downloader, verifyKey);
 
     final fileName = fileMeta.meta.fileName ?? "unnamed";
     File file = File("$path${Platform.pathSeparator}$fileName");
@@ -1273,13 +1312,7 @@ class Group extends AbstractSymCrypto {
       file = File(availableFileName);
     }
 
-    await downloadFileWithMeta(
-      file: file,
-      fileId: fileId,
-      fileMeta: fileMeta,
-      verifyKey: verifyKey,
-      updateProgressCb: updateProgressCb,
-    );
+    await downloader.downloadFileParts(file, fileMeta.meta.partList, fileMeta.key.key, updateProgressCb, verifyKey);
 
     return fileMeta;
   }

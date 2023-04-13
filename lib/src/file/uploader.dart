@@ -22,6 +22,20 @@ class FileCreateOutput {
   FileCreateOutput(this.fileId, this.masterKeyId, this.encryptedFileName);
 }
 
+class FilePrepareCreateOutput {
+  final String serverInput;
+  final String masterKeyId;
+  final String encryptedFileName;
+  final SymKey key;
+
+  FilePrepareCreateOutput({
+    required this.serverInput,
+    required this.masterKeyId,
+    required this.encryptedFileName,
+    required this.key,
+  });
+}
+
 class Uploader {
   static bool cancelUpload = false;
 
@@ -65,7 +79,7 @@ class Uploader {
   }
 
   Future<FilePrepareRegister> prepareFileRegister(
-    String fileName,
+    File file,
     String contentKey,
     String masterKeyId,
   ) {
@@ -74,7 +88,7 @@ class Uploader {
       contentKey: contentKey,
       belongsToId: _belongsToId,
       belongsToType: _belongsTo,
-      fileName: fileName,
+      fileName: p.basename(file.path),
     );
   }
 
