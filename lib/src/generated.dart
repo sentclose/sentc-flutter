@@ -1050,7 +1050,19 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kFileDownloadFileMetaConstMeta;
 
-  Future<Uint8List> fileDownloadAndDecryptFilePart(
+  Future<FileDownloadResult> fileDownloadAndDecryptFilePartStart(
+      {required String baseUrl,
+      required String urlPrefix,
+      required String authToken,
+      required String partId,
+      required String contentKey,
+      required String verifyKeyData,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta
+      get kFileDownloadAndDecryptFilePartStartConstMeta;
+
+  Future<FileDownloadResult> fileDownloadAndDecryptFilePart(
       {required String baseUrl,
       required String urlPrefix,
       required String authToken,
@@ -1100,7 +1112,22 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kFileDoneRegisterFileConstMeta;
 
-  Future<void> fileUploadPart(
+  Future<String> fileUploadPartStart(
+      {required String baseUrl,
+      required String urlPrefix,
+      required String authToken,
+      required String jwt,
+      required String sessionId,
+      required bool end,
+      required int sequence,
+      required String contentKey,
+      required String signKey,
+      required Uint8List part,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFileUploadPartStartConstMeta;
+
+  Future<String> fileUploadPart(
       {required String baseUrl,
       required String urlPrefix,
       required String authToken,
@@ -1227,6 +1254,16 @@ class FileDoneRegister {
   FileDoneRegister({
     required this.fileId,
     required this.sessionId,
+  });
+}
+
+class FileDownloadResult {
+  final String nextFileKey;
+  final Uint8List file;
+
+  FileDownloadResult({
+    required this.nextFileKey,
+    required this.file,
   });
 }
 
@@ -4968,7 +5005,53 @@ class SentcFlutterImpl implements SentcFlutter {
         ],
       );
 
-  Future<Uint8List> fileDownloadAndDecryptFilePart(
+  Future<FileDownloadResult> fileDownloadAndDecryptFilePartStart(
+      {required String baseUrl,
+      required String urlPrefix,
+      required String authToken,
+      required String partId,
+      required String contentKey,
+      required String verifyKeyData,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(urlPrefix);
+    var arg2 = _platform.api2wire_String(authToken);
+    var arg3 = _platform.api2wire_String(partId);
+    var arg4 = _platform.api2wire_String(contentKey);
+    var arg5 = _platform.api2wire_String(verifyKeyData);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_file_download_and_decrypt_file_part_start(
+              port_, arg0, arg1, arg2, arg3, arg4, arg5),
+      parseSuccessData: _wire2api_file_download_result,
+      constMeta: kFileDownloadAndDecryptFilePartStartConstMeta,
+      argValues: [
+        baseUrl,
+        urlPrefix,
+        authToken,
+        partId,
+        contentKey,
+        verifyKeyData
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta
+      get kFileDownloadAndDecryptFilePartStartConstMeta =>
+          const FlutterRustBridgeTaskConstMeta(
+            debugName: "file_download_and_decrypt_file_part_start",
+            argNames: [
+              "baseUrl",
+              "urlPrefix",
+              "authToken",
+              "partId",
+              "contentKey",
+              "verifyKeyData"
+            ],
+          );
+
+  Future<FileDownloadResult> fileDownloadAndDecryptFilePart(
       {required String baseUrl,
       required String urlPrefix,
       required String authToken,
@@ -4986,7 +5069,7 @@ class SentcFlutterImpl implements SentcFlutter {
       callFfi: (port_) => _platform.inner
           .wire_file_download_and_decrypt_file_part(
               port_, arg0, arg1, arg2, arg3, arg4, arg5),
-      parseSuccessData: _wire2api_ZeroCopyBuffer_Uint8List,
+      parseSuccessData: _wire2api_file_download_result,
       constMeta: kFileDownloadAndDecryptFilePartConstMeta,
       argValues: [
         baseUrl,
@@ -5158,7 +5241,67 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: ["serverOutput"],
       );
 
-  Future<void> fileUploadPart(
+  Future<String> fileUploadPartStart(
+      {required String baseUrl,
+      required String urlPrefix,
+      required String authToken,
+      required String jwt,
+      required String sessionId,
+      required bool end,
+      required int sequence,
+      required String contentKey,
+      required String signKey,
+      required Uint8List part,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(urlPrefix);
+    var arg2 = _platform.api2wire_String(authToken);
+    var arg3 = _platform.api2wire_String(jwt);
+    var arg4 = _platform.api2wire_String(sessionId);
+    var arg5 = end;
+    var arg6 = api2wire_i32(sequence);
+    var arg7 = _platform.api2wire_String(contentKey);
+    var arg8 = _platform.api2wire_String(signKey);
+    var arg9 = _platform.api2wire_uint_8_list(part);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_file_upload_part_start(
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
+      parseSuccessData: _wire2api_String,
+      constMeta: kFileUploadPartStartConstMeta,
+      argValues: [
+        baseUrl,
+        urlPrefix,
+        authToken,
+        jwt,
+        sessionId,
+        end,
+        sequence,
+        contentKey,
+        signKey,
+        part
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kFileUploadPartStartConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "file_upload_part_start",
+        argNames: [
+          "baseUrl",
+          "urlPrefix",
+          "authToken",
+          "jwt",
+          "sessionId",
+          "end",
+          "sequence",
+          "contentKey",
+          "signKey",
+          "part"
+        ],
+      );
+
+  Future<String> fileUploadPart(
       {required String baseUrl,
       required String urlPrefix,
       required String authToken,
@@ -5183,7 +5326,7 @@ class SentcFlutterImpl implements SentcFlutter {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_file_upload_part(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
-      parseSuccessData: _wire2api_unit,
+      parseSuccessData: _wire2api_String,
       constMeta: kFileUploadPartConstMeta,
       argValues: [
         baseUrl,
@@ -5391,6 +5534,16 @@ class SentcFlutterImpl implements SentcFlutter {
     return FileDoneRegister(
       fileId: _wire2api_String(arr[0]),
       sessionId: _wire2api_String(arr[1]),
+    );
+  }
+
+  FileDownloadResult _wire2api_file_download_result(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return FileDownloadResult(
+      nextFileKey: _wire2api_String(arr[0]),
+      file: _wire2api_ZeroCopyBuffer_Uint8List(arr[1]),
     );
   }
 
@@ -9457,6 +9610,48 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_file_download_and_decrypt_file_part_start(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> url_prefix,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> part_id,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> verify_key_data,
+  ) {
+    return _wire_file_download_and_decrypt_file_part_start(
+      port_,
+      base_url,
+      url_prefix,
+      auth_token,
+      part_id,
+      content_key,
+      verify_key_data,
+    );
+  }
+
+  late final _wire_file_download_and_decrypt_file_part_startPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_file_download_and_decrypt_file_part_start');
+  late final _wire_file_download_and_decrypt_file_part_start =
+      _wire_file_download_and_decrypt_file_part_startPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
   void wire_file_download_and_decrypt_file_part(
     int port_,
     ffi.Pointer<wire_uint_8_list> base_url,
@@ -9642,6 +9837,63 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>)>>('wire_file_done_register_file');
   late final _wire_file_done_register_file = _wire_file_done_register_filePtr
       .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_file_upload_part_start(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> url_prefix,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> session_id,
+    bool end,
+    int sequence,
+    ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+    ffi.Pointer<wire_uint_8_list> part1,
+  ) {
+    return _wire_file_upload_part_start(
+      port_,
+      base_url,
+      url_prefix,
+      auth_token,
+      jwt,
+      session_id,
+      end,
+      sequence,
+      content_key,
+      sign_key,
+      part1,
+    );
+  }
+
+  late final _wire_file_upload_part_startPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool,
+              ffi.Int32,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_file_upload_part_start');
+  late final _wire_file_upload_part_start =
+      _wire_file_upload_part_startPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              bool,
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_file_upload_part(
     int port_,

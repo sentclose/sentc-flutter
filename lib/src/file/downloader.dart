@@ -131,6 +131,8 @@ class Downloader {
 
     final sink = file.openWrite(mode: FileMode.append);
 
+    String nextFileKey = contentKey;
+
     for (var i = 0; i < partList.length; ++i) {
       var partListItem = partList[i];
 
@@ -140,14 +142,31 @@ class Downloader {
       Uint8List part;
 
       try {
-        part = await api.fileDownloadAndDecryptFilePart(
-          baseUrl: _baseUrl,
-          urlPrefix: partUrlBase,
-          authToken: _appToken,
-          partId: partListItem.partId,
-          contentKey: contentKey,
-          verifyKeyData: verifyKey,
-        );
+        if (i == 0) {
+          final res = await api.fileDownloadAndDecryptFilePartStart(
+            baseUrl: _baseUrl,
+            urlPrefix: urlPrefix,
+            authToken: _appToken,
+            partId: partListItem.partId,
+            contentKey: contentKey,
+            verifyKeyData: verifyKey,
+          );
+
+          nextFileKey = res.nextFileKey;
+          part = res.file;
+        } else {
+          final res = await api.fileDownloadAndDecryptFilePart(
+            baseUrl: _baseUrl,
+            urlPrefix: partUrlBase,
+            authToken: _appToken,
+            partId: partListItem.partId,
+            contentKey: nextFileKey,
+            verifyKeyData: verifyKey,
+          );
+
+          nextFileKey = res.nextFileKey;
+          part = res.file;
+        }
       } catch (e) {
         await sink.close();
         await file.delete();

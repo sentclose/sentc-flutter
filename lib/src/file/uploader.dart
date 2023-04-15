@@ -118,6 +118,8 @@ class Uploader {
 
     final urlPrefix = Sentc.filePartUrl ?? "";
 
+    String nextFileKey = contentKey;
+
     while (start < fileSize) {
       currentChunk++;
 
@@ -127,18 +129,33 @@ class Uploader {
       end = start + _chunkSize;
       final isEnd = start >= fileSize;
 
-      await api.fileUploadPart(
-        baseUrl: _baseUrl,
-        urlPrefix: urlPrefix,
-        authToken: _appToken,
-        jwt: jwt,
-        sessionId: sessionId,
-        end: isEnd,
-        sequence: currentChunk,
-        contentKey: contentKey,
-        signKey: signKey,
-        part: part,
-      );
+      if (currentChunk == 1) {
+        nextFileKey = await api.fileUploadPartStart(
+          baseUrl: _baseUrl,
+          urlPrefix: urlPrefix,
+          authToken: _appToken,
+          jwt: jwt,
+          sessionId: sessionId,
+          end: isEnd,
+          sequence: currentChunk,
+          contentKey: contentKey,
+          signKey: signKey,
+          part: part,
+        );
+      } else {
+        nextFileKey = await api.fileUploadPart(
+          baseUrl: _baseUrl,
+          urlPrefix: urlPrefix,
+          authToken: _appToken,
+          jwt: jwt,
+          sessionId: sessionId,
+          end: isEnd,
+          sequence: currentChunk,
+          contentKey: nextFileKey,
+          signKey: signKey,
+          part: part,
+        );
+      }
 
       if (uploadCallback != null) {
         uploadCallback!(currentChunk / totalChunks);
