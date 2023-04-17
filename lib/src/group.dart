@@ -951,7 +951,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<String> prepareKeysForNewMember(String userId, [int page = 0, bool group = false]) async {
+  Future<String> prepareKeysForNewMember(String userId, int? rank, [int page = 0, bool group = false]) async {
     final keyCount = _keys.length;
 
     PublicKeyData publicKey;
@@ -968,27 +968,28 @@ class Group extends AbstractSymCrypto {
       userPublicKey: publicKey.key,
       groupKeys: keyString,
       keyCount: keyCount,
-      adminRank: rank,
+      adminRank: this.rank,
+      rank: rank,
     );
   }
 
-  Future<void> invite(String userId) {
-    return _inviteUserInternally(userId);
+  Future<void> invite(String userId, int? rank) {
+    return _inviteUserInternally(userId, rank);
   }
 
-  Future<void> inviteAuto(String userId) {
-    return _inviteUserInternally(userId, true);
+  Future<void> inviteAuto(String userId, int? rank) {
+    return _inviteUserInternally(userId, rank, true);
   }
 
-  Future<void> inviteGroup(String groupId) {
-    return _inviteUserInternally(groupId, false, true);
+  Future<void> inviteGroup(String groupId, int? rank) {
+    return _inviteUserInternally(groupId, rank, false, true);
   }
 
-  Future<void> inviteGroupAuto(String groupId) {
-    return _inviteUserInternally(groupId, true, true);
+  Future<void> inviteGroupAuto(String groupId, int? rank) {
+    return _inviteUserInternally(groupId, rank, true, true);
   }
 
-  Future<void> _inviteUserInternally(String userId, [bool auto = false, bool group = false]) async {
+  Future<void> _inviteUserInternally(String userId, int? rank, [bool auto = false, bool group = false]) async {
     PublicKeyData publicKey;
 
     if (group) {
@@ -1010,7 +1011,8 @@ class Group extends AbstractSymCrypto {
       id: groupId,
       userId: userId,
       keyCount: keyCount,
-      adminRank: rank,
+      rank: rank,
+      adminRank: this.rank,
       autoInvite: auto,
       groupInvite: group,
       userPublicKey: publicKey.key,
@@ -1083,7 +1085,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<void> acceptJoinRequest(String userId, [int userType = 0]) async {
+  Future<void> acceptJoinRequest(String userId, [int userType = 0, int? rank]) async {
     final jwt = await getJwt();
     final api = Sentc.getApi();
 
@@ -1105,7 +1107,8 @@ class Group extends AbstractSymCrypto {
       id: groupId,
       userId: userId,
       keyCount: keyCount,
-      adminRank: rank,
+      rank: rank,
+      adminRank: this.rank,
       userPublicKey: publicKey.key,
       groupKeys: keyString,
       groupAsMember: accessByGroupAsMember,

@@ -495,6 +495,7 @@ abstract class SentcFlutter {
       {required String userPublicKey,
       required String groupKeys,
       required int keyCount,
+      int? rank,
       required int adminRank,
       dynamic hint});
 
@@ -507,6 +508,7 @@ abstract class SentcFlutter {
       required String id,
       required String userId,
       required int keyCount,
+      int? rank,
       required int adminRank,
       required bool autoInvite,
       required bool groupInvite,
@@ -654,6 +656,7 @@ abstract class SentcFlutter {
       required String id,
       required String userId,
       required int keyCount,
+      int? rank,
       required int adminRank,
       required String userPublicKey,
       required String groupKeys,
@@ -3080,19 +3083,21 @@ class SentcFlutterImpl implements SentcFlutter {
       {required String userPublicKey,
       required String groupKeys,
       required int keyCount,
+      int? rank,
       required int adminRank,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(userPublicKey);
     var arg1 = _platform.api2wire_String(groupKeys);
     var arg2 = api2wire_i32(keyCount);
-    var arg3 = api2wire_i32(adminRank);
+    var arg3 = _platform.api2wire_opt_box_autoadd_i32(rank);
+    var arg4 = api2wire_i32(adminRank);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_prepare_keys_for_new_member(
-              port_, arg0, arg1, arg2, arg3),
+              port_, arg0, arg1, arg2, arg3, arg4),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupPrepareKeysForNewMemberConstMeta,
-      argValues: [userPublicKey, groupKeys, keyCount, adminRank],
+      argValues: [userPublicKey, groupKeys, keyCount, rank, adminRank],
       hint: hint,
     ));
   }
@@ -3100,7 +3105,13 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kGroupPrepareKeysForNewMemberConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_prepare_keys_for_new_member",
-        argNames: ["userPublicKey", "groupKeys", "keyCount", "adminRank"],
+        argNames: [
+          "userPublicKey",
+          "groupKeys",
+          "keyCount",
+          "rank",
+          "adminRank"
+        ],
       );
 
   Future<String> groupInviteUser(
@@ -3110,6 +3121,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String userId,
       required int keyCount,
+      int? rank,
       required int adminRank,
       required bool autoInvite,
       required bool groupInvite,
@@ -3123,15 +3135,29 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(userId);
     var arg5 = api2wire_i32(keyCount);
-    var arg6 = api2wire_i32(adminRank);
-    var arg7 = autoInvite;
-    var arg8 = groupInvite;
-    var arg9 = _platform.api2wire_String(userPublicKey);
-    var arg10 = _platform.api2wire_String(groupKeys);
-    var arg11 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_box_autoadd_i32(rank);
+    var arg7 = api2wire_i32(adminRank);
+    var arg8 = autoInvite;
+    var arg9 = groupInvite;
+    var arg10 = _platform.api2wire_String(userPublicKey);
+    var arg11 = _platform.api2wire_String(groupKeys);
+    var arg12 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_group_invite_user(port_, arg0,
-          arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11),
+      callFfi: (port_) => _platform.inner.wire_group_invite_user(
+          port_,
+          arg0,
+          arg1,
+          arg2,
+          arg3,
+          arg4,
+          arg5,
+          arg6,
+          arg7,
+          arg8,
+          arg9,
+          arg10,
+          arg11,
+          arg12),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupInviteUserConstMeta,
       argValues: [
@@ -3141,6 +3167,7 @@ class SentcFlutterImpl implements SentcFlutter {
         id,
         userId,
         keyCount,
+        rank,
         adminRank,
         autoInvite,
         groupInvite,
@@ -3162,6 +3189,7 @@ class SentcFlutterImpl implements SentcFlutter {
           "id",
           "userId",
           "keyCount",
+          "rank",
           "adminRank",
           "autoInvite",
           "groupInvite",
@@ -3671,6 +3699,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String userId,
       required int keyCount,
+      int? rank,
       required int adminRank,
       required String userPublicKey,
       required String groupKeys,
@@ -3682,13 +3711,14 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(userId);
     var arg5 = api2wire_i32(keyCount);
-    var arg6 = api2wire_i32(adminRank);
-    var arg7 = _platform.api2wire_String(userPublicKey);
-    var arg8 = _platform.api2wire_String(groupKeys);
-    var arg9 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_box_autoadd_i32(rank);
+    var arg7 = api2wire_i32(adminRank);
+    var arg8 = _platform.api2wire_String(userPublicKey);
+    var arg9 = _platform.api2wire_String(groupKeys);
+    var arg10 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_group_accept_join_req(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
+      callFfi: (port_) => _platform.inner.wire_group_accept_join_req(port_,
+          arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupAcceptJoinReqConstMeta,
       argValues: [
@@ -3698,6 +3728,7 @@ class SentcFlutterImpl implements SentcFlutter {
         id,
         userId,
         keyCount,
+        rank,
         adminRank,
         userPublicKey,
         groupKeys,
@@ -3717,6 +3748,7 @@ class SentcFlutterImpl implements SentcFlutter {
           "id",
           "userId",
           "keyCount",
+          "rank",
           "adminRank",
           "userPublicKey",
           "groupKeys",
@@ -6009,8 +6041,18 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Int32> api2wire_box_autoadd_i32(int raw) {
+    return inner.new_box_autoadd_i32_0(api2wire_i32(raw));
+  }
+
+  @protected
   ffi.Pointer<ffi.Uint32> api2wire_box_autoadd_u32(int raw) {
     return inner.new_box_autoadd_u32_0(api2wire_u32(raw));
+  }
+
+  @protected
+  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_i32(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_i32(raw);
   }
 
   @protected
@@ -7607,6 +7649,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
     int key_count,
+    ffi.Pointer<ffi.Int32> rank,
     int admin_rank,
   ) {
     return _wire_group_prepare_keys_for_new_member(
@@ -7614,6 +7657,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       user_public_key,
       group_keys,
       key_count,
+      rank,
       admin_rank,
     );
   }
@@ -7625,11 +7669,17 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
+              ffi.Pointer<ffi.Int32>,
               ffi.Int32)>>('wire_group_prepare_keys_for_new_member');
   late final _wire_group_prepare_keys_for_new_member =
       _wire_group_prepare_keys_for_new_memberPtr.asFunction<
-          void Function(int, ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>, int, int)>();
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              int,
+              ffi.Pointer<ffi.Int32>,
+              int)>();
 
   void wire_group_invite_user(
     int port_,
@@ -7639,6 +7689,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> user_id,
     int key_count,
+    ffi.Pointer<ffi.Int32> rank,
     int admin_rank,
     bool auto_invite,
     bool group_invite,
@@ -7654,6 +7705,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       user_id,
       key_count,
+      rank,
       admin_rank,
       auto_invite,
       group_invite,
@@ -7673,6 +7725,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
+              ffi.Pointer<ffi.Int32>,
               ffi.Int32,
               ffi.Bool,
               ffi.Bool,
@@ -7688,6 +7741,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           int,
+          ffi.Pointer<ffi.Int32>,
           int,
           bool,
           bool,
@@ -8194,6 +8248,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> user_id,
     int key_count,
+    ffi.Pointer<ffi.Int32> rank,
     int admin_rank,
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
@@ -8207,6 +8262,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       user_id,
       key_count,
+      rank,
       admin_rank,
       user_public_key,
       group_keys,
@@ -8224,6 +8280,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Int32,
+              ffi.Pointer<ffi.Int32>,
               ffi.Int32,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -8238,6 +8295,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               int,
+              ffi.Pointer<ffi.Int32>,
               int,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -10031,6 +10089,20 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  ffi.Pointer<ffi.Int32> new_box_autoadd_i32_0(
+    int value,
+  ) {
+    return _new_box_autoadd_i32_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_i32_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int32> Function(ffi.Int32)>>(
+          'new_box_autoadd_i32_0');
+  late final _new_box_autoadd_i32_0 = _new_box_autoadd_i32_0Ptr
+      .asFunction<ffi.Pointer<ffi.Int32> Function(int)>();
 
   ffi.Pointer<ffi.Uint32> new_box_autoadd_u32_0(
     int value,
