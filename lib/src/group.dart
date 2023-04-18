@@ -989,7 +989,21 @@ class Group extends AbstractSymCrypto {
     return _inviteUserInternally(groupId, rank, true, true);
   }
 
-  Future<void> _inviteUserInternally(String userId, int? rank, [bool auto = false, bool group = false]) async {
+  Future<void> reInviteUser(String userId) {
+    return _inviteUserInternally(userId, null, false, false, true);
+  }
+
+  Future<void> reInviteGroup(String groupId) {
+    return _inviteUserInternally(groupId, null, false, true, true);
+  }
+
+  Future<void> _inviteUserInternally(
+    String userId,
+    int? rank, [
+    bool auto = false,
+    bool group = false,
+    bool reInvite = false,
+  ]) async {
     PublicKeyData publicKey;
 
     if (group) {
@@ -1018,6 +1032,7 @@ class Group extends AbstractSymCrypto {
       userPublicKey: publicKey.key,
       groupKeys: keyString,
       groupAsMember: accessByGroupAsMember,
+      reInvite: reInvite,
     );
 
     if (sessionId == "") {

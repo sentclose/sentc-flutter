@@ -512,6 +512,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required bool autoInvite,
       required bool groupInvite,
+      required bool reInvite,
       required String userPublicKey,
       required String groupKeys,
       required String groupAsMember,
@@ -1463,6 +1464,7 @@ class KeyRotationGetOut {
 }
 
 class KeyRotationInput {
+  final String? error;
   final String encryptedEphemeralKeyByGroupKeyAndPublicKey;
   final String encryptedGroupKeyByEphemeral;
   final String ephemeralAlg;
@@ -1472,6 +1474,7 @@ class KeyRotationInput {
   final String newGroupKeyId;
 
   KeyRotationInput({
+    this.error,
     required this.encryptedEphemeralKeyByGroupKeyAndPublicKey,
     required this.encryptedGroupKeyByEphemeral,
     required this.ephemeralAlg,
@@ -3125,6 +3128,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required int adminRank,
       required bool autoInvite,
       required bool groupInvite,
+      required bool reInvite,
       required String userPublicKey,
       required String groupKeys,
       required String groupAsMember,
@@ -3139,9 +3143,10 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg7 = api2wire_i32(adminRank);
     var arg8 = autoInvite;
     var arg9 = groupInvite;
-    var arg10 = _platform.api2wire_String(userPublicKey);
-    var arg11 = _platform.api2wire_String(groupKeys);
-    var arg12 = _platform.api2wire_String(groupAsMember);
+    var arg10 = reInvite;
+    var arg11 = _platform.api2wire_String(userPublicKey);
+    var arg12 = _platform.api2wire_String(groupKeys);
+    var arg13 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_invite_user(
           port_,
@@ -3157,7 +3162,8 @@ class SentcFlutterImpl implements SentcFlutter {
           arg9,
           arg10,
           arg11,
-          arg12),
+          arg12,
+          arg13),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupInviteUserConstMeta,
       argValues: [
@@ -3171,6 +3177,7 @@ class SentcFlutterImpl implements SentcFlutter {
         adminRank,
         autoInvite,
         groupInvite,
+        reInvite,
         userPublicKey,
         groupKeys,
         groupAsMember
@@ -3193,6 +3200,7 @@ class SentcFlutterImpl implements SentcFlutter {
           "adminRank",
           "autoInvite",
           "groupInvite",
+          "reInvite",
           "userPublicKey",
           "groupKeys",
           "groupAsMember"
@@ -5757,16 +5765,17 @@ class SentcFlutterImpl implements SentcFlutter {
 
   KeyRotationInput _wire2api_key_rotation_input(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
     return KeyRotationInput(
-      encryptedEphemeralKeyByGroupKeyAndPublicKey: _wire2api_String(arr[0]),
-      encryptedGroupKeyByEphemeral: _wire2api_String(arr[1]),
-      ephemeralAlg: _wire2api_String(arr[2]),
-      encryptedEphKeyKeyId: _wire2api_String(arr[3]),
-      previousGroupKeyId: _wire2api_String(arr[4]),
-      time: _wire2api_String(arr[5]),
-      newGroupKeyId: _wire2api_String(arr[6]),
+      error: _wire2api_opt_String(arr[0]),
+      encryptedEphemeralKeyByGroupKeyAndPublicKey: _wire2api_String(arr[1]),
+      encryptedGroupKeyByEphemeral: _wire2api_String(arr[2]),
+      ephemeralAlg: _wire2api_String(arr[3]),
+      encryptedEphKeyKeyId: _wire2api_String(arr[4]),
+      previousGroupKeyId: _wire2api_String(arr[5]),
+      time: _wire2api_String(arr[6]),
+      newGroupKeyId: _wire2api_String(arr[7]),
     );
   }
 
@@ -7693,6 +7702,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int admin_rank,
     bool auto_invite,
     bool group_invite,
+    bool re_invite,
     ffi.Pointer<wire_uint_8_list> user_public_key,
     ffi.Pointer<wire_uint_8_list> group_keys,
     ffi.Pointer<wire_uint_8_list> group_as_member,
@@ -7709,6 +7719,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       admin_rank,
       auto_invite,
       group_invite,
+      re_invite,
       user_public_key,
       group_keys,
       group_as_member,
@@ -7729,6 +7740,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Int32,
               ffi.Bool,
               ffi.Bool,
+              ffi.Bool,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_invite_user');
@@ -7743,6 +7755,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           int,
           ffi.Pointer<ffi.Int32>,
           int,
+          bool,
           bool,
           bool,
           ffi.Pointer<wire_uint_8_list>,
