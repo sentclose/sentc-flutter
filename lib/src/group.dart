@@ -65,18 +65,22 @@ Future<Group> getGroup(
   final jwt = await user.getJwt();
 
   if (groupJson != null) {
-    //load the group from json data and just look for group updates
-    final update = await Sentc.getApi().groupGetGroupUpdates(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      jwt: jwt,
-      id: groupId,
-      groupAsMember: groupAsMember,
-    );
+    final group = Group.fromJson(jsonDecode(groupJson), baseUrl, appToken, user, parent);
 
-    final group = Group.fromJson(jsonDecode(groupJson), baseUrl, appToken, user, parent, update.keyUpdate);
+    if (group.lastCheckTime + 60000 * 5 < DateTime.now().millisecondsSinceEpoch) {
+      //load the group from json data and just look for group updates
+      final update = await Sentc.getApi().groupGetGroupUpdates(
+        baseUrl: baseUrl,
+        authToken: appToken,
+        jwt: jwt,
+        id: groupId,
+        groupAsMember: groupAsMember,
+      );
 
-    group.rank = update.rank;
+      group.rank = update.rank;
+      group.keyUpdate = update.keyUpdate;
+      group.lastCheckTime = DateTime.now().millisecondsSinceEpoch;
+    }
 
     return group;
   }
@@ -125,6 +129,7 @@ Future<Group> getGroup(
     out.accessByParentGroup,
     accessByGroupAsMember,
     [],
+    DateTime.now().millisecondsSinceEpoch,
   );
 
   final keys = await groupObj.decryptKey(out.keys);
@@ -207,6 +212,7 @@ class Group extends AbstractSymCrypto {
   final String parentGroupId;
   final bool _fromParent;
   int rank;
+  int lastCheckTime;
   bool keyUpdate;
   final String createdTime;
   final String joinedTime;
@@ -235,6 +241,7 @@ class Group extends AbstractSymCrypto {
     this.accessByParentGroup,
     this.accessByGroupAsMember,
     this._hmacKeys,
+    this.lastCheckTime,
   );
 
   Group.fromJson(
@@ -243,8 +250,9 @@ class Group extends AbstractSymCrypto {
     super.appToken,
     this._user,
     this._fromParent,
-    this.keyUpdate,
   )   : groupId = json["groupId"],
+        lastCheckTime = json["lastCheckTime"],
+        keyUpdate = json["keyUpdate"],
         parentGroupId = json["parentGroupId"],
         createdTime = json["createdTime"],
         joinedTime = json["joinedTime"],
@@ -268,7 +276,9 @@ class Group extends AbstractSymCrypto {
       "keys": jsonEncode(_keys),
       "accessByParentGroup": accessByParentGroup,
       "accessByGroupAsMember": accessByGroupAsMember,
-      "hmacKeys": jsonEncode(_hmacKeys)
+      "hmacKeys": jsonEncode(_hmacKeys),
+      "lastCheckTime": lastCheckTime,
+      "keyUpdate": keyUpdate,
     };
   }
 
@@ -391,7 +401,6 @@ class Group extends AbstractSymCrypto {
       appToken,
       _user,
       false,
-      false,
     );
   }
 
@@ -412,7 +421,6 @@ class Group extends AbstractSymCrypto {
       baseUrl,
       appToken,
       _user,
-      false,
       false,
     );
   }
@@ -616,6 +624,21 @@ class Group extends AbstractSymCrypto {
       parentPublicKey: lastKey,
       groupAsMember: accessByGroupAsMember,
     );
+  }
+
+  Future<void> groupUpdateCheck() async {
+    final jwt = await getJwt();
+
+    final update = await Sentc.getApi().groupGetGroupUpdates(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      jwt: jwt,
+      id: groupId,
+      groupAsMember: accessByGroupAsMember,
+    );
+
+    rank = update.rank;
+    lastCheckTime = DateTime.now().millisecondsSinceEpoch;
   }
 
   Future<List<GroupUserListItem>> getMember(GroupUserListItem? lastFetchedItem) async {
