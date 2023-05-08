@@ -1411,4 +1411,22 @@ class Group extends AbstractSymCrypto {
       lastFetchedGroupId: lastId,
     );
   }
+
+  Future<List<ListContentItem>> fetchContent(ListContentItem? lastFetchedItem, String? catId) async {
+    final jwt = await getJwt();
+
+    final lastTime = lastFetchedItem?.time ?? "0";
+    final lastId = lastFetchedItem?.id ?? "none";
+
+    return Sentc.getApi().contentFetchForGroup(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      jwt: jwt,
+      groupId: groupId,
+      groupAsMember: accessByGroupAsMember,
+      catId: catId ?? "",
+      lastFetchedTime: lastTime,
+      lastFetchedGroupId: lastId,
+    );
+  }
 }

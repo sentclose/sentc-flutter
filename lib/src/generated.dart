@@ -1043,6 +1043,19 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kSearchConstMeta;
 
+  Future<List<ListContentItem>> contentFetchForGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String groupId,
+      required String groupAsMember,
+      required String catId,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kContentFetchForGroupConstMeta;
+
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
       required String authToken,
@@ -1494,6 +1507,28 @@ class KeysToMasterKeyFetch {
     required this.lastFetchedTime,
     required this.lastKeyId,
     required this.keys,
+  });
+}
+
+class ListContentItem {
+  final String id;
+  final String item;
+  final String? belongsToGroup;
+  final String? belongsToUser;
+  final String creator;
+  final String time;
+  final String? category;
+  final String? accessFromGroup;
+
+  ListContentItem({
+    required this.id,
+    required this.item,
+    this.belongsToGroup,
+    this.belongsToUser,
+    required this.creator,
+    required this.time,
+    this.category,
+    this.accessFromGroup,
   });
 }
 
@@ -5008,6 +5043,58 @@ class SentcFlutterImpl implements SentcFlutter {
         ],
       );
 
+  Future<List<ListContentItem>> contentFetchForGroup(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String groupId,
+      required String groupAsMember,
+      required String catId,
+      required String lastFetchedTime,
+      required String lastFetchedGroupId,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    var arg3 = _platform.api2wire_String(groupId);
+    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_String(catId);
+    var arg6 = _platform.api2wire_String(lastFetchedTime);
+    var arg7 = _platform.api2wire_String(lastFetchedGroupId);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_content_fetch_for_group(
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7),
+      parseSuccessData: _wire2api_list_list_content_item,
+      constMeta: kContentFetchForGroupConstMeta,
+      argValues: [
+        baseUrl,
+        authToken,
+        jwt,
+        groupId,
+        groupAsMember,
+        catId,
+        lastFetchedTime,
+        lastFetchedGroupId
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kContentFetchForGroupConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "content_fetch_for_group",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "jwt",
+          "groupId",
+          "groupAsMember",
+          "catId",
+          "lastFetchedTime",
+          "lastFetchedGroupId"
+        ],
+      );
+
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
       required String authToken,
@@ -5790,6 +5877,22 @@ class SentcFlutterImpl implements SentcFlutter {
     );
   }
 
+  ListContentItem _wire2api_list_content_item(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return ListContentItem(
+      id: _wire2api_String(arr[0]),
+      item: _wire2api_String(arr[1]),
+      belongsToGroup: _wire2api_opt_String(arr[2]),
+      belongsToUser: _wire2api_opt_String(arr[3]),
+      creator: _wire2api_String(arr[4]),
+      time: _wire2api_String(arr[5]),
+      category: _wire2api_opt_String(arr[6]),
+      accessFromGroup: _wire2api_opt_String(arr[7]),
+    );
+  }
+
   List<FilePartListItem> _wire2api_list_file_part_list_item(dynamic raw) {
     return (raw as List<dynamic>).map(_wire2api_file_part_list_item).toList();
   }
@@ -5836,6 +5939,10 @@ class SentcFlutterImpl implements SentcFlutter {
 
   List<KeyRotationGetOut> _wire2api_list_key_rotation_get_out(dynamic raw) {
     return (raw as List<dynamic>).map(_wire2api_key_rotation_get_out).toList();
+  }
+
+  List<ListContentItem> _wire2api_list_list_content_item(dynamic raw) {
+    return (raw as List<dynamic>).map(_wire2api_list_content_item).toList();
   }
 
   List<ListGroups> _wire2api_list_list_groups(dynamic raw) {
@@ -9639,6 +9746,55 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_content_fetch_for_group(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> group_id,
+    ffi.Pointer<wire_uint_8_list> group_as_member,
+    ffi.Pointer<wire_uint_8_list> cat_id,
+    ffi.Pointer<wire_uint_8_list> last_fetched_time,
+    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+  ) {
+    return _wire_content_fetch_for_group(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      group_id,
+      group_as_member,
+      cat_id,
+      last_fetched_time,
+      last_fetched_group_id,
+    );
+  }
+
+  late final _wire_content_fetch_for_groupPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_content_fetch_for_group');
+  late final _wire_content_fetch_for_group =
+      _wire_content_fetch_for_groupPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_file_download_file_meta(
     int port_,
