@@ -1052,6 +1052,7 @@ abstract class SentcFlutter {
       required String catId,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
+      required ContentFetchLimit limit,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kContentFetchForGroupConstMeta;
@@ -1202,6 +1203,13 @@ class Claims {
     required this.iat,
     required this.fresh,
   });
+}
+
+enum ContentFetchLimit {
+  Small,
+  Medium,
+  Large,
+  XLarge,
 }
 
 class CryptoRawOutput {
@@ -5052,6 +5060,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String catId,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
+      required ContentFetchLimit limit,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -5061,9 +5070,10 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = _platform.api2wire_String(catId);
     var arg6 = _platform.api2wire_String(lastFetchedTime);
     var arg7 = _platform.api2wire_String(lastFetchedGroupId);
+    var arg8 = api2wire_content_fetch_limit(limit);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_content_fetch_for_group(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7),
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8),
       parseSuccessData: _wire2api_list_list_content_item,
       constMeta: kContentFetchForGroupConstMeta,
       argValues: [
@@ -5074,7 +5084,8 @@ class SentcFlutterImpl implements SentcFlutter {
         groupAsMember,
         catId,
         lastFetchedTime,
-        lastFetchedGroupId
+        lastFetchedGroupId,
+        limit
       ],
       hint: hint,
     ));
@@ -5091,7 +5102,8 @@ class SentcFlutterImpl implements SentcFlutter {
           "groupAsMember",
           "catId",
           "lastFetchedTime",
-          "lastFetchedGroupId"
+          "lastFetchedGroupId",
+          "limit"
         ],
       );
 
@@ -6126,6 +6138,11 @@ class SentcFlutterImpl implements SentcFlutter {
 @protected
 bool api2wire_bool(bool raw) {
   return raw;
+}
+
+@protected
+int api2wire_content_fetch_limit(ContentFetchLimit raw) {
+  return api2wire_i32(raw.index);
 }
 
 @protected
@@ -9757,6 +9774,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> cat_id,
     ffi.Pointer<wire_uint_8_list> last_fetched_time,
     ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
+    int limit,
   ) {
     return _wire_content_fetch_for_group(
       port_,
@@ -9768,6 +9786,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       cat_id,
       last_fetched_time,
       last_fetched_group_id,
+      limit,
     );
   }
 
@@ -9782,7 +9801,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_content_fetch_for_group');
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Int32)>>('wire_content_fetch_for_group');
   late final _wire_content_fetch_for_group =
       _wire_content_fetch_for_groupPtr.asFunction<
           void Function(
@@ -9794,7 +9814,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>();
+              ffi.Pointer<wire_uint_8_list>,
+              int)>();
 
   void wire_file_download_file_meta(
     int port_,
