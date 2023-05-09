@@ -80,6 +80,9 @@ Future<Group> getGroup(
       group.rank = update.rank;
       group.keyUpdate = update.keyUpdate;
       group.lastCheckTime = DateTime.now().millisecondsSinceEpoch;
+
+      //update the group data in the storage
+      await storage.set(groupKey, jsonEncode(group));
     }
 
     return group;
