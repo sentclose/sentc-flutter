@@ -701,7 +701,11 @@ abstract class SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kLeaveGroupConstMeta;
 
   Future<String> groupPrepareKeyRotation(
-      {required String preGroupKey, required String publicKey, dynamic hint});
+      {required String preGroupKey,
+      required String publicKey,
+      required String signKey,
+      required String starter,
+      dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupPrepareKeyRotationConstMeta;
 
@@ -710,6 +714,7 @@ abstract class SentcFlutter {
       required String publicKey,
       required String preGroupKey,
       required String serverOutput,
+      required String verifyKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDoneKeyRotationConstMeta;
@@ -721,6 +726,8 @@ abstract class SentcFlutter {
       required String id,
       required String publicKey,
       required String preGroupKey,
+      required String signKey,
+      required String starter,
       required String groupAsMember,
       dynamic hint});
 
@@ -751,6 +758,7 @@ abstract class SentcFlutter {
       required String preGroupKey,
       required String publicKey,
       required String privateKey,
+      required String verifyKey,
       required String groupAsMember,
       dynamic hint});
 
@@ -1475,12 +1483,18 @@ class KeyRotationGetOut {
   final String newGroupKeyId;
   final String encryptedEphKeyKeyId;
   final String serverOutput;
+  final String? signedByUserId;
+  final String? signedByUserSignKeyId;
+  final String? signedByUserSignKeyAlg;
 
   KeyRotationGetOut({
     required this.preGroupKeyId,
     required this.newGroupKeyId,
     required this.encryptedEphKeyKeyId,
     required this.serverOutput,
+    this.signedByUserId,
+    this.signedByUserSignKeyId,
+    this.signedByUserSignKeyAlg,
   });
 }
 
@@ -3925,15 +3939,21 @@ class SentcFlutterImpl implements SentcFlutter {
       );
 
   Future<String> groupPrepareKeyRotation(
-      {required String preGroupKey, required String publicKey, dynamic hint}) {
+      {required String preGroupKey,
+      required String publicKey,
+      required String signKey,
+      required String starter,
+      dynamic hint}) {
     var arg0 = _platform.api2wire_String(preGroupKey);
     var arg1 = _platform.api2wire_String(publicKey);
+    var arg2 = _platform.api2wire_String(signKey);
+    var arg3 = _platform.api2wire_String(starter);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) =>
-          _platform.inner.wire_group_prepare_key_rotation(port_, arg0, arg1),
+      callFfi: (port_) => _platform.inner
+          .wire_group_prepare_key_rotation(port_, arg0, arg1, arg2, arg3),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupPrepareKeyRotationConstMeta,
-      argValues: [preGroupKey, publicKey],
+      argValues: [preGroupKey, publicKey, signKey, starter],
       hint: hint,
     ));
   }
@@ -3941,7 +3961,7 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kGroupPrepareKeyRotationConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_prepare_key_rotation",
-        argNames: ["preGroupKey", "publicKey"],
+        argNames: ["preGroupKey", "publicKey", "signKey", "starter"],
       );
 
   Future<String> groupDoneKeyRotation(
@@ -3949,17 +3969,19 @@ class SentcFlutterImpl implements SentcFlutter {
       required String publicKey,
       required String preGroupKey,
       required String serverOutput,
+      required String verifyKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(privateKey);
     var arg1 = _platform.api2wire_String(publicKey);
     var arg2 = _platform.api2wire_String(preGroupKey);
     var arg3 = _platform.api2wire_String(serverOutput);
+    var arg4 = _platform.api2wire_String(verifyKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
-          .wire_group_done_key_rotation(port_, arg0, arg1, arg2, arg3),
+          .wire_group_done_key_rotation(port_, arg0, arg1, arg2, arg3, arg4),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupDoneKeyRotationConstMeta,
-      argValues: [privateKey, publicKey, preGroupKey, serverOutput],
+      argValues: [privateKey, publicKey, preGroupKey, serverOutput, verifyKey],
       hint: hint,
     ));
   }
@@ -3967,7 +3989,13 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kGroupDoneKeyRotationConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_done_key_rotation",
-        argNames: ["privateKey", "publicKey", "preGroupKey", "serverOutput"],
+        argNames: [
+          "privateKey",
+          "publicKey",
+          "preGroupKey",
+          "serverOutput",
+          "verifyKey"
+        ],
       );
 
   Future<String> groupKeyRotation(
@@ -3977,6 +4005,8 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String publicKey,
       required String preGroupKey,
+      required String signKey,
+      required String starter,
       required String groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
@@ -3985,10 +4015,12 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(publicKey);
     var arg5 = _platform.api2wire_String(preGroupKey);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_String(signKey);
+    var arg7 = _platform.api2wire_String(starter);
+    var arg8 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_key_rotation(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8),
       parseSuccessData: _wire2api_String,
       constMeta: kGroupKeyRotationConstMeta,
       argValues: [
@@ -3998,6 +4030,8 @@ class SentcFlutterImpl implements SentcFlutter {
         id,
         publicKey,
         preGroupKey,
+        signKey,
+        starter,
         groupAsMember
       ],
       hint: hint,
@@ -4014,6 +4048,8 @@ class SentcFlutterImpl implements SentcFlutter {
           "id",
           "publicKey",
           "preGroupKey",
+          "signKey",
+          "starter",
           "groupAsMember"
         ],
       );
@@ -4075,6 +4111,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String preGroupKey,
       required String publicKey,
       required String privateKey,
+      required String verifyKey,
       required String groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
@@ -4085,10 +4122,11 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = _platform.api2wire_String(preGroupKey);
     var arg6 = _platform.api2wire_String(publicKey);
     var arg7 = _platform.api2wire_String(privateKey);
-    var arg8 = _platform.api2wire_String(groupAsMember);
+    var arg8 = _platform.api2wire_String(verifyKey);
+    var arg9 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_finish_key_rotation(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8),
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
       parseSuccessData: _wire2api_unit,
       constMeta: kGroupFinishKeyRotationConstMeta,
       argValues: [
@@ -4100,6 +4138,7 @@ class SentcFlutterImpl implements SentcFlutter {
         preGroupKey,
         publicKey,
         privateKey,
+        verifyKey,
         groupAsMember
       ],
       hint: hint,
@@ -4118,6 +4157,7 @@ class SentcFlutterImpl implements SentcFlutter {
           "preGroupKey",
           "publicKey",
           "privateKey",
+          "verifyKey",
           "groupAsMember"
         ],
       );
@@ -5852,13 +5892,16 @@ class SentcFlutterImpl implements SentcFlutter {
 
   KeyRotationGetOut _wire2api_key_rotation_get_out(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return KeyRotationGetOut(
       preGroupKeyId: _wire2api_String(arr[0]),
       newGroupKeyId: _wire2api_String(arr[1]),
       encryptedEphKeyKeyId: _wire2api_String(arr[2]),
       serverOutput: _wire2api_String(arr[3]),
+      signedByUserId: _wire2api_opt_String(arr[4]),
+      signedByUserSignKeyId: _wire2api_opt_String(arr[5]),
+      signedByUserSignKeyAlg: _wire2api_opt_String(arr[6]),
     );
   }
 
@@ -8568,22 +8611,34 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     int port_,
     ffi.Pointer<wire_uint_8_list> pre_group_key,
     ffi.Pointer<wire_uint_8_list> public_key,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+    ffi.Pointer<wire_uint_8_list> starter,
   ) {
     return _wire_group_prepare_key_rotation(
       port_,
       pre_group_key,
       public_key,
+      sign_key,
+      starter,
     );
   }
 
   late final _wire_group_prepare_key_rotationPtr = _lookup<
           ffi.NativeFunction<
-              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_prepare_key_rotation');
   late final _wire_group_prepare_key_rotation =
       _wire_group_prepare_key_rotationPtr.asFunction<
-          void Function(int, ffi.Pointer<wire_uint_8_list>,
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_done_key_rotation(
@@ -8592,6 +8647,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> public_key,
     ffi.Pointer<wire_uint_8_list> pre_group_key,
     ffi.Pointer<wire_uint_8_list> server_output,
+    ffi.Pointer<wire_uint_8_list> verify_key,
   ) {
     return _wire_group_done_key_rotation(
       port_,
@@ -8599,6 +8655,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       public_key,
       pre_group_key,
       server_output,
+      verify_key,
     );
   }
 
@@ -8609,11 +8666,13 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_done_key_rotation');
   late final _wire_group_done_key_rotation =
       _wire_group_done_key_rotationPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -8627,6 +8686,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> id,
     ffi.Pointer<wire_uint_8_list> public_key,
     ffi.Pointer<wire_uint_8_list> pre_group_key,
+    ffi.Pointer<wire_uint_8_list> sign_key,
+    ffi.Pointer<wire_uint_8_list> starter,
     ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_key_rotation(
@@ -8637,6 +8698,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       id,
       public_key,
       pre_group_key,
+      sign_key,
+      starter,
       group_as_member,
     );
   }
@@ -8651,10 +8714,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_key_rotation');
   late final _wire_group_key_rotation = _wire_group_key_rotationPtr.asFunction<
       void Function(
           int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
@@ -8729,6 +8796,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> pre_group_key,
     ffi.Pointer<wire_uint_8_list> public_key,
     ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> verify_key,
     ffi.Pointer<wire_uint_8_list> group_as_member,
   ) {
     return _wire_group_finish_key_rotation(
@@ -8741,6 +8809,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       pre_group_key,
       public_key,
       private_key,
+      verify_key,
       group_as_member,
     );
   }
@@ -8757,12 +8826,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_group_finish_key_rotation');
   late final _wire_group_finish_key_rotation =
       _wire_group_finish_key_rotationPtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,

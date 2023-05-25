@@ -664,30 +664,32 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //key rotation
 
-  Future<String> prepareKeyRotation() async {
+  Future<String> prepareKeyRotation([bool sign = false]) async {
     final publicKey = await _getPublicKey();
 
-    return Sentc.getApi().groupPrepareKeyRotation(preGroupKey: _getNewestKey()!.groupKey, publicKey: publicKey);
-  }
+    String signKey = "";
 
-  Future<String> doneKeyRotation(String serverOutput) async {
-    final out = await Sentc.getApi().groupGetDoneKeyRotationServerInput(serverOutput: serverOutput);
+    if (sign) {
+      signKey = await getSignKey();
+    }
 
-    final keys = await Future.wait([_getPublicKey(), _getPrivateKey(out.encryptedEphKeyKeyId)]);
-    final publicKey = keys[0];
-    final privateKey = keys[1];
-
-    return Sentc.getApi().groupDoneKeyRotation(
-      privateKey: privateKey,
-      publicKey: publicKey,
+    return Sentc.getApi().groupPrepareKeyRotation(
       preGroupKey: _getNewestKey()!.groupKey,
-      serverOutput: serverOutput,
+      publicKey: publicKey,
+      signKey: signKey,
+      starter: _user.userId,
     );
   }
 
-  Future<GroupKey> keyRotation() async {
+  Future<GroupKey> keyRotation([bool sign = false]) async {
     final jwt = await getJwt();
     final publicKey = await _getPublicKey();
+
+    String signKey = "";
+
+    if (sign) {
+      signKey = await getSignKey();
+    }
 
     final keyId = await Sentc.getApi().groupKeyRotation(
       baseUrl: baseUrl,
@@ -696,13 +698,15 @@ class Group extends AbstractSymCrypto {
       id: groupId,
       publicKey: publicKey,
       preGroupKey: _getNewestKey()!.groupKey,
+      signKey: signKey,
+      starter: _user.userId,
       groupAsMember: accessByGroupAsMember,
     );
 
     return getGroupKey(keyId, true);
   }
 
-  Future<void> finishKeyRotation() async {
+  Future<void> finishKeyRotation([bool verify = false]) async {
     final jwt = await getJwt();
 
     final api = Sentc.getApi();
@@ -742,6 +746,21 @@ class Group extends AbstractSymCrypto {
         //get the right used private key for each key
         final privateKey = await _getPrivateKey(key.encryptedEphKeyKeyId);
 
+        String verifyKey = "";
+
+        if (verify && key.signedByUserId != null && key.signedByUserSignKeyId != null) {
+          try {
+            verifyKey = await Sentc.getUserVerifyKey(key.signedByUserId!, key.signedByUserSignKeyId!);
+          } catch (e) {
+            final err = SentcError.fromJson(jsonDecode(e.toString()));
+
+            //check if code == 100 -> user not found. if so ignore this error and use no verify key
+            if (err.status != "server_100") {
+              rethrow;
+            }
+          }
+        }
+
         await api.groupFinishKeyRotation(
           baseUrl: baseUrl,
           authToken: appToken,
@@ -751,6 +770,7 @@ class Group extends AbstractSymCrypto {
           preGroupKey: preKey.groupKey,
           publicKey: publicKey,
           privateKey: privateKey,
+          verifyKey: verifyKey,
           groupAsMember: accessByGroupAsMember,
         );
 
