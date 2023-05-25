@@ -17,6 +17,20 @@ class RefreshOptions {
   RefreshOptions({required this.endpoint, this.endpointUrl, this.endpointFn});
 }
 
+class SentcError {
+  String status;
+  String errorMessage;
+
+  SentcError({required this.status, required this.errorMessage});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{'error_message': errorMessage, 'status': status};
+
+  factory SentcError.fromJson(Map<String, dynamic> json) => SentcError(
+        status: json['status'],
+        errorMessage: json['error_message'],
+      );
+}
+
 class Sentc {
   static SentcFlutterImpl? _api;
   static StorageInterface? _storage;
