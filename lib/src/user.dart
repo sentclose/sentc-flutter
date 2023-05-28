@@ -482,39 +482,17 @@ class User {
   }
 
   Future<String> createSafetyNumber([UserVerifyKeyCompareInfo? userToCompare]) async {
-    String verifyKey1;
-    String userId1;
-
     String? verifyKey2;
-    String? userId2;
 
     if (userToCompare != null) {
-      final verifyKey = await Sentc.getUserVerifyKey(userToCompare.userId, userToCompare.verifyKeyId);
-
-      if (userToCompare.userId.compareTo(userId) > 0) {
-        //if the actual user is higher in the alphabet
-        verifyKey1 = _getNewestKey().exportedVerifyKey;
-        userId1 = userId;
-
-        verifyKey2 = verifyKey;
-        userId2 = userToCompare.userId;
-      } else {
-        verifyKey1 = verifyKey;
-        userId1 = userToCompare.userId;
-
-        verifyKey2 = _getNewestKey().exportedVerifyKey;
-        userId2 = userId;
-      }
-    } else {
-      verifyKey1 = _getNewestKey().exportedVerifyKey;
-      userId1 = userId;
+      verifyKey2 = await Sentc.getUserVerifyKey(userToCompare.userId, userToCompare.verifyKeyId);
     }
 
     return Sentc.getApi().userCreateSafetyNumber(
-      verifyKey1: verifyKey1,
-      userId1: userId1,
+      verifyKey1: _getNewestKey().exportedVerifyKey,
+      userId1: userId,
       verifyKey2: verifyKey2,
-      userId2: userId2,
+      userId2: userToCompare?.userId,
     );
   }
 
