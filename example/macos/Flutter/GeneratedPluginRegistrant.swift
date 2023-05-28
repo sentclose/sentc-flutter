@@ -6,7 +6,7 @@ import FlutterMacOS
 import Foundation
 
 import sentc
-import shared_preferences_macos
+import shared_preferences_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   SentcPlugin.register(with: registry.registrar(forPlugin: "SentcPlugin"))
