@@ -215,6 +215,15 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kInitUserConstMeta;
 
+  Future<String> userCreateSafetyNumber(
+      {required String verifyKey1,
+      required String userId1,
+      String? verifyKey2,
+      String? userId2,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserCreateSafetyNumberConstMeta;
+
   Future<List<UserDeviceList>> getUserDevices(
       {required String baseUrl,
       required String authToken,
@@ -2252,6 +2261,32 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "init_user",
         argNames: ["baseUrl", "authToken", "jwt", "refreshToken"],
+      );
+
+  Future<String> userCreateSafetyNumber(
+      {required String verifyKey1,
+      required String userId1,
+      String? verifyKey2,
+      String? userId2,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(verifyKey1);
+    var arg1 = _platform.api2wire_String(userId1);
+    var arg2 = _platform.api2wire_opt_String(verifyKey2);
+    var arg3 = _platform.api2wire_opt_String(userId2);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_user_create_safety_number(port_, arg0, arg1, arg2, arg3),
+      parseSuccessData: _wire2api_String,
+      constMeta: kUserCreateSafetyNumberConstMeta,
+      argValues: [verifyKey1, userId1, verifyKey2, userId2],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kUserCreateSafetyNumberConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_create_safety_number",
+        argNames: ["verifyKey1", "userId1", "verifyKey2", "userId2"],
       );
 
   Future<List<UserDeviceList>> getUserDevices(
@@ -6227,6 +6262,11 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   }
 
   @protected
+  ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
+    return raw == null ? ffi.nullptr : api2wire_String(raw);
+  }
+
+  @protected
   ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_i32(int? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_i32(raw);
   }
@@ -6910,6 +6950,40 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_create_safety_number(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> verify_key_1,
+    ffi.Pointer<wire_uint_8_list> user_id_1,
+    ffi.Pointer<wire_uint_8_list> verify_key_2,
+    ffi.Pointer<wire_uint_8_list> user_id_2,
+  ) {
+    return _wire_user_create_safety_number(
+      port_,
+      verify_key_1,
+      user_id_1,
+      verify_key_2,
+      user_id_2,
+    );
+  }
+
+  late final _wire_user_create_safety_numberPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_user_create_safety_number');
+  late final _wire_user_create_safety_number =
+      _wire_user_create_safety_numberPtr.asFunction<
+          void Function(
+              int,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_get_user_devices(
     int port_,

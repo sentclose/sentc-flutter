@@ -122,6 +122,13 @@ class UserKey extends group.GroupKey {
   }
 }
 
+class UserVerifyKeyCompareInfo {
+  final String userId;
+  final String verifyKeyId;
+
+  UserVerifyKeyCompareInfo(this.userId, this.verifyKeyId);
+}
+
 class User {
   final String _baseUrl;
   final String _appToken;
@@ -471,6 +478,21 @@ class User {
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedId: lastId,
+    );
+  }
+
+  Future<String> createSafetyNumber([UserVerifyKeyCompareInfo? userToCompare]) async {
+    String? verifyKey2;
+
+    if (userToCompare != null) {
+      verifyKey2 = await Sentc.getUserVerifyKey(userToCompare.userId, userToCompare.verifyKeyId);
+    }
+
+    return Sentc.getApi().userCreateSafetyNumber(
+      verifyKey1: _getNewestKey().exportedVerifyKey,
+      userId1: userId,
+      verifyKey2: verifyKey2,
+      userId2: userToCompare?.userId,
     );
   }
 
