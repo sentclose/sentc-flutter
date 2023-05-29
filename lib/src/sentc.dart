@@ -292,7 +292,7 @@ class Sentc {
 
     final fetchedKey = await getApi().userFetchPublicKey(baseUrl: baseUrl, authToken: appToken, userId: userId);
 
-    final k = PublicKeyData(fetchedKey.publicKey, fetchedKey.publicKeyId);
+    final k = PublicKeyData(fetchedKey.publicKey, fetchedKey.publicKeyId, fetchedKey.publicKeySigKeyId, false);
 
     await storage.set("user_public_key_$userId", jsonEncode(k));
 
@@ -332,37 +332,83 @@ class Sentc {
     throw UnimplementedError();
   }
 
-  static Future<PublicKeyData> getGroupPublicKeyData(String groupId) async {
+  static Future<PublicGroupKeyData> getGroupPublicKeyData(String groupId) async {
     final storage = Sentc.getStorage();
     final key = await storage.getItem("group_public_key_$groupId");
 
     if (key != null) {
-      return PublicKeyData.fromJson(jsonDecode(key));
+      return PublicGroupKeyData.fromJson(jsonDecode(key));
     }
 
     final fetchedKey = await getApi().groupGetPublicKeyData(baseUrl: baseUrl, authToken: appToken, id: groupId);
 
-    final k = PublicKeyData(fetchedKey.publicKeyId, fetchedKey.publicKey);
+    final k = PublicGroupKeyData(fetchedKey.publicKeyId, fetchedKey.publicKey);
 
     await storage.set("group_public_key_$groupId", jsonEncode(k));
 
     return k;
   }
+
+  static Future<bool> verifyUserPublicKey(String userId, PublicKeyData publicKey, [bool force = false]) async {
+    if (publicKey.verified && !force) {
+      return true;
+    }
+
+    if (publicKey.publicKeySigKeyId == null) {
+      return false;
+    }
+
+    final verifyKey = await getUserVerifyKey(userId, publicKey.publicKeySigKeyId!);
+
+    final verify = await getApi().userVerifyUserPublicKey(verifyKey: verifyKey, publicKey: publicKey.publicKey);
+
+    publicKey.verified = verify;
+
+    //store the new value
+    final storage = Sentc.getStorage();
+    await storage.set("user_public_key_$userId", jsonEncode(publicKey));
+
+    return verify;
+  }
 }
 
 //______________________________________________________________________________________________________________________
 
-class PublicKeyData {
+class PublicGroupKeyData {
   final String id;
   final String key;
 
-  PublicKeyData(this.id, this.key);
+  const PublicGroupKeyData(this.id, this.key);
 
-  PublicKeyData.fromJson(Map<String, dynamic> json)
+  PublicGroupKeyData.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         key = json["key"];
 
   Map<String, dynamic> toJson() {
     return {"id": id, "key": key};
+  }
+}
+
+class PublicKeyData {
+  final String publicKeyId;
+  final String publicKey;
+  final String? publicKeySigKeyId;
+  bool verified;
+
+  PublicKeyData(this.publicKeyId, this.publicKey, this.publicKeySigKeyId, this.verified);
+
+  PublicKeyData.fromJson(Map<String, dynamic> json)
+      : publicKeyId = json["publicKeyId"],
+        publicKey = json["publicKey"],
+        publicKeySigKeyId = json["publicKeySigKeyId"],
+        verified = json["verified"];
+
+  Map<String, dynamic> toJson() {
+    return {
+      "publicKeyId": publicKeyId,
+      "publicKey": publicKey,
+      "verified": verified,
+      "publicKeySigKeyId": publicKeySigKeyId
+    };
   }
 }

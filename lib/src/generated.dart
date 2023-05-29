@@ -224,6 +224,11 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kUserCreateSafetyNumberConstMeta;
 
+  Future<bool> userVerifyUserPublicKey(
+      {required String verifyKey, required String publicKey, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kUserVerifyUserPublicKeyConstMeta;
+
   Future<List<UserDeviceList>> getUserDevices(
       {required String baseUrl,
       required String authToken,
@@ -817,7 +822,7 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta;
 
-  Future<UserPublicKeyData> groupGetPublicKeyData(
+  Future<GroupPublicKeyData> groupGetPublicKeyData(
       {required String baseUrl,
       required String authToken,
       required String id,
@@ -1463,6 +1468,16 @@ class GroupOutDataKeys {
   });
 }
 
+class GroupPublicKeyData {
+  final String publicKey;
+  final String publicKeyId;
+
+  const GroupPublicKeyData({
+    required this.publicKey,
+    required this.publicKeyId,
+  });
+}
+
 class GroupUserListItem {
   final String userId;
   final int rank;
@@ -1722,10 +1737,12 @@ class UserKeyData {
 class UserPublicKeyData {
   final String publicKey;
   final String publicKeyId;
+  final String? publicKeySigKeyId;
 
   const UserPublicKeyData({
     required this.publicKey,
     required this.publicKeyId,
+    this.publicKeySigKeyId,
   });
 }
 
@@ -2287,6 +2304,26 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "user_create_safety_number",
         argNames: ["verifyKey1", "userId1", "verifyKey2", "userId2"],
+      );
+
+  Future<bool> userVerifyUserPublicKey(
+      {required String verifyKey, required String publicKey, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(verifyKey);
+    var arg1 = _platform.api2wire_String(publicKey);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_user_verify_user_public_key(port_, arg0, arg1),
+      parseSuccessData: _wire2api_bool,
+      constMeta: kUserVerifyUserPublicKeyConstMeta,
+      argValues: [verifyKey, publicKey],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kUserVerifyUserPublicKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "user_verify_user_public_key",
+        argNames: ["verifyKey", "publicKey"],
       );
 
   Future<List<UserDeviceList>> getUserDevices(
@@ -4358,7 +4395,7 @@ class SentcFlutterImpl implements SentcFlutter {
         ],
       );
 
-  Future<UserPublicKeyData> groupGetPublicKeyData(
+  Future<GroupPublicKeyData> groupGetPublicKeyData(
       {required String baseUrl,
       required String authToken,
       required String id,
@@ -4369,7 +4406,7 @@ class SentcFlutterImpl implements SentcFlutter {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_get_public_key_data(port_, arg0, arg1, arg2),
-      parseSuccessData: _wire2api_user_public_key_data,
+      parseSuccessData: _wire2api_group_public_key_data,
       constMeta: kGroupGetPublicKeyDataConstMeta,
       argValues: [baseUrl, authToken, id],
       hint: hint,
@@ -5899,6 +5936,16 @@ class SentcFlutterImpl implements SentcFlutter {
     );
   }
 
+  GroupPublicKeyData _wire2api_group_public_key_data(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return GroupPublicKeyData(
+      publicKey: _wire2api_String(arr[0]),
+      publicKeyId: _wire2api_String(arr[1]),
+    );
+  }
+
   GroupUserListItem _wire2api_group_user_list_item(dynamic raw) {
     final arr = raw as List<dynamic>;
     if (arr.length != 4)
@@ -6198,11 +6245,12 @@ class SentcFlutterImpl implements SentcFlutter {
 
   UserPublicKeyData _wire2api_user_public_key_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return UserPublicKeyData(
       publicKey: _wire2api_String(arr[0]),
       publicKeyId: _wire2api_String(arr[1]),
+      publicKeySigKeyId: _wire2api_opt_String(arr[2]),
     );
   }
 
@@ -6983,6 +7031,28 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_user_verify_user_public_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> verify_key,
+    ffi.Pointer<wire_uint_8_list> public_key,
+  ) {
+    return _wire_user_verify_user_public_key(
+      port_,
+      verify_key,
+      public_key,
+    );
+  }
+
+  late final _wire_user_verify_user_public_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_user_verify_user_public_key');
+  late final _wire_user_verify_user_public_key =
+      _wire_user_verify_user_public_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_get_user_devices(

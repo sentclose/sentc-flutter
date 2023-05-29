@@ -1000,18 +1000,20 @@ class Group extends AbstractSymCrypto {
   Future<String> prepareKeysForNewMember(String userId, int? rank, [int page = 0, bool group = false]) async {
     final keyCount = _keys.length;
 
-    PublicKeyData publicKey;
+    String publicKey;
 
     if (group) {
-      publicKey = await Sentc.getGroupPublicKeyData(userId);
+      final k = await Sentc.getGroupPublicKeyData(userId);
+      publicKey = k.key;
     } else {
-      publicKey = await Sentc.getUserPublicKey(userId);
+      final k = await Sentc.getUserPublicKey(userId);
+      publicKey = k.publicKey;
     }
 
     final keyString = prepareKeys(_keys, page).str;
 
     return Sentc.getApi().groupPrepareKeysForNewMember(
-      userPublicKey: publicKey.key,
+      userPublicKey: publicKey,
       groupKeys: keyString,
       keyCount: keyCount,
       adminRank: this.rank,
@@ -1050,12 +1052,14 @@ class Group extends AbstractSymCrypto {
     bool group = false,
     bool reInvite = false,
   ]) async {
-    PublicKeyData publicKey;
+    String publicKey;
 
     if (group) {
-      publicKey = await Sentc.getGroupPublicKeyData(userId);
+      final k = await Sentc.getGroupPublicKeyData(userId);
+      publicKey = k.key;
     } else {
-      publicKey = await Sentc.getUserPublicKey(userId);
+      final k = await Sentc.getUserPublicKey(userId);
+      publicKey = k.publicKey;
     }
 
     final keyCount = _keys.length;
@@ -1075,7 +1079,7 @@ class Group extends AbstractSymCrypto {
       adminRank: this.rank,
       autoInvite: auto,
       groupInvite: group,
-      userPublicKey: publicKey.key,
+      userPublicKey: publicKey,
       groupKeys: keyString,
       groupAsMember: accessByGroupAsMember,
       reInvite: reInvite,
@@ -1100,7 +1104,7 @@ class Group extends AbstractSymCrypto {
         id: groupId,
         autoInvite: auto,
         sessionId: sessionId,
-        userPublicKey: publicKey.key,
+        userPublicKey: publicKey,
         groupKeys: nextKeys.str,
         groupAsMember: accessByGroupAsMember,
       ));
@@ -1153,12 +1157,14 @@ class Group extends AbstractSymCrypto {
     final keyCount = _keys.length;
     final keyString = prepareKeys(_keys, 0).str;
 
-    PublicKeyData publicKey;
+    String publicKey;
 
     if (userType == 2) {
-      publicKey = await Sentc.getGroupPublicKeyData(userId);
+      final k = await Sentc.getGroupPublicKeyData(userId);
+      publicKey = k.key;
     } else {
-      publicKey = await Sentc.getUserPublicKey(userId);
+      final k = await Sentc.getUserPublicKey(userId);
+      publicKey = k.publicKey;
     }
 
     final sessionId = await api.groupAcceptJoinReq(
@@ -1170,7 +1176,7 @@ class Group extends AbstractSymCrypto {
       keyCount: keyCount,
       rank: rank,
       adminRank: this.rank,
-      userPublicKey: publicKey.key,
+      userPublicKey: publicKey,
       groupKeys: keyString,
       groupAsMember: accessByGroupAsMember,
     );
@@ -1193,7 +1199,7 @@ class Group extends AbstractSymCrypto {
         jwt: jwt,
         id: groupId,
         sessionId: sessionId,
-        userPublicKey: publicKey.key,
+        userPublicKey: publicKey,
         groupKeys: nextKeys.str,
         groupAsMember: accessByGroupAsMember,
       ));
