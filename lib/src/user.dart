@@ -54,10 +54,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
     //save always the newest public key
     storage.set(
       "user_public_key_${user.userId}",
-      jsonEncode(PublicKeyData(
-        userKeys[0].publicGroupKey,
-        userKeys[0].groupKeyId,
-      )),
+      jsonEncode(PublicKeyData(userKeys[0].publicGroupKey, userKeys[0].groupKeyId, null, true)),
     )
   ]);
 
