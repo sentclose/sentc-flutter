@@ -9,7 +9,7 @@ PrepareKeysResult prepareKeys(List<GroupKey> keys, int page) {
   final offset = page * 50;
   int end = offset + 50;
 
-  if (end < keys.length) {
+  if (end > keys.length) {
     end = keys.length;
   }
 
