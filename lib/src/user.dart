@@ -239,7 +239,7 @@ class User {
   }
 
   /// Fetch key for the actual user group
-  Future<UserKey> _getUserKeys(String keyId, [bool? first]) async {
+  Future<UserKey> _getUserKeys(String keyId, [bool first = false]) async {
     var index = _keyMap[keyId];
 
     if (index == null) {
@@ -261,7 +261,7 @@ class User {
     }
   }
 
-  fetchUserKey(String keyId, [bool? first]) async {
+  fetchUserKey(String keyId, [bool first = false]) async {
     final jwt = await getJwt();
 
     final userKeys = await Sentc.getApi().fetchUserKey(
@@ -272,9 +272,11 @@ class User {
       privateKey: _privateDeviceKey,
     );
 
+    final index = _userKeys.length;
     _userKeys.add(UserKey.fromServer(userKeys));
+    _keyMap[userKeys.groupKeyId] = index;
 
-    if (first != null && first) {
+    if (first) {
       _newestKeyId = userKeys.groupKeyId;
     }
 
