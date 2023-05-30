@@ -54,8 +54,16 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
     //save always the newest public key
     storage.set(
       "user_public_key_${user.userId}",
-      jsonEncode(PublicKeyData(userKeys[0].publicGroupKey, userKeys[0].groupKeyId, null, true)),
-    )
+      jsonEncode(
+        PublicKeyData(
+          userKeys[0].groupKeyId,
+          userKeys[0].exportedPublicKey,
+          userKeys[0].exportedPublicKeySigKeyId,
+          false,
+        ),
+      ),
+    ),
+    storage.set("user_verify_key_${user.userId}_${userKeys[0].groupKeyId}", userKeys[0].exportedVerifyKey),
   ]);
 
   return user;
@@ -66,6 +74,7 @@ class UserKey extends group.GroupKey {
   final String signKey;
   final String verifyKey;
   final String exportedVerifyKey;
+  final String? exportedPublicKeySigKeyId;
 
   UserKey({
     required super.privateGroupKey,
@@ -77,19 +86,20 @@ class UserKey extends group.GroupKey {
     required this.verifyKey,
     required super.exportedPublicKey,
     required this.exportedVerifyKey,
+    required this.exportedPublicKeySigKeyId,
   });
 
   factory UserKey.fromJson(Map<String, dynamic> json) => UserKey(
-        privateGroupKey: json['privateGroupKey'] as String,
-        publicGroupKey: json['publicGroupKey'] as String,
-        groupKey: json['groupKey'] as String,
-        time: json['time'] as String,
-        groupKeyId: json['groupKeyId'] as String,
-        signKey: json['signKey'] as String,
-        verifyKey: json['verifyKey'] as String,
-        exportedPublicKey: json['exportedPublicKey'] as String,
-        exportedVerifyKey: json['exportedVerifyKey'] as String,
-      );
+      privateGroupKey: json['privateGroupKey'] as String,
+      publicGroupKey: json['publicGroupKey'] as String,
+      groupKey: json['groupKey'] as String,
+      time: json['time'] as String,
+      groupKeyId: json['groupKeyId'] as String,
+      signKey: json['signKey'] as String,
+      verifyKey: json['verifyKey'] as String,
+      exportedPublicKey: json['exportedPublicKey'] as String,
+      exportedVerifyKey: json['exportedVerifyKey'] as String,
+      exportedPublicKeySigKeyId: json["exportedPublicKeySigKeyId"] as String?);
 
   factory UserKey.fromServer(plugin.UserKeyData key) => UserKey(
         privateGroupKey: key.privateKey,
@@ -101,6 +111,7 @@ class UserKey extends group.GroupKey {
         verifyKey: key.verifyKey,
         exportedPublicKey: key.exportedPublicKey,
         exportedVerifyKey: key.exportedVerifyKey,
+        exportedPublicKeySigKeyId: key.exportedPublicKeySigKeyId,
       );
 
   @override
@@ -114,7 +125,8 @@ class UserKey extends group.GroupKey {
       "signKey": signKey,
       "verifyKey": verifyKey,
       "exportedPublicKey": exportedPublicKey,
-      "exportedVerifyKey": exportedVerifyKey
+      "exportedVerifyKey": exportedVerifyKey,
+      "exportedPublicKeySigKeyId": exportedPublicKeySigKeyId,
     };
   }
 }

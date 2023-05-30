@@ -1719,6 +1719,7 @@ class UserKeyData {
   final String signKey;
   final String verifyKey;
   final String exportedPublicKey;
+  final String? exportedPublicKeySigKeyId;
   final String exportedVerifyKey;
 
   const UserKeyData({
@@ -1730,6 +1731,7 @@ class UserKeyData {
     required this.signKey,
     required this.verifyKey,
     required this.exportedPublicKey,
+    this.exportedPublicKeySigKeyId,
     required this.exportedVerifyKey,
   });
 }
@@ -6228,8 +6230,8 @@ class SentcFlutterImpl implements SentcFlutter {
 
   UserKeyData _wire2api_user_key_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
     return UserKeyData(
       privateKey: _wire2api_String(arr[0]),
       publicKey: _wire2api_String(arr[1]),
@@ -6239,7 +6241,8 @@ class SentcFlutterImpl implements SentcFlutter {
       signKey: _wire2api_String(arr[5]),
       verifyKey: _wire2api_String(arr[6]),
       exportedPublicKey: _wire2api_String(arr[7]),
-      exportedVerifyKey: _wire2api_String(arr[8]),
+      exportedPublicKeySigKeyId: _wire2api_opt_String(arr[8]),
+      exportedVerifyKey: _wire2api_String(arr[9]),
     );
   }
 
