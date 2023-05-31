@@ -1021,19 +1021,19 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<void> invite(String userId, int? rank) {
+  Future<void> invite(String userId, [int? rank]) {
     return _inviteUserInternally(userId, rank);
   }
 
-  Future<void> inviteAuto(String userId, int? rank) {
+  Future<void> inviteAuto(String userId, [int? rank]) {
     return _inviteUserInternally(userId, rank, true);
   }
 
-  Future<void> inviteGroup(String groupId, int? rank) {
+  Future<void> inviteGroup(String groupId, [int? rank]) {
     return _inviteUserInternally(groupId, rank, false, true);
   }
 
-  Future<void> inviteGroupAuto(String groupId, int? rank) {
+  Future<void> inviteGroupAuto(String groupId, [int? rank]) {
     return _inviteUserInternally(groupId, rank, true, true);
   }
 
