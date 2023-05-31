@@ -34,7 +34,9 @@ void main() {
 
     await Sentc.register(username1, pw);
     user1 = await Sentc.login(username1, pw);
+  });
 
+  testWidgets("prepare test file", (widgetTester) async {
     final file = File(fileItemPath);
     fileItemLength = await file.length();
   });
