@@ -145,7 +145,7 @@ class User {
   late String jwt;
   final String refreshToken;
   final String userId;
-  final String _deviceId;
+  final String deviceId;
 
   //device keys
   final String _privateDeviceKey;
@@ -170,7 +170,7 @@ class User {
     this.jwt,
     this.refreshToken,
     this.userId,
-    this._deviceId,
+    this.deviceId,
     this._privateDeviceKey,
     this._publicDeviceKey,
     this._signDeviceKey,
@@ -190,7 +190,7 @@ class User {
         jwt = json["jwt"],
         refreshToken = json["refreshToken"],
         userId = json["userId"],
-        _deviceId = json["deviceId"],
+        deviceId = json["deviceId"],
         _privateDeviceKey = json["privateDeviceKey"],
         _publicDeviceKey = json["publicDeviceKey"],
         _signDeviceKey = json["signDeviceKey"],
@@ -209,7 +209,7 @@ class User {
       "jwt": jwt,
       "refreshToken": refreshToken,
       "userId": userId,
-      "deviceId": _deviceId,
+      "deviceId": deviceId,
       "privateDeviceKey": _privateDeviceKey,
       "publicDeviceKey": _publicDeviceKey,
       "signDeviceKey": _signDeviceKey,
@@ -410,7 +410,7 @@ class User {
       deviceId: deviceId,
     );
 
-    if (deviceId == _deviceId) {
+    if (deviceId == this.deviceId) {
       //only log the device out if it is the actual used device
       return logOut();
     }
@@ -477,7 +477,7 @@ class User {
     await Future.wait(p);
   }
 
-  Future<List<UserDeviceList>> getDevices(UserDeviceList? lastFetchedItem) async {
+  Future<List<UserDeviceList>> getDevices([UserDeviceList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
