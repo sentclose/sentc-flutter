@@ -133,9 +133,124 @@ void main() {
 
       newDevice1 = await Sentc.login(deviceIdentifier1, devicePw1);
     });
+
+    testWidgets("get the same key id for all devices", (widgetTester) async {
+      final storage = Sentc.getStorage();
+
+      final newestKeyJson = await storage.getItem("user_data_userIdentifier1");
+      final newestKey = jsonDecode(newestKeyJson!)["newestKeyId"];
+
+      final newestKey1Json = await storage.getItem("user_data_$deviceIdentifier");
+      final newestKey1 = jsonDecode(newestKey1Json!)["newestKeyId"];
+
+      final newestKey2Json = await storage.getItem("user_data_$deviceIdentifier1");
+      final newestKey2 = jsonDecode(newestKey2Json!)["newestKeyId"];
+
+      expect(newestKey, newestKey1);
+      expect(newestKey, newestKey2);
+    });
+
+    testWidgets("list all devices", (widgetTester) async {
+      final list = await user.getDevices();
+
+      expect(list.length, 3);
+
+      final listPagination = await user.getDevices(list[0]);
+
+      //order by time
+      expect(listPagination.length, 2);
+    });
+
+    testWidgets("delete device", (widgetTester) async {
+      await user.deleteDevice("password", newDevice1.deviceId);
+    });
+
+    testWidgets("not login with deleted device", (widgetTester) async {
+      try {
+        await Sentc.login(deviceIdentifier, devicePw);
+      } catch (e) {
+        final error = SentcError.fromError(e);
+
+        expect(error.status, "server_100");
+      }
+    });
+  });
+
+  late User user2, user3;
+
+  group("safety number", () {
+    testWidgets("create a safety number", (widgetTester) async {
+      await user.createSafetyNumber();
+    });
+
+    testWidgets("create a combined safety number", (widgetTester) async {
+      //first register new user
+      await Sentc.register("userIdentifier2", "password");
+      user2 = await Sentc.login("userIdentifier2", "password");
+
+      final storage = Sentc.getStorage();
+
+      final newestKeyJson = await storage.getItem("user_data_userIdentifier1");
+      final newestKey = jsonDecode(newestKeyJson!)["newestKeyId"];
+
+      final newestKey1Json = await storage.getItem("user_data_userIdentifier2");
+      final newestKey1 = jsonDecode(newestKey1Json!)["newestKeyId"];
+
+      final number = await user.createSafetyNumber(UserVerifyKeyCompareInfo(user2.userId, newestKey1));
+
+      final number2 = await user2.createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
+
+      expect(number, number2);
+    });
+
+    testWidgets("not create the same number with different users", (widgetTester) async {
+      await Sentc.register("userIdentifier3", "password");
+      user3 = await Sentc.login("userIdentifier3", "password");
+
+      final storage = Sentc.getStorage();
+
+      final newestKeyJson = await storage.getItem("user_data_userIdentifier1");
+      final newestKey = jsonDecode(newestKeyJson!)["newestKeyId"];
+
+      final newestKey1Json = await storage.getItem("user_data_userIdentifier2");
+      final newestKey1 = jsonDecode(newestKey1Json!)["newestKeyId"];
+
+      final newestKey2Json = await storage.getItem("user_data_userIdentifier3");
+      final newestKey2 = jsonDecode(newestKey2Json!)["newestKeyId"];
+
+      final number = await user.createSafetyNumber(UserVerifyKeyCompareInfo(user2.userId, newestKey1));
+
+      final number2 = await user2.createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
+
+      expect(number, number2);
+
+      final number3 = await user3.createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
+
+      expect((number != number3), true);
+
+      final number4 = await user.createSafetyNumber(UserVerifyKeyCompareInfo(user3.userId, newestKey2));
+
+      expect(number3, number4);
+    });
+  });
+
+  testWidgets("verify public key", (widgetTester) async {
+    final userId = user2.userId;
+
+    //first remove the cached public key from the store of user 2 because after login the public key will be set as verified true
+    final storage = Sentc.getStorage();
+    await storage.delete("user_public_key_id_$userId");
+
+    final publicKey = await Sentc.getUserPublicKey(userId);
+
+    final verify = await Sentc.verifyUserPublicKey(userId, publicKey);
+
+    expect(verify, true);
   });
 
   testWidgets("delete user", (widgetTester) async {
     await user.deleteUser("password");
+    await user2.deleteUser("password");
+    await user3.deleteUser("password");
   });
 }
