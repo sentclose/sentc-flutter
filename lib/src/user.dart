@@ -600,7 +600,7 @@ class User {
     return group.getGroup(groupId, _baseUrl, _appToken, this, false, groupAsMember);
   }
 
-  Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
+  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
@@ -616,7 +616,7 @@ class User {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
+  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
