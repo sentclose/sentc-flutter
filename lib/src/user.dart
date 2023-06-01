@@ -687,4 +687,16 @@ class User {
       groupAsMember: "",
     );
   }
+
+  Future<void> deleteJoinReq(String id) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupDeleteSentJoinReqUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      joinReqGroupId: id,
+      groupAsMember: "",
+    );
+  }
 }
