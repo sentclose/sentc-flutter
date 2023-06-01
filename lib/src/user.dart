@@ -646,7 +646,7 @@ class User {
     );
   }
 
-  Future<void> rejectGroupInvite(groupIdToReject) async {
+  Future<void> rejectGroupInvite(String groupIdToReject) async {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupRejectInvite(
@@ -655,6 +655,35 @@ class User {
       jwt: jwt,
       id: groupIdToReject,
       groupId: "",
+      groupAsMember: "",
+    );
+  }
+
+  Future<void> groupJoinRequest(String groupId) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      groupId: "",
+      groupAsMember: "",
+    );
+  }
+
+  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time ?? "0";
+    final lastFetchedId = lastFetchedItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetSentJoinReqUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedId,
       groupAsMember: "",
     );
   }
