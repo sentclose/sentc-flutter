@@ -260,12 +260,12 @@ class Group extends AbstractSymCrypto {
         createdTime = json["createdTime"],
         joinedTime = json["joinedTime"],
         rank = json["rank"],
-        _keyMap = jsonDecode(json["keyMap"]),
+        _keyMap = Map<String, int>.from(jsonDecode(json["keyMap"]) as Map<String, dynamic>),
         _newestKeyId = json["newestKeyId"],
         accessByParentGroup = json["accessByParentGroup"],
         accessByGroupAsMember = json["accessByGroupAsMember"],
         _keys = (jsonDecode(json["keys"]) as List).map((e) => GroupKey.fromJson(e)).toList(),
-        _hmacKeys = (json["hmacKeys"] as List<dynamic>).map((e) => e as String).toList();
+        _hmacKeys = (jsonDecode(json["hmacKeys"]) as List<dynamic>).map((e) => e as String).toList();
 
   Map<String, dynamic> toJson() {
     return {
