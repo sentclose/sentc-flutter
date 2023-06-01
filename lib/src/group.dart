@@ -160,7 +160,10 @@ Future<Group> getGroup(
     //store the group data
     storage.set(groupKey, jsonEncode(groupObj)),
     //save always the newest public key
-    storage.set("group_public_key_$groupId", jsonEncode(keys[0])),
+    storage.set(
+      "group_public_key_$groupId",
+      jsonEncode(PublicGroupKeyData(keys[0].groupKeyId, keys[0].exportedPublicKey)),
+    ),
   ]);
 
   return groupObj;
@@ -343,7 +346,10 @@ class Group extends AbstractSymCrypto {
         _newestKeyId = decryptedKey[0].groupKeyId;
 
         //save also the newest key in the cache
-        storage.set("group_public_key_$groupId", jsonEncode(decryptedKey[0]));
+        storage.set(
+          "group_public_key_$groupId",
+          jsonEncode(PublicGroupKeyData(_newestKeyId, decryptedKey[0].exportedPublicKey)),
+        );
       }
 
       String actualUserId;
