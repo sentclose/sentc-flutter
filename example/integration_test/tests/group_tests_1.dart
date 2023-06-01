@@ -126,7 +126,7 @@ void main() {
     expect(groupForUser1.groupId, sentcGroup.groupId);
   });
 
-  late String encryptedStringByUser0, encryptedStringByUser0AfterKr;
+  late String encryptedStringByUser0, encryptedStringByUser0AfterKr, encryptedStringByUser0WithSign;
 
   group("basic encryption", () {
     testWidgets("encrypt a string for the group", (widgetTester) async {
@@ -203,6 +203,74 @@ void main() {
     final decrypted1 = await groupForUser1.decryptString(encryptedStringByUser0AfterKr);
 
     expect(decrypted1, "hello there £ Я a a 👍 1");
+  });
+
+  group("encrypt with sign", () {
+    testWidgets("encrypt a string with signing", (widgetTester) async {
+      encryptedStringByUser0WithSign = await sentcGroup.encryptString("hello there £ Я a a 👍", true);
+
+      //should decrypt without verify
+      final decrypt = await sentcGroup.decryptString(encryptedStringByUser0WithSign);
+      expect(decrypt, "hello there £ Я a a 👍");
+
+      //now decrypt with verify
+      final decrypt1 = await sentcGroup.decryptString(encryptedStringByUser0WithSign, true, user0.userId);
+
+      expect(decrypt1, "hello there £ Я a a 👍");
+    });
+
+    testWidgets("decrypt the string with verify for other user", (widgetTester) async {
+      final decrypt = await groupForUser1.decryptString(encryptedStringByUser0WithSign);
+      expect(decrypt, "hello there £ Я a a 👍");
+
+      //now decrypt
+      final decrypt1 = await groupForUser1.decryptString(encryptedStringByUser0WithSign, true, user0.userId);
+      expect(decrypt1, "hello there £ Я a a 👍");
+    });
+  });
+
+  group("join req", () {
+    testWidgets("send join req to the group", (widgetTester) async {
+      await user2.groupJoinRequest(sentcGroup.groupId);
+    });
+
+    testWidgets("get the sent join req for the group", (widgetTester) async {
+      final list = await sentcGroup.getJoinRequests();
+
+      expect(list.length, 1);
+      expect(list[0].userId, user2.userId);
+
+      //pagination
+      final list1 = await sentcGroup.getJoinRequests(list[0]);
+
+      expect(list1.length, 0);
+    });
+
+    testWidgets("get the sent join req for the user", (widgetTester) async {
+      final list = await user2.sentJoinReq();
+
+      expect(list.length, 1);
+      expect(list[0].groupId, sentcGroup.groupId);
+
+      //pagination
+      final list1 = await user2.sentJoinReq(list[0]);
+
+      expect(list1.length, 0);
+    });
+
+    testWidgets("not reject join req without rights", (widgetTester) async {
+      try {
+        await groupForUser1.rejectJoinRequest(user2.userId);
+      } catch (e) {
+        final err = SentcError.fromError(e);
+
+        expect(err.status, "client_201");
+      }
+    });
+
+    testWidgets("reject join req", (widgetTester) async {
+      await sentcGroup.rejectJoinRequest(user2.userId);
+    });
   });
 
   tearDownAll(() async {
