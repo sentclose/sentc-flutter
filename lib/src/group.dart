@@ -1124,7 +1124,7 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //join req
 
-  Future<List<GroupJoinReqList>> getJoinRequests(GroupJoinReqList? lastFetchedItem) async {
+  Future<List<GroupJoinReqList>> getJoinRequests([GroupJoinReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
