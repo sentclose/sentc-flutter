@@ -1,8 +1,41 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sentc/sentc.dart';
 import 'package:http/http.dart' as http;
+
+const fileItemPathConst = "integration_test/test_data/file_item";
+
+class FileAtt {
+  final String testFilePath;
+  final String testDirPath;
+
+  const FileAtt(this.testFilePath, this.testDirPath);
+}
+
+Future<FileAtt> loadAssetAsFile(String path) async {
+  if (!(Platform.isIOS || Platform.isAndroid)) {
+    return const FileAtt(fileItemPathConst, "integration_test/test_data");
+  }
+
+  final ByteData assetData = await rootBundle.load(path);
+  final List<int> bytes = assetData.buffer.asUint8List();
+
+  // Get the directory for storing the file.
+  final Directory tempDir = await getTemporaryDirectory();
+  final String tempPath = tempDir.path;
+
+  // Generate a unique file name.
+  final String fileName = path.split('/').last;
+
+  // Create a file and write the asset data to it.
+  final File file = File('$tempPath/$fileName');
+  await file.writeAsBytes(bytes, flush: true);
+
+  return FileAtt('$tempPath/$fileName', tempPath);
+}
 
 void main() {
   const username0 = "test0";
@@ -17,9 +50,11 @@ void main() {
   late String file1, file2;
   late int fileItemLength;
 
-  const fileItemPath = "integration_test/test_data/file_item";
-  const file1Path = "integration_test/test_data/file1";
-  const file2Path = "integration_test/test_data/file_item(1)"; //same name it is set in the downloader
+  late FileAtt testFilePath;
+
+  late String fileItemPath;
+  late String file1Path;
+  late String file2Path;
 
   setUpAll(() async {
     final init = await Sentc.init(
@@ -37,6 +72,11 @@ void main() {
   });
 
   testWidgets("prepare test file", (widgetTester) async {
+    testFilePath = await loadAssetAsFile(fileItemPathConst);
+    fileItemPath = testFilePath.testFilePath;
+    file1Path = "${testFilePath.testDirPath}/file1";
+    file2Path = "${testFilePath.testDirPath}/file_item(1)";
+
     final file = File(fileItemPath);
     fileItemLength = await file.length();
   });
@@ -124,7 +164,7 @@ void main() {
   });
 
   testWidgets("download the created file", (widgetTester) async {
-    await group.downloadFile(path: "integration_test/test_data", fileId: file2);
+    await group.downloadFile(path: testFilePath.testDirPath, fileId: file2);
 
     final file = File(file2Path);
 
