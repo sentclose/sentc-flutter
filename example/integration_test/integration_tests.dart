@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'tests/01_user_test.dart' as user_tests;
-import 'tests/03_file_test.dart' as file_tests;
+import 'tests/user_test.dart' as user_tests;
+import 'tests/file_test.dart' as file_tests;
 
 void main() {
   group("user tests", user_tests.main);
