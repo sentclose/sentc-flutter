@@ -650,7 +650,7 @@ class Group extends AbstractSymCrypto {
     lastCheckTime = DateTime.now().millisecondsSinceEpoch;
   }
 
-  Future<List<GroupUserListItem>> getMember(GroupUserListItem? lastFetchedItem) async {
+  Future<List<GroupUserListItem>> getMember([GroupUserListItem? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.joinedTime ?? "0";
@@ -882,7 +882,7 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //group as member
 
-  Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
+  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
@@ -898,7 +898,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
+  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
@@ -955,7 +955,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<List<GroupInviteReqList>> sentJoinReq(GroupInviteReqList? lastFetchedItem) async {
+  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
@@ -1427,7 +1427,11 @@ class Group extends AbstractSymCrypto {
     return Sentc.getApi().prepareSearch(key: key, data: data);
   }
 
-  Future<List<ListSearchItem>> searchItem(String data, ListSearchItem? lastFetchedItem, String? catId) async {
+  Future<List<ListSearchItem>> searchItem({
+    required String data,
+    ListSearchItem? lastFetchedItem,
+    String? catId,
+  }) async {
     final jwt = await getJwt();
 
     final lastTime = lastFetchedItem?.time ?? "0";
