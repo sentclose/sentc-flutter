@@ -582,7 +582,7 @@ class Group extends AbstractSymCrypto {
     return getGroup(groupId, baseUrl, appToken, _user, false, this.groupId);
   }
 
-  Future<List<GroupChildrenList>> getChildren(GroupChildrenList? lastFetchedItem) async {
+  Future<List<GroupChildrenList>> getChildren([GroupChildrenList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
@@ -826,7 +826,7 @@ class Group extends AbstractSymCrypto {
       jwt: jwt,
       id: groupId,
       userId: userId,
-      rank: rank,
+      rank: newRank,
       adminRank: rank,
       groupAsMember: accessByGroupAsMember,
     );
