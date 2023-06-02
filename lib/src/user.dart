@@ -145,7 +145,7 @@ class User {
   late String jwt;
   final String refreshToken;
   final String userId;
-  final String _deviceId;
+  final String deviceId;
 
   //device keys
   final String _privateDeviceKey;
@@ -170,7 +170,7 @@ class User {
     this.jwt,
     this.refreshToken,
     this.userId,
-    this._deviceId,
+    this.deviceId,
     this._privateDeviceKey,
     this._publicDeviceKey,
     this._signDeviceKey,
@@ -190,7 +190,7 @@ class User {
         jwt = json["jwt"],
         refreshToken = json["refreshToken"],
         userId = json["userId"],
-        _deviceId = json["deviceId"],
+        deviceId = json["deviceId"],
         _privateDeviceKey = json["privateDeviceKey"],
         _publicDeviceKey = json["publicDeviceKey"],
         _signDeviceKey = json["signDeviceKey"],
@@ -209,7 +209,7 @@ class User {
       "jwt": jwt,
       "refreshToken": refreshToken,
       "userId": userId,
-      "deviceId": _deviceId,
+      "deviceId": deviceId,
       "privateDeviceKey": _privateDeviceKey,
       "publicDeviceKey": _publicDeviceKey,
       "signDeviceKey": _signDeviceKey,
@@ -239,7 +239,7 @@ class User {
   }
 
   /// Fetch key for the actual user group
-  Future<UserKey> _getUserKeys(String keyId, [bool? first]) async {
+  Future<UserKey> _getUserKeys(String keyId, [bool first = false]) async {
     var index = _keyMap[keyId];
 
     if (index == null) {
@@ -261,7 +261,7 @@ class User {
     }
   }
 
-  fetchUserKey(String keyId, [bool? first]) async {
+  fetchUserKey(String keyId, [bool first = false]) async {
     final jwt = await getJwt();
 
     final userKeys = await Sentc.getApi().fetchUserKey(
@@ -272,9 +272,11 @@ class User {
       privateKey: _privateDeviceKey,
     );
 
+    final index = _userKeys.length;
     _userKeys.add(UserKey.fromServer(userKeys));
+    _keyMap[userKeys.groupKeyId] = index;
 
-    if (first != null && first) {
+    if (first) {
       _newestKeyId = userKeys.groupKeyId;
     }
 
@@ -408,7 +410,7 @@ class User {
       deviceId: deviceId,
     );
 
-    if (deviceId == _deviceId) {
+    if (deviceId == this.deviceId) {
       //only log the device out if it is the actual used device
       return logOut();
     }
@@ -475,7 +477,7 @@ class User {
     await Future.wait(p);
   }
 
-  Future<List<UserDeviceList>> getDevices(UserDeviceList? lastFetchedItem) async {
+  Future<List<UserDeviceList>> getDevices([UserDeviceList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
@@ -598,7 +600,7 @@ class User {
     return group.getGroup(groupId, _baseUrl, _appToken, this, false, groupAsMember);
   }
 
-  Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
+  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
@@ -614,7 +616,7 @@ class User {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
+  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
@@ -644,7 +646,7 @@ class User {
     );
   }
 
-  Future<void> rejectGroupInvite(groupIdToReject) async {
+  Future<void> rejectGroupInvite(String groupIdToReject) async {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupRejectInvite(
@@ -653,6 +655,47 @@ class User {
       jwt: jwt,
       id: groupIdToReject,
       groupId: "",
+      groupAsMember: "",
+    );
+  }
+
+  Future<void> groupJoinRequest(String groupId) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupJoinReq(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      id: groupId,
+      groupId: "",
+      groupAsMember: "",
+    );
+  }
+
+  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
+    final jwt = await getJwt();
+
+    final lastFetchedTime = lastFetchedItem?.time ?? "0";
+    final lastFetchedId = lastFetchedItem?.groupId ?? "none";
+
+    return Sentc.getApi().groupGetSentJoinReqUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      lastFetchedTime: lastFetchedTime,
+      lastFetchedGroupId: lastFetchedId,
+      groupAsMember: "",
+    );
+  }
+
+  Future<void> deleteJoinReq(String id) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().groupDeleteSentJoinReqUser(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      joinReqGroupId: id,
       groupAsMember: "",
     );
   }

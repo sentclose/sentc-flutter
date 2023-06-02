@@ -9,7 +9,7 @@ PrepareKeysResult prepareKeys(List<GroupKey> keys, int page) {
   final offset = page * 50;
   int end = offset + 50;
 
-  if (end < keys.length) {
+  if (end > keys.length) {
     end = keys.length;
   }
 
@@ -160,7 +160,10 @@ Future<Group> getGroup(
     //store the group data
     storage.set(groupKey, jsonEncode(groupObj)),
     //save always the newest public key
-    storage.set("group_public_key_$groupId", jsonEncode(keys[0])),
+    storage.set(
+      "group_public_key_$groupId",
+      jsonEncode(PublicGroupKeyData(keys[0].groupKeyId, keys[0].exportedPublicKey)),
+    ),
   ]);
 
   return groupObj;
@@ -260,12 +263,12 @@ class Group extends AbstractSymCrypto {
         createdTime = json["createdTime"],
         joinedTime = json["joinedTime"],
         rank = json["rank"],
-        _keyMap = jsonDecode(json["keyMap"]),
+        _keyMap = Map<String, int>.from(jsonDecode(json["keyMap"]) as Map<String, dynamic>),
         _newestKeyId = json["newestKeyId"],
         accessByParentGroup = json["accessByParentGroup"],
         accessByGroupAsMember = json["accessByGroupAsMember"],
         _keys = (jsonDecode(json["keys"]) as List).map((e) => GroupKey.fromJson(e)).toList(),
-        _hmacKeys = (json["hmacKeys"] as List<dynamic>).map((e) => e as String).toList();
+        _hmacKeys = (jsonDecode(json["hmacKeys"]) as List<dynamic>).map((e) => e as String).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -343,7 +346,10 @@ class Group extends AbstractSymCrypto {
         _newestKeyId = decryptedKey[0].groupKeyId;
 
         //save also the newest key in the cache
-        storage.set("group_public_key_$groupId", jsonEncode(decryptedKey[0]));
+        storage.set(
+          "group_public_key_$groupId",
+          jsonEncode(PublicGroupKeyData(_newestKeyId, decryptedKey[0].exportedPublicKey)),
+        );
       }
 
       String actualUserId;
@@ -576,7 +582,7 @@ class Group extends AbstractSymCrypto {
     return getGroup(groupId, baseUrl, appToken, _user, false, this.groupId);
   }
 
-  Future<List<GroupChildrenList>> getChildren(GroupChildrenList? lastFetchedItem) async {
+  Future<List<GroupChildrenList>> getChildren([GroupChildrenList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
@@ -644,7 +650,7 @@ class Group extends AbstractSymCrypto {
     lastCheckTime = DateTime.now().millisecondsSinceEpoch;
   }
 
-  Future<List<GroupUserListItem>> getMember(GroupUserListItem? lastFetchedItem) async {
+  Future<List<GroupUserListItem>> getMember([GroupUserListItem? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.joinedTime ?? "0";
@@ -820,7 +826,7 @@ class Group extends AbstractSymCrypto {
       jwt: jwt,
       id: groupId,
       userId: userId,
-      rank: rank,
+      rank: newRank,
       adminRank: rank,
       groupAsMember: accessByGroupAsMember,
     );
@@ -876,7 +882,7 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //group as member
 
-  Future<List<ListGroups>> getGroups(ListGroups? lastFetchedItem) async {
+  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
@@ -892,7 +898,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites(GroupInviteReqList? lastItem) async {
+  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
@@ -949,7 +955,7 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<List<GroupInviteReqList>> sentJoinReq(GroupInviteReqList? lastFetchedItem) async {
+  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
@@ -1021,19 +1027,19 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<void> invite(String userId, int? rank) {
+  Future<void> invite(String userId, [int? rank]) {
     return _inviteUserInternally(userId, rank);
   }
 
-  Future<void> inviteAuto(String userId, int? rank) {
+  Future<void> inviteAuto(String userId, [int? rank]) {
     return _inviteUserInternally(userId, rank, true);
   }
 
-  Future<void> inviteGroup(String groupId, int? rank) {
+  Future<void> inviteGroup(String groupId, [int? rank]) {
     return _inviteUserInternally(groupId, rank, false, true);
   }
 
-  Future<void> inviteGroupAuto(String groupId, int? rank) {
+  Future<void> inviteGroupAuto(String groupId, [int? rank]) {
     return _inviteUserInternally(groupId, rank, true, true);
   }
 
@@ -1118,7 +1124,7 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //join req
 
-  Future<List<GroupJoinReqList>> getJoinRequests(GroupJoinReqList? lastFetchedItem) async {
+  Future<List<GroupJoinReqList>> getJoinRequests([GroupJoinReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
@@ -1421,7 +1427,11 @@ class Group extends AbstractSymCrypto {
     return Sentc.getApi().prepareSearch(key: key, data: data);
   }
 
-  Future<List<ListSearchItem>> searchItem(String data, ListSearchItem? lastFetchedItem, String? catId) async {
+  Future<List<ListSearchItem>> searchItem({
+    required String data,
+    ListSearchItem? lastFetchedItem,
+    String? catId,
+  }) async {
     final jwt = await getJwt();
 
     final lastTime = lastFetchedItem?.time ?? "0";
@@ -1441,11 +1451,11 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<List<ListContentItem>> fetchContent(
+  Future<List<ListContentItem>> fetchContent({
     ListContentItem? lastFetchedItem,
     String? catId,
     ContentFetchLimit? limit,
-  ) async {
+  }) async {
     final jwt = await getJwt();
 
     final lastTime = lastFetchedItem?.time ?? "0";

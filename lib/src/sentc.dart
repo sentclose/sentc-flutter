@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:sentc/src/generated.dart';
 import 'package:sentc/src/storage/shared_preferences_storage.dart';
 import 'package:sentc/src/storage/storage_interface.dart';
@@ -29,6 +30,14 @@ class SentcError {
         status: json['status'],
         errorMessage: json['error_message'],
       );
+
+  factory SentcError.fromError(Object e) {
+    return SentcError.fromException(e as FfiException);
+  }
+
+  factory SentcError.fromException(FfiException e) {
+    return SentcError.fromJson(jsonDecode(e.message));
+  }
 }
 
 class Sentc {
