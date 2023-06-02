@@ -121,7 +121,7 @@ class Downloader {
     List<FilePartListItem> partList,
     String contentKey, [
     void Function(double progress)? updateProgressCb,
-    String verifyKey = "",
+    String? verifyKey,
   ]) async {
     final api = Sentc.getApi();
 

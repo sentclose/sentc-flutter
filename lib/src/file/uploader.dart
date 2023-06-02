@@ -100,7 +100,7 @@ class Uploader {
     final jwt = await _user.getJwt();
     final api = Sentc.getApi();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = _user.getNewestSignKey();

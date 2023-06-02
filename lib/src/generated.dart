@@ -717,7 +717,7 @@ abstract class SentcFlutter {
   Future<String> groupPrepareKeyRotation(
       {required String preGroupKey,
       required String publicKey,
-      required String signKey,
+      String? signKey,
       required String starter,
       dynamic hint});
 
@@ -728,7 +728,7 @@ abstract class SentcFlutter {
       required String publicKey,
       required String preGroupKey,
       required String serverOutput,
-      required String verifyKey,
+      String? verifyKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDoneKeyRotationConstMeta;
@@ -740,7 +740,7 @@ abstract class SentcFlutter {
       required String id,
       required String publicKey,
       required String preGroupKey,
-      required String signKey,
+      String? signKey,
       required String starter,
       required String groupAsMember,
       dynamic hint});
@@ -772,7 +772,7 @@ abstract class SentcFlutter {
       required String preGroupKey,
       required String publicKey,
       required String privateKey,
-      required String verifyKey,
+      String? verifyKey,
       required String groupAsMember,
       dynamic hint});
 
@@ -848,7 +848,7 @@ abstract class SentcFlutter {
   Future<CryptoRawOutput> encryptRawSymmetric(
       {required String key,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kEncryptRawSymmetricConstMeta;
@@ -857,7 +857,7 @@ abstract class SentcFlutter {
       {required String key,
       required Uint8List encryptedData,
       required String head,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDecryptRawSymmetricConstMeta;
@@ -865,7 +865,7 @@ abstract class SentcFlutter {
   Future<Uint8List> encryptSymmetric(
       {required String key,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kEncryptSymmetricConstMeta;
@@ -873,7 +873,7 @@ abstract class SentcFlutter {
   Future<Uint8List> decryptSymmetric(
       {required String key,
       required Uint8List encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDecryptSymmetricConstMeta;
@@ -881,7 +881,7 @@ abstract class SentcFlutter {
   Future<String> encryptStringSymmetric(
       {required String key,
       required String data,
-      required String signKey,
+      String? signKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kEncryptStringSymmetricConstMeta;
@@ -889,7 +889,7 @@ abstract class SentcFlutter {
   Future<String> decryptStringSymmetric(
       {required String key,
       required String encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDecryptStringSymmetricConstMeta;
@@ -897,7 +897,7 @@ abstract class SentcFlutter {
   Future<CryptoRawOutput> encryptRawAsymmetric(
       {required String replyPublicKeyData,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kEncryptRawAsymmetricConstMeta;
@@ -906,7 +906,7 @@ abstract class SentcFlutter {
       {required String privateKey,
       required Uint8List encryptedData,
       required String head,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDecryptRawAsymmetricConstMeta;
@@ -914,7 +914,7 @@ abstract class SentcFlutter {
   Future<Uint8List> encryptAsymmetric(
       {required String replyPublicKeyData,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kEncryptAsymmetricConstMeta;
@@ -922,7 +922,7 @@ abstract class SentcFlutter {
   Future<Uint8List> decryptAsymmetric(
       {required String privateKey,
       required Uint8List encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDecryptAsymmetricConstMeta;
@@ -930,7 +930,7 @@ abstract class SentcFlutter {
   Future<String> encryptStringAsymmetric(
       {required String replyPublicKeyData,
       required String data,
-      required String signKey,
+      String? signKey,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kEncryptStringAsymmetricConstMeta;
@@ -938,7 +938,7 @@ abstract class SentcFlutter {
   Future<String> decryptStringAsymmetric(
       {required String privateKey,
       required String encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDecryptStringAsymmetricConstMeta;
@@ -1096,7 +1096,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String partId,
       required String contentKey,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta
@@ -1108,7 +1108,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String partId,
       required String contentKey,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileDownloadAndDecryptFilePartConstMeta;
@@ -1161,7 +1161,7 @@ abstract class SentcFlutter {
       required bool end,
       required int sequence,
       required String contentKey,
-      required String signKey,
+      String? signKey,
       required Uint8List part,
       dynamic hint});
 
@@ -1176,7 +1176,7 @@ abstract class SentcFlutter {
       required bool end,
       required int sequence,
       required String contentKey,
-      required String signKey,
+      String? signKey,
       required Uint8List part,
       dynamic hint});
 
@@ -4015,12 +4015,12 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<String> groupPrepareKeyRotation(
       {required String preGroupKey,
       required String publicKey,
-      required String signKey,
+      String? signKey,
       required String starter,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(preGroupKey);
     var arg1 = _platform.api2wire_String(publicKey);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     var arg3 = _platform.api2wire_String(starter);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
@@ -4043,13 +4043,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String publicKey,
       required String preGroupKey,
       required String serverOutput,
-      required String verifyKey,
+      String? verifyKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(privateKey);
     var arg1 = _platform.api2wire_String(publicKey);
     var arg2 = _platform.api2wire_String(preGroupKey);
     var arg3 = _platform.api2wire_String(serverOutput);
-    var arg4 = _platform.api2wire_String(verifyKey);
+    var arg4 = _platform.api2wire_opt_String(verifyKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_done_key_rotation(port_, arg0, arg1, arg2, arg3, arg4),
@@ -4079,7 +4079,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String publicKey,
       required String preGroupKey,
-      required String signKey,
+      String? signKey,
       required String starter,
       required String groupAsMember,
       dynamic hint}) {
@@ -4089,7 +4089,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(publicKey);
     var arg5 = _platform.api2wire_String(preGroupKey);
-    var arg6 = _platform.api2wire_String(signKey);
+    var arg6 = _platform.api2wire_opt_String(signKey);
     var arg7 = _platform.api2wire_String(starter);
     var arg8 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
@@ -4185,7 +4185,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String preGroupKey,
       required String publicKey,
       required String privateKey,
-      required String verifyKey,
+      String? verifyKey,
       required String groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
@@ -4196,7 +4196,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = _platform.api2wire_String(preGroupKey);
     var arg6 = _platform.api2wire_String(publicKey);
     var arg7 = _platform.api2wire_String(privateKey);
-    var arg8 = _platform.api2wire_String(verifyKey);
+    var arg8 = _platform.api2wire_opt_String(verifyKey);
     var arg9 = _platform.api2wire_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_finish_key_rotation(
@@ -4481,11 +4481,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<CryptoRawOutput> encryptRawSymmetric(
       {required String key,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_uint_8_list(data);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_encrypt_raw_symmetric(port_, arg0, arg1, arg2),
@@ -4506,12 +4506,12 @@ class SentcFlutterImpl implements SentcFlutter {
       {required String key,
       required Uint8List encryptedData,
       required String head,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_uint_8_list(encryptedData);
     var arg2 = _platform.api2wire_String(head);
-    var arg3 = _platform.api2wire_String(verifyKeyData);
+    var arg3 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_decrypt_raw_symmetric(port_, arg0, arg1, arg2, arg3),
@@ -4531,11 +4531,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<Uint8List> encryptSymmetric(
       {required String key,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_uint_8_list(data);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_encrypt_symmetric(port_, arg0, arg1, arg2),
@@ -4555,11 +4555,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<Uint8List> decryptSymmetric(
       {required String key,
       required Uint8List encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_uint_8_list(encryptedData);
-    var arg2 = _platform.api2wire_String(verifyKeyData);
+    var arg2 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_decrypt_symmetric(port_, arg0, arg1, arg2),
@@ -4579,11 +4579,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<String> encryptStringSymmetric(
       {required String key,
       required String data,
-      required String signKey,
+      String? signKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_String(data);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_encrypt_string_symmetric(port_, arg0, arg1, arg2),
@@ -4603,11 +4603,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<String> decryptStringSymmetric(
       {required String key,
       required String encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_String(encryptedData);
-    var arg2 = _platform.api2wire_String(verifyKeyData);
+    var arg2 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_decrypt_string_symmetric(port_, arg0, arg1, arg2),
@@ -4627,11 +4627,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<CryptoRawOutput> encryptRawAsymmetric(
       {required String replyPublicKeyData,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(replyPublicKeyData);
     var arg1 = _platform.api2wire_uint_8_list(data);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_encrypt_raw_asymmetric(port_, arg0, arg1, arg2),
@@ -4652,12 +4652,12 @@ class SentcFlutterImpl implements SentcFlutter {
       {required String privateKey,
       required Uint8List encryptedData,
       required String head,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(privateKey);
     var arg1 = _platform.api2wire_uint_8_list(encryptedData);
     var arg2 = _platform.api2wire_String(head);
-    var arg3 = _platform.api2wire_String(verifyKeyData);
+    var arg3 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_decrypt_raw_asymmetric(port_, arg0, arg1, arg2, arg3),
@@ -4677,11 +4677,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<Uint8List> encryptAsymmetric(
       {required String replyPublicKeyData,
       required Uint8List data,
-      required String signKey,
+      String? signKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(replyPublicKeyData);
     var arg1 = _platform.api2wire_uint_8_list(data);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_encrypt_asymmetric(port_, arg0, arg1, arg2),
@@ -4701,11 +4701,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<Uint8List> decryptAsymmetric(
       {required String privateKey,
       required Uint8List encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(privateKey);
     var arg1 = _platform.api2wire_uint_8_list(encryptedData);
-    var arg2 = _platform.api2wire_String(verifyKeyData);
+    var arg2 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_decrypt_asymmetric(port_, arg0, arg1, arg2),
@@ -4725,11 +4725,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<String> encryptStringAsymmetric(
       {required String replyPublicKeyData,
       required String data,
-      required String signKey,
+      String? signKey,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(replyPublicKeyData);
     var arg1 = _platform.api2wire_String(data);
-    var arg2 = _platform.api2wire_String(signKey);
+    var arg2 = _platform.api2wire_opt_String(signKey);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_encrypt_string_asymmetric(port_, arg0, arg1, arg2),
@@ -4749,11 +4749,11 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<String> decryptStringAsymmetric(
       {required String privateKey,
       required String encryptedData,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(privateKey);
     var arg1 = _platform.api2wire_String(encryptedData);
-    var arg2 = _platform.api2wire_String(verifyKeyData);
+    var arg2 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_decrypt_string_asymmetric(port_, arg0, arg1, arg2),
@@ -5264,14 +5264,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String partId,
       required String contentKey,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(urlPrefix);
     var arg2 = _platform.api2wire_String(authToken);
     var arg3 = _platform.api2wire_String(partId);
     var arg4 = _platform.api2wire_String(contentKey);
-    var arg5 = _platform.api2wire_String(verifyKeyData);
+    var arg5 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_file_download_and_decrypt_file_part_start(
@@ -5310,14 +5310,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String partId,
       required String contentKey,
-      required String verifyKeyData,
+      String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(urlPrefix);
     var arg2 = _platform.api2wire_String(authToken);
     var arg3 = _platform.api2wire_String(partId);
     var arg4 = _platform.api2wire_String(contentKey);
-    var arg5 = _platform.api2wire_String(verifyKeyData);
+    var arg5 = _platform.api2wire_opt_String(verifyKeyData);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_file_download_and_decrypt_file_part(
@@ -5503,7 +5503,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required bool end,
       required int sequence,
       required String contentKey,
-      required String signKey,
+      String? signKey,
       required Uint8List part,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
@@ -5514,7 +5514,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = end;
     var arg6 = api2wire_i32(sequence);
     var arg7 = _platform.api2wire_String(contentKey);
-    var arg8 = _platform.api2wire_String(signKey);
+    var arg8 = _platform.api2wire_opt_String(signKey);
     var arg9 = _platform.api2wire_uint_8_list(part);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_file_upload_part_start(
@@ -5563,7 +5563,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required bool end,
       required int sequence,
       required String contentKey,
-      required String signKey,
+      String? signKey,
       required Uint8List part,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
@@ -5574,7 +5574,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = end;
     var arg6 = api2wire_i32(sequence);
     var arg7 = _platform.api2wire_String(contentKey);
-    var arg8 = _platform.api2wire_String(signKey);
+    var arg8 = _platform.api2wire_opt_String(signKey);
     var arg9 = _platform.api2wire_uint_8_list(part);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_file_upload_part(

@@ -673,7 +673,7 @@ class Group extends AbstractSymCrypto {
   Future<String> prepareKeyRotation([bool sign = false]) async {
     final publicKey = await _getPublicKey();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = await getSignKey();
@@ -691,7 +691,7 @@ class Group extends AbstractSymCrypto {
     final jwt = await getJwt();
     final publicKey = await _getPublicKey();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = await getSignKey();
@@ -752,7 +752,7 @@ class Group extends AbstractSymCrypto {
         //get the right used private key for each key
         final privateKey = await _getPrivateKey(key.encryptedEphKeyKeyId);
 
-        String verifyKey = "";
+        String? verifyKey;
 
         if (verify && key.signedByUserId != null && key.signedByUserSignKeyId != null) {
           try {
@@ -1293,7 +1293,7 @@ class Group extends AbstractSymCrypto {
   Future<DownloadResult> _getFileMetaInfo(
     String fileId,
     Downloader downloader, [
-    String verifyKey = "",
+    String? verifyKey,
   ]) async {
     final fileMeta = await downloader.downloadFileMetaInformation(fileId);
 
@@ -1312,7 +1312,7 @@ class Group extends AbstractSymCrypto {
   ///
   /// This is usefully if the user wants to show information about the file (e.g. the file name) but not download the file
   /// The meta info is also needed for the download file functions
-  Future<DownloadResult> downloadFileMetaInfo(String fileId, [String verifyKey = ""]) {
+  Future<DownloadResult> downloadFileMetaInfo(String fileId, [String? verifyKey]) {
     final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
 
     return _getFileMetaInfo(fileId, downloader, verifyKey);
@@ -1327,7 +1327,7 @@ class Group extends AbstractSymCrypto {
     required File file,
     required SymKey key,
     required FileMetaInformation fileMeta,
-    String verifyKey = "",
+    String? verifyKey,
     void Function(double progress)? updateProgressCb,
   }) {
     final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
@@ -1345,7 +1345,7 @@ class Group extends AbstractSymCrypto {
   Future<DownloadResult> downloadFileWithFile({
     required File file,
     required String fileId,
-    String verifyKey = "",
+    String? verifyKey,
     void Function(double progress)? updateProgressCb,
   }) async {
     final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);
@@ -1365,7 +1365,7 @@ class Group extends AbstractSymCrypto {
   Future<DownloadResult> downloadFile({
     required String path,
     required String fileId,
-    String verifyKey = "",
+    String? verifyKey,
     void Function(double progress)? updateProgressCb,
   }) async {
     final downloader = Downloader(baseUrl, appToken, _user, groupId, accessByGroupAsMember);

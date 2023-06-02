@@ -94,7 +94,7 @@ class SymKey {
   }
 
   Future<CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) {
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = _signKey;
@@ -103,7 +103,7 @@ class SymKey {
     return Sentc.getApi().encryptRawSymmetric(key: key, data: data, signKey: signKey);
   }
 
-  Future<Uint8List> decryptRaw(String head, Uint8List encryptedData, [String verifyKey = ""]) {
+  Future<Uint8List> decryptRaw(String head, Uint8List encryptedData, [String? verifyKey]) {
     return Sentc.getApi().decryptRawSymmetric(
       key: key,
       encryptedData: encryptedData,
@@ -113,7 +113,7 @@ class SymKey {
   }
 
   Future<Uint8List> encrypt(Uint8List data, [bool sign = false]) {
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = _signKey;
@@ -122,12 +122,12 @@ class SymKey {
     return Sentc.getApi().encryptSymmetric(key: key, data: data, signKey: signKey);
   }
 
-  Future<Uint8List> decrypt(Uint8List data, [String verifyKey = ""]) {
+  Future<Uint8List> decrypt(Uint8List data, [String? verifyKey]) {
     return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
   Future<String> encryptString(String data, [bool sign = false]) {
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = _signKey;
@@ -136,7 +136,7 @@ class SymKey {
     return Sentc.getApi().encryptStringSymmetric(key: key, data: data, signKey: signKey);
   }
 
-  Future<String> decryptString(String data, [String verifyKey = ""]) {
+  Future<String> decryptString(String data, [String? verifyKey]) {
     return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
