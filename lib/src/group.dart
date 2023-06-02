@@ -1447,11 +1447,11 @@ class Group extends AbstractSymCrypto {
     );
   }
 
-  Future<List<ListContentItem>> fetchContent(
+  Future<List<ListContentItem>> fetchContent({
     ListContentItem? lastFetchedItem,
     String? catId,
     ContentFetchLimit? limit,
-  ) async {
+  }) async {
     final jwt = await getJwt();
 
     final lastTime = lastFetchedItem?.time ?? "0";
