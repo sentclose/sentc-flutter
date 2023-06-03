@@ -49,24 +49,22 @@ class Uploader {
 
   final void Function(double progress)? uploadCallback;
 
-  String _groupAsMember = "";
+  final String? _groupAsMember;
   int _chunkSize = 1024 * 1024 * 4;
 
-  String _belongsToId = "";
+  String? _belongsToId;
   String _belongsTo = "\"None\"";
 
   Uploader(
     this._baseUrl,
     this._appToken,
-    this._user,
+    this._user, [
     this._groupId,
-    this._otherUserId, [
+    this._otherUserId,
     this.uploadCallback,
-    String groupAsMember = "",
+    this._groupAsMember,
     int chunkSize = 1024 * 1024 * 4,
   ]) {
-    _groupAsMember = groupAsMember;
-
     if (_groupId != null && _groupId != "") {
       _belongsToId = _groupId!;
       _belongsTo = "\"Group\""; //the double "" are important for rust serde json
@@ -100,7 +98,7 @@ class Uploader {
     final jwt = await _user.getJwt();
     final api = Sentc.getApi();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = _user.getNewestSignKey();
@@ -116,7 +114,7 @@ class Uploader {
     //reset it just in case it was true
     Uploader.cancelUpload = false;
 
-    final urlPrefix = Sentc.filePartUrl ?? "";
+    final urlPrefix = Sentc.filePartUrl;
 
     String nextFileKey = contentKey;
 
@@ -186,7 +184,7 @@ class Uploader {
       belongsToId: _belongsToId,
       belongsToType: _belongsTo,
       fileName: p.basename(file.path),
-      groupId: _groupId ?? "",
+      groupId: _groupId,
       groupAsMember: _groupAsMember,
     );
 

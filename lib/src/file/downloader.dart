@@ -59,11 +59,11 @@ class Downloader {
 
   final User _user;
 
-  final String _groupId;
+  final String? _groupId;
 
-  String _groupAsMember = "";
+  final String? _groupAsMember;
 
-  Downloader(this._baseUrl, this._appToken, this._user, [this._groupId = "", this._groupAsMember = ""]);
+  Downloader(this._baseUrl, this._appToken, this._user, [this._groupId, this._groupAsMember]);
 
   Future<FileMetaInformation> downloadFileMetaInformation(String fileId) async {
     final jwt = await _user.getJwt();
@@ -121,11 +121,11 @@ class Downloader {
     List<FilePartListItem> partList,
     String contentKey, [
     void Function(double progress)? updateProgressCb,
-    String verifyKey = "",
+    String? verifyKey,
   ]) async {
     final api = Sentc.getApi();
 
-    final urlPrefix = Sentc.filePartUrl ?? "";
+    final urlPrefix = Sentc.filePartUrl;
 
     Downloader.cancelDownload = false;
 
@@ -137,7 +137,7 @@ class Downloader {
       var partListItem = partList[i];
 
       final external = partListItem.externStorage == true;
-      final partUrlBase = (external) ? urlPrefix : "";
+      final partUrlBase = (external) ? urlPrefix : null;
 
       Uint8List part;
 
@@ -145,7 +145,7 @@ class Downloader {
         if (i == 0) {
           final res = await api.fileDownloadAndDecryptFilePartStart(
             baseUrl: _baseUrl,
-            urlPrefix: urlPrefix,
+            urlPrefix: partUrlBase,
             authToken: _appToken,
             partId: partListItem.partId,
             contentKey: contentKey,

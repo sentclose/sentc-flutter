@@ -26,7 +26,7 @@ abstract class AbstractSymCrypto {
   Future<CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) async {
     final key = await getSymKeyToEncrypt();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = await getSignKey();
@@ -35,7 +35,7 @@ abstract class AbstractSymCrypto {
     return Sentc.getApi().encryptRawSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
-  Future<Uint8List> decryptRaw(String head, Uint8List encryptedData, [String verifyKey = ""]) async {
+  Future<Uint8List> decryptRaw(String head, Uint8List encryptedData, [String? verifyKey]) async {
     final deHead = await Sentc.getApi().deserializeHeadFromString(head: head);
 
     final key = await getSymKeyById(deHead.id);
@@ -53,7 +53,7 @@ abstract class AbstractSymCrypto {
   Future<Uint8List> encrypt(Uint8List data, [bool sign = false]) async {
     final key = await getSymKeyToEncrypt();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = await getSignKey();
@@ -68,7 +68,7 @@ abstract class AbstractSymCrypto {
     final key = await getSymKeyById(head.id);
 
     if (head.sign == null || !verify || userId == null) {
-      return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data, verifyKeyData: "");
+      return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data);
     }
 
     final verifyKey = await Sentc.getUserVerifyKey(userId, head.sign!.id);
@@ -79,7 +79,7 @@ abstract class AbstractSymCrypto {
   Future<String> encryptString(String data, [bool sign = false]) async {
     final key = await getSymKeyToEncrypt();
 
-    String signKey = "";
+    String? signKey;
 
     if (sign) {
       signKey = await getSignKey();
@@ -94,7 +94,7 @@ abstract class AbstractSymCrypto {
     final key = await getSymKeyById(head.id);
 
     if (head.sign == null || !verify || userId == null) {
-      return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: "");
+      return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data);
     }
 
     final verifyKey = await Sentc.getUserVerifyKey(userId, head.sign!.id);

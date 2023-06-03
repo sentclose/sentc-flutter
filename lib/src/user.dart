@@ -592,11 +592,10 @@ class User {
       authToken: _appToken,
       jwt: jwt,
       creatorsPublicKey: getNewestPublicKey(),
-      groupAsMember: "",
     );
   }
 
-  Future<group.Group> getGroup(String groupId, [String groupAsMember = ""]) {
+  Future<group.Group> getGroup(String groupId, [String? groupAsMember]) {
     return group.getGroup(groupId, _baseUrl, _appToken, this, false, groupAsMember);
   }
 
@@ -612,7 +611,6 @@ class User {
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedGroupId,
-      groupId: "",
     );
   }
 
@@ -628,8 +626,6 @@ class User {
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedGroupId,
-      groupId: "",
-      groupAsMember: "",
     );
   }
 
@@ -641,8 +637,6 @@ class User {
       authToken: _appToken,
       jwt: jwt,
       id: groupIdToAccept,
-      groupId: "",
-      groupAsMember: "",
     );
   }
 
@@ -654,8 +648,6 @@ class User {
       authToken: _appToken,
       jwt: jwt,
       id: groupIdToReject,
-      groupId: "",
-      groupAsMember: "",
     );
   }
 
@@ -684,7 +676,6 @@ class User {
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedId,
-      groupAsMember: "",
     );
   }
 
@@ -696,7 +687,6 @@ class User {
       authToken: _appToken,
       jwt: jwt,
       joinReqGroupId: id,
-      groupAsMember: "",
     );
   }
 }
