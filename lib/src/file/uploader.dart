@@ -114,7 +114,7 @@ class Uploader {
     //reset it just in case it was true
     Uploader.cancelUpload = false;
 
-    final urlPrefix = Sentc.filePartUrl ?? "";
+    final urlPrefix = Sentc.filePartUrl;
 
     String nextFileKey = contentKey;
 

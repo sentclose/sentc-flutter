@@ -125,7 +125,7 @@ class Downloader {
   ]) async {
     final api = Sentc.getApi();
 
-    final urlPrefix = Sentc.filePartUrl ?? "";
+    final urlPrefix = Sentc.filePartUrl;
 
     Downloader.cancelDownload = false;
 
@@ -137,7 +137,7 @@ class Downloader {
       var partListItem = partList[i];
 
       final external = partListItem.externStorage == true;
-      final partUrlBase = (external) ? urlPrefix : "";
+      final partUrlBase = (external) ? urlPrefix : null;
 
       Uint8List part;
 
@@ -145,7 +145,7 @@ class Downloader {
         if (i == 0) {
           final res = await api.fileDownloadAndDecryptFilePartStart(
             baseUrl: _baseUrl,
-            urlPrefix: urlPrefix,
+            urlPrefix: partUrlBase,
             authToken: _appToken,
             partId: partListItem.partId,
             contentKey: contentKey,

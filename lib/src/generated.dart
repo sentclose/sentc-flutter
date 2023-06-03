@@ -1092,7 +1092,7 @@ abstract class SentcFlutter {
 
   Future<FileDownloadResult> fileDownloadAndDecryptFilePartStart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String partId,
       required String contentKey,
@@ -1104,7 +1104,7 @@ abstract class SentcFlutter {
 
   Future<FileDownloadResult> fileDownloadAndDecryptFilePart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String partId,
       required String contentKey,
@@ -1154,7 +1154,7 @@ abstract class SentcFlutter {
 
   Future<String> fileUploadPartStart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String jwt,
       required String sessionId,
@@ -1169,7 +1169,7 @@ abstract class SentcFlutter {
 
   Future<String> fileUploadPart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String jwt,
       required String sessionId,
@@ -5260,14 +5260,14 @@ class SentcFlutterImpl implements SentcFlutter {
 
   Future<FileDownloadResult> fileDownloadAndDecryptFilePartStart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String partId,
       required String contentKey,
       String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(urlPrefix);
+    var arg1 = _platform.api2wire_opt_String(urlPrefix);
     var arg2 = _platform.api2wire_String(authToken);
     var arg3 = _platform.api2wire_String(partId);
     var arg4 = _platform.api2wire_String(contentKey);
@@ -5306,14 +5306,14 @@ class SentcFlutterImpl implements SentcFlutter {
 
   Future<FileDownloadResult> fileDownloadAndDecryptFilePart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String partId,
       required String contentKey,
       String? verifyKeyData,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(urlPrefix);
+    var arg1 = _platform.api2wire_opt_String(urlPrefix);
     var arg2 = _platform.api2wire_String(authToken);
     var arg3 = _platform.api2wire_String(partId);
     var arg4 = _platform.api2wire_String(contentKey);
@@ -5496,7 +5496,7 @@ class SentcFlutterImpl implements SentcFlutter {
 
   Future<String> fileUploadPartStart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String jwt,
       required String sessionId,
@@ -5507,7 +5507,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required Uint8List part,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(urlPrefix);
+    var arg1 = _platform.api2wire_opt_String(urlPrefix);
     var arg2 = _platform.api2wire_String(authToken);
     var arg3 = _platform.api2wire_String(jwt);
     var arg4 = _platform.api2wire_String(sessionId);
@@ -5556,7 +5556,7 @@ class SentcFlutterImpl implements SentcFlutter {
 
   Future<String> fileUploadPart(
       {required String baseUrl,
-      required String urlPrefix,
+      String? urlPrefix,
       required String authToken,
       required String jwt,
       required String sessionId,
@@ -5567,7 +5567,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required Uint8List part,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(urlPrefix);
+    var arg1 = _platform.api2wire_opt_String(urlPrefix);
     var arg2 = _platform.api2wire_String(authToken);
     var arg3 = _platform.api2wire_String(jwt);
     var arg4 = _platform.api2wire_String(sessionId);
