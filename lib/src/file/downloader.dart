@@ -59,11 +59,11 @@ class Downloader {
 
   final User _user;
 
-  final String _groupId;
+  final String? _groupId;
 
-  String _groupAsMember = "";
+  final String? _groupAsMember;
 
-  Downloader(this._baseUrl, this._appToken, this._user, [this._groupId = "", this._groupAsMember = ""]);
+  Downloader(this._baseUrl, this._appToken, this._user, [this._groupId, this._groupAsMember]);
 
   Future<FileMetaInformation> downloadFileMetaInformation(String fileId) async {
     final jwt = await _user.getJwt();

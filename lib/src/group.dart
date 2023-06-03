@@ -45,14 +45,14 @@ Future<Group> getGroup(
   String appToken,
   User user, [
   bool parent = false,
-  String groupAsMember = "",
+  String? groupAsMember,
   bool rek = false,
 ]) async {
   final storage = Sentc.getStorage();
 
   String userId;
 
-  if (groupAsMember == "") {
+  if (groupAsMember == null || groupAsMember == "") {
     userId = user.userId;
   } else {
     userId = groupAsMember;
@@ -97,9 +97,9 @@ Future<Group> getGroup(
     groupAsMember: groupAsMember,
   );
 
-  final accessByGroupAsMember = out.accessByGroupAsMember ?? "";
+  final accessByGroupAsMember = out.accessByGroupAsMember;
 
-  if (accessByGroupAsMember != "" && !rek) {
+  if (accessByGroupAsMember != null && accessByGroupAsMember != "" && !rek) {
     //only load the group once even for rek. calls.
     //if group as member set. load this group first to get the keys
     //no group as member flag
@@ -112,7 +112,7 @@ Future<Group> getGroup(
     //rec here because the user might be in a parent of the parent group or so
     //check the tree until we found the group where the user access by user
 
-    await getGroup(out.parentGroupId, baseUrl, appToken, user, false, groupAsMember, true);
+    await getGroup(out.parentGroupId!, baseUrl, appToken, user, false, groupAsMember, true);
   }
 
   final groupObj = Group._(
@@ -215,7 +215,7 @@ class Group extends AbstractSymCrypto {
   final User _user;
 
   final String groupId;
-  final String parentGroupId;
+  final String? parentGroupId;
   final bool _fromParent;
   int rank;
   int lastCheckTime;
@@ -228,7 +228,7 @@ class Group extends AbstractSymCrypto {
   Map<String, int> _keyMap;
   String _newestKeyId;
   final String? accessByParentGroup;
-  final String accessByGroupAsMember;
+  final String? accessByGroupAsMember;
 
   Group._(
     super.baseUrl,
@@ -353,10 +353,10 @@ class Group extends AbstractSymCrypto {
       }
 
       String actualUserId;
-      if (accessByGroupAsMember == "") {
+      if (accessByGroupAsMember == null) {
         actualUserId = _user.userId;
       } else {
-        actualUserId = accessByGroupAsMember;
+        actualUserId = accessByGroupAsMember!;
       }
 
       final groupKey = "group_data_user_${actualUserId}_id_$groupId";
@@ -388,10 +388,10 @@ class Group extends AbstractSymCrypto {
 
   Future<Group> _getGroupRefFromParent() async {
     String userId;
-    if (accessByGroupAsMember == "") {
+    if (accessByGroupAsMember == null) {
       userId = _user.userId;
     } else {
-      userId = accessByGroupAsMember;
+      userId = accessByGroupAsMember!;
     }
 
     final storage = Sentc.getStorage();
@@ -435,7 +435,7 @@ class Group extends AbstractSymCrypto {
   }
 
   Future<String> _getPublicKey() async {
-    if (!_fromParent && (accessByGroupAsMember == "")) {
+    if (!_fromParent && accessByGroupAsMember == null) {
       return _user.getNewestPublicKey();
     }
 
@@ -468,7 +468,7 @@ class Group extends AbstractSymCrypto {
   }
 
   Future<String> _getPrivateKey(String keyId) async {
-    if (!_fromParent && (accessByGroupAsMember == "")) {
+    if (!_fromParent && accessByGroupAsMember == null) {
       return _user.getPrivateKey(keyId);
     }
 
@@ -797,10 +797,10 @@ class Group extends AbstractSymCrypto {
     } while (nextRound && roundsLeft > 0);
 
     String userId;
-    if (accessByGroupAsMember == "") {
+    if (accessByGroupAsMember == null) {
       userId = _user.userId;
     } else {
-      userId = accessByGroupAsMember;
+      userId = accessByGroupAsMember!;
     }
 
     //after a key rotation -> save the new group data in the store
@@ -832,10 +832,10 @@ class Group extends AbstractSymCrypto {
     );
 
     String actualUserId;
-    if (accessByGroupAsMember == "") {
+    if (accessByGroupAsMember == null) {
       actualUserId = _user.userId;
     } else {
-      actualUserId = accessByGroupAsMember;
+      actualUserId = accessByGroupAsMember!;
     }
 
     //check if the updated user is the actual user -> then update the group store

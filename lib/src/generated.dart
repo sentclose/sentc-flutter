@@ -361,7 +361,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String creatorsPublicKey,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateGroupConstMeta;
@@ -373,7 +373,7 @@ abstract class SentcFlutter {
       required String parentPublicKey,
       required String parentId,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateChildGroupConstMeta;
@@ -385,7 +385,7 @@ abstract class SentcFlutter {
       required String connectedGroupId,
       required int adminRank,
       required String parentPublicKey,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupCreateConnectedGroupConstMeta;
@@ -415,7 +415,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupDataConstMeta;
@@ -427,7 +427,7 @@ abstract class SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedKeyId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeysConstMeta;
@@ -438,7 +438,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required String keyId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupKeyConstMeta;
@@ -462,7 +462,7 @@ abstract class SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetMemberConstMeta;
@@ -472,7 +472,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupUpdatesConstMeta;
@@ -484,7 +484,7 @@ abstract class SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetAllFirstLevelChildrenConstMeta;
@@ -495,7 +495,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupId,
+      String? groupId,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetGroupsForUserConstMeta;
@@ -529,7 +529,7 @@ abstract class SentcFlutter {
       required bool reInvite,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupInviteUserConstMeta;
@@ -543,7 +543,7 @@ abstract class SentcFlutter {
       required String sessionId,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupInviteUserSessionConstMeta;
@@ -554,8 +554,8 @@ abstract class SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetInvitesForUserConstMeta;
@@ -565,8 +565,8 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupAcceptInviteConstMeta;
@@ -576,8 +576,8 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupRejectInviteConstMeta;
@@ -588,7 +588,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetSentJoinReqUserConstMeta;
@@ -601,7 +601,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetSentJoinReqConstMeta;
@@ -611,7 +611,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String joinReqGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteSentJoinReqUserConstMeta;
@@ -623,7 +623,7 @@ abstract class SentcFlutter {
       required String id,
       required int adminRank,
       required String joinReqGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteSentJoinReqConstMeta;
@@ -634,7 +634,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required String groupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupJoinReqConstMeta;
@@ -647,7 +647,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required String lastFetchedTime,
       required String lastFetchedId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupGetJoinReqsConstMeta;
@@ -659,7 +659,7 @@ abstract class SentcFlutter {
       required String id,
       required int adminRank,
       required String rejectedUserId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupRejectJoinReqConstMeta;
@@ -675,7 +675,7 @@ abstract class SentcFlutter {
       required int adminRank,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupAcceptJoinReqConstMeta;
@@ -688,7 +688,7 @@ abstract class SentcFlutter {
       required String sessionId,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupJoinUserSessionConstMeta;
@@ -699,7 +699,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupStopGroupInvitesConstMeta;
@@ -709,7 +709,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kLeaveGroupConstMeta;
@@ -742,7 +742,7 @@ abstract class SentcFlutter {
       required String preGroupKey,
       String? signKey,
       required String starter,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupKeyRotationConstMeta;
@@ -752,7 +752,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupPreDoneKeyRotationConstMeta;
@@ -773,7 +773,7 @@ abstract class SentcFlutter {
       required String publicKey,
       required String privateKey,
       String? verifyKey,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupFinishKeyRotationConstMeta;
@@ -794,7 +794,7 @@ abstract class SentcFlutter {
       required String userId,
       required int rank,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupUpdateRankConstMeta;
@@ -806,7 +806,7 @@ abstract class SentcFlutter {
       required String id,
       required String userId,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupKickUserConstMeta;
@@ -817,7 +817,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String id,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGroupDeleteGroupConstMeta;
@@ -1055,7 +1055,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String groupId,
-      required String groupAsMember,
+      String? groupAsMember,
       required String key,
       required String data,
       required String catId,
@@ -1070,7 +1070,7 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String groupId,
-      required String groupAsMember,
+      String? groupAsMember,
       required String catId,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
@@ -1082,10 +1082,10 @@ abstract class SentcFlutter {
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
       required String authToken,
-      required String jwt,
+      String? jwt,
       required String id,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileDownloadFileMetaConstMeta;
@@ -1128,11 +1128,11 @@ abstract class SentcFlutter {
       required String jwt,
       required String masterKeyId,
       required String contentKey,
-      required String belongsToId,
+      String? belongsToId,
       required String belongsToType,
-      required String fileName,
-      required String groupId,
-      required String groupAsMember,
+      String? fileName,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileRegisterFileConstMeta;
@@ -1140,9 +1140,9 @@ abstract class SentcFlutter {
   Future<FilePrepareRegister> filePrepareRegisterFile(
       {required String masterKeyId,
       required String contentKey,
-      required String belongsToId,
+      String? belongsToId,
       required String belongsToType,
-      required String fileName,
+      String? fileName,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFilePrepareRegisterFileConstMeta;
@@ -1198,8 +1198,8 @@ abstract class SentcFlutter {
       required String authToken,
       required String jwt,
       required String fileId,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileDeleteFileConstMeta;
@@ -1422,7 +1422,7 @@ class GroupKeyData {
 
 class GroupOutData {
   final String groupId;
-  final String parentGroupId;
+  final String? parentGroupId;
   final int rank;
   final bool keyUpdate;
   final String createdTime;
@@ -1435,7 +1435,7 @@ class GroupOutData {
 
   const GroupOutData({
     required this.groupId,
-    required this.parentGroupId,
+    this.parentGroupId,
     required this.rank,
     required this.keyUpdate,
     required this.createdTime,
@@ -2726,13 +2726,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String creatorsPublicKey,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(creatorsPublicKey);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_create_group(port_, arg0, arg1, arg2, arg3, arg4),
@@ -2762,7 +2762,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String parentPublicKey,
       required String parentId,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -2770,7 +2770,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(parentPublicKey);
     var arg4 = _platform.api2wire_String(parentId);
     var arg5 = api2wire_i32(adminRank);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_create_child_group(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -2810,7 +2810,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String connectedGroupId,
       required int adminRank,
       required String parentPublicKey,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -2818,7 +2818,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(connectedGroupId);
     var arg4 = api2wire_i32(adminRank);
     var arg5 = _platform.api2wire_String(parentPublicKey);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_create_connected_group(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -2894,13 +2894,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_get_group_data(port_, arg0, arg1, arg2, arg3, arg4),
@@ -2924,7 +2924,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedKeyId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -2932,7 +2932,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(lastFetchedTime);
     var arg5 = _platform.api2wire_String(lastFetchedKeyId);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_group_keys(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -2971,14 +2971,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String id,
       required String keyId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(keyId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_get_group_key(port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3051,7 +3051,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3059,7 +3059,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(lastFetchedTime);
     var arg5 = _platform.api2wire_String(lastFetchedId);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_member(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -3097,13 +3097,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_get_group_updates(port_, arg0, arg1, arg2, arg3, arg4),
@@ -3127,7 +3127,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3135,7 +3135,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(lastFetchedTime);
     var arg5 = _platform.api2wire_String(lastFetchedGroupId);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_get_all_first_level_children(
@@ -3175,14 +3175,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupId,
+      String? groupId,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(lastFetchedTime);
     var arg4 = _platform.api2wire_String(lastFetchedGroupId);
-    var arg5 = _platform.api2wire_String(groupId);
+    var arg5 = _platform.api2wire_opt_String(groupId);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_groups_for_user(
           port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3262,7 +3262,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required bool reInvite,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3277,7 +3277,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg10 = reInvite;
     var arg11 = _platform.api2wire_String(userPublicKey);
     var arg12 = _platform.api2wire_String(groupKeys);
-    var arg13 = _platform.api2wire_String(groupAsMember);
+    var arg13 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_invite_user(
           port_,
@@ -3347,7 +3347,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String sessionId,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3357,7 +3357,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = _platform.api2wire_String(sessionId);
     var arg6 = _platform.api2wire_String(userPublicKey);
     var arg7 = _platform.api2wire_String(groupKeys);
-    var arg8 = _platform.api2wire_String(groupAsMember);
+    var arg8 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_invite_user_session(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8),
@@ -3400,16 +3400,16 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(lastFetchedTime);
     var arg4 = _platform.api2wire_String(lastFetchedGroupId);
-    var arg5 = _platform.api2wire_String(groupId);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_opt_String(groupId);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_invites_for_user(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -3447,15 +3447,15 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupId);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_accept_invite(port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3484,15 +3484,15 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupId);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_reject_invite(port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3522,14 +3522,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(lastFetchedTime);
     var arg4 = _platform.api2wire_String(lastFetchedGroupId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_sent_join_req_user(
           port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3568,7 +3568,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required int adminRank,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3577,7 +3577,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg4 = api2wire_i32(adminRank);
     var arg5 = _platform.api2wire_String(lastFetchedTime);
     var arg6 = _platform.api2wire_String(lastFetchedGroupId);
-    var arg7 = _platform.api2wire_String(groupAsMember);
+    var arg7 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_sent_join_req(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7),
@@ -3617,13 +3617,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String joinReqGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(joinReqGroupId);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_delete_sent_join_req_user(
           port_, arg0, arg1, arg2, arg3, arg4),
@@ -3653,7 +3653,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required int adminRank,
       required String joinReqGroupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3661,7 +3661,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = api2wire_i32(adminRank);
     var arg5 = _platform.api2wire_String(joinReqGroupId);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_delete_sent_join_req(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -3700,14 +3700,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String id,
       required String groupId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(groupId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_join_req(port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3739,7 +3739,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required int adminRank,
       required String lastFetchedTime,
       required String lastFetchedId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3748,7 +3748,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg4 = api2wire_i32(adminRank);
     var arg5 = _platform.api2wire_String(lastFetchedTime);
     var arg6 = _platform.api2wire_String(lastFetchedId);
-    var arg7 = _platform.api2wire_String(groupAsMember);
+    var arg7 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_get_join_reqs(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7),
@@ -3790,7 +3790,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required int adminRank,
       required String rejectedUserId,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3798,7 +3798,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = api2wire_i32(adminRank);
     var arg5 = _platform.api2wire_String(rejectedUserId);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_reject_join_req(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -3842,7 +3842,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required int adminRank,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3854,7 +3854,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg7 = api2wire_i32(adminRank);
     var arg8 = _platform.api2wire_String(userPublicKey);
     var arg9 = _platform.api2wire_String(groupKeys);
-    var arg10 = _platform.api2wire_String(groupAsMember);
+    var arg10 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_accept_join_req(port_,
           arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10),
@@ -3903,7 +3903,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String sessionId,
       required String userPublicKey,
       required String groupKeys,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -3912,7 +3912,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg4 = _platform.api2wire_String(sessionId);
     var arg5 = _platform.api2wire_String(userPublicKey);
     var arg6 = _platform.api2wire_String(groupKeys);
-    var arg7 = _platform.api2wire_String(groupAsMember);
+    var arg7 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_join_user_session(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7),
@@ -3953,14 +3953,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String id,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
     var arg4 = api2wire_i32(adminRank);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_stop_group_invites(
           port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -3989,13 +3989,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_leave_group(port_, arg0, arg1, arg2, arg3, arg4),
@@ -4081,7 +4081,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String preGroupKey,
       String? signKey,
       required String starter,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -4091,7 +4091,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg5 = _platform.api2wire_String(preGroupKey);
     var arg6 = _platform.api2wire_opt_String(signKey);
     var arg7 = _platform.api2wire_String(starter);
-    var arg8 = _platform.api2wire_String(groupAsMember);
+    var arg8 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_key_rotation(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8),
@@ -4133,13 +4133,13 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String id,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_pre_done_key_rotation(
           port_, arg0, arg1, arg2, arg3, arg4),
@@ -4186,7 +4186,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String publicKey,
       required String privateKey,
       String? verifyKey,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -4197,7 +4197,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg6 = _platform.api2wire_String(publicKey);
     var arg7 = _platform.api2wire_String(privateKey);
     var arg8 = _platform.api2wire_opt_String(verifyKey);
-    var arg9 = _platform.api2wire_String(groupAsMember);
+    var arg9 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_finish_key_rotation(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
@@ -4268,7 +4268,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String userId,
       required int rank,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -4277,7 +4277,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg4 = _platform.api2wire_String(userId);
     var arg5 = api2wire_i32(rank);
     var arg6 = api2wire_i32(adminRank);
-    var arg7 = _platform.api2wire_String(groupAsMember);
+    var arg7 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_update_rank(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7),
@@ -4319,7 +4319,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String id,
       required String userId,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
@@ -4327,7 +4327,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_String(id);
     var arg4 = _platform.api2wire_String(userId);
     var arg5 = api2wire_i32(adminRank);
-    var arg6 = _platform.api2wire_String(groupAsMember);
+    var arg6 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_group_kick_user(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -4366,14 +4366,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String id,
       required int adminRank,
-      required String groupAsMember,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(id);
     var arg4 = api2wire_i32(adminRank);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_group_delete_group(port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -5110,7 +5110,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String groupId,
-      required String groupAsMember,
+      String? groupAsMember,
       required String key,
       required String data,
       required String catId,
@@ -5121,7 +5121,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(groupId);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     var arg5 = _platform.api2wire_String(key);
     var arg6 = _platform.api2wire_String(data);
     var arg7 = _platform.api2wire_String(catId);
@@ -5170,7 +5170,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String groupId,
-      required String groupAsMember,
+      String? groupAsMember,
       required String catId,
       required String lastFetchedTime,
       required String lastFetchedGroupId,
@@ -5180,7 +5180,7 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(groupId);
-    var arg4 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupAsMember);
     var arg5 = _platform.api2wire_String(catId);
     var arg6 = _platform.api2wire_String(lastFetchedTime);
     var arg7 = _platform.api2wire_String(lastFetchedGroupId);
@@ -5224,17 +5224,17 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
       required String authToken,
-      required String jwt,
+      String? jwt,
       required String id,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(jwt);
+    var arg2 = _platform.api2wire_opt_String(jwt);
     var arg3 = _platform.api2wire_String(id);
-    var arg4 = _platform.api2wire_String(groupId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupId);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_file_download_file_meta(
           port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -5381,22 +5381,22 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String masterKeyId,
       required String contentKey,
-      required String belongsToId,
+      String? belongsToId,
       required String belongsToType,
-      required String fileName,
-      required String groupId,
-      required String groupAsMember,
+      String? fileName,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(masterKeyId);
     var arg4 = _platform.api2wire_String(contentKey);
-    var arg5 = _platform.api2wire_String(belongsToId);
+    var arg5 = _platform.api2wire_opt_String(belongsToId);
     var arg6 = _platform.api2wire_String(belongsToType);
-    var arg7 = _platform.api2wire_String(fileName);
-    var arg8 = _platform.api2wire_String(groupId);
-    var arg9 = _platform.api2wire_String(groupAsMember);
+    var arg7 = _platform.api2wire_opt_String(fileName);
+    var arg8 = _platform.api2wire_opt_String(groupId);
+    var arg9 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_file_register_file(
           port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
@@ -5438,15 +5438,15 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<FilePrepareRegister> filePrepareRegisterFile(
       {required String masterKeyId,
       required String contentKey,
-      required String belongsToId,
+      String? belongsToId,
       required String belongsToType,
-      required String fileName,
+      String? fileName,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(masterKeyId);
     var arg1 = _platform.api2wire_String(contentKey);
-    var arg2 = _platform.api2wire_String(belongsToId);
+    var arg2 = _platform.api2wire_opt_String(belongsToId);
     var arg3 = _platform.api2wire_String(belongsToType);
-    var arg4 = _platform.api2wire_String(fileName);
+    var arg4 = _platform.api2wire_opt_String(fileName);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_file_prepare_register_file(port_, arg0, arg1, arg2, arg3, arg4),
@@ -5656,15 +5656,15 @@ class SentcFlutterImpl implements SentcFlutter {
       required String authToken,
       required String jwt,
       required String fileId,
-      required String groupId,
-      required String groupAsMember,
+      String? groupId,
+      String? groupAsMember,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(fileId);
-    var arg4 = _platform.api2wire_String(groupId);
-    var arg5 = _platform.api2wire_String(groupAsMember);
+    var arg4 = _platform.api2wire_opt_String(groupId);
+    var arg5 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
           .wire_file_delete_file(port_, arg0, arg1, arg2, arg3, arg4, arg5),
@@ -5905,7 +5905,7 @@ class SentcFlutterImpl implements SentcFlutter {
       throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return GroupOutData(
       groupId: _wire2api_String(arr[0]),
-      parentGroupId: _wire2api_String(arr[1]),
+      parentGroupId: _wire2api_opt_String(arr[1]),
       rank: _wire2api_i32(arr[2]),
       keyUpdate: _wire2api_bool(arr[3]),
       createdTime: _wire2api_String(arr[4]),
