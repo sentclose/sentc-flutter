@@ -1223,11 +1223,12 @@ class Group extends AbstractSymCrypto {
   ///
   /// encrypted file name, key and master key id are only for the frontend to encrypt more date if necessary
   Future<FilePrepareCreateOutput> prepareRegisterFile(File file) async {
-    final key = await registerKey();
+    final keyOut = await generateNonRegisteredKey();
+    final key = keyOut.key;
 
     final uploader = Uploader(baseUrl, appToken, _user, groupId, null, null, accessByGroupAsMember);
 
-    final out = await uploader.prepareFileRegister(file, key.key, key.masterKeyId);
+    final out = await uploader.prepareFileRegister(file, key.key, keyOut.encryptedKey, key.masterKeyId);
 
     return FilePrepareCreateOutput(
       encryptedFileName: out.encryptedFileName,
@@ -1281,11 +1282,12 @@ class Group extends AbstractSymCrypto {
     bool sign = false,
     void Function(double progress)? uploadCallback,
   }) async {
-    final key = await registerKey();
+    final keyOut = await generateNonRegisteredKey();
+    final key = keyOut.key;
 
     final uploader = Uploader(baseUrl, appToken, _user, groupId, null, uploadCallback, accessByGroupAsMember);
 
-    final out = await uploader.uploadFile(file, key.key, key.masterKeyId, sign);
+    final out = await uploader.uploadFile(file, key.key, keyOut.encryptedKey, key.masterKeyId, sign);
 
     return FileCreateOutput(out.fileId, key.masterKeyId, out.encryptedFileName);
   }
@@ -1297,8 +1299,7 @@ class Group extends AbstractSymCrypto {
   ]) async {
     final fileMeta = await downloader.downloadFileMetaInformation(fileId);
 
-    final keyId = fileMeta.keyId;
-    final key = await fetchKey(keyId, fileMeta.masterKeyId);
+    final key = await this.getNonRegisteredKey(fileMeta.masterKeyId, fileMeta.encryptedKey);
 
     if (fileMeta.encryptedFileName != null && fileMeta.encryptedFileName != "") {
       fileMeta.fileName = await key.decryptString(fileMeta.encryptedFileName!, verifyKey);
