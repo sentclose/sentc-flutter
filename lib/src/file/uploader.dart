@@ -6,7 +6,7 @@ import 'package:sentc/sentc.dart';
 
 class UploadResult {
   final String fileId;
-  final String encryptedFileName;
+  final String? encryptedFileName;
 
   UploadResult({
     required this.fileId,
@@ -17,15 +17,15 @@ class UploadResult {
 class FileCreateOutput {
   final String fileId;
   final String masterKeyId;
-  final String encryptedFileName;
+  final String? encryptedFileName;
 
-  FileCreateOutput(this.fileId, this.masterKeyId, this.encryptedFileName);
+  const FileCreateOutput(this.fileId, this.masterKeyId, this.encryptedFileName);
 }
 
 class FilePrepareCreateOutput {
   final String serverInput;
   final String masterKeyId;
-  final String encryptedFileName;
+  final String? encryptedFileName;
   final SymKey key;
 
   FilePrepareCreateOutput({
@@ -79,11 +79,13 @@ class Uploader {
   Future<FilePrepareRegister> prepareFileRegister(
     File file,
     String contentKey,
+    String encryptedContentKey,
     String masterKeyId,
   ) {
     return Sentc.getApi().filePrepareRegisterFile(
       masterKeyId: masterKeyId,
       contentKey: contentKey,
+      encryptedContentKey: encryptedContentKey,
       belongsToId: _belongsToId,
       belongsToType: _belongsTo,
       fileName: p.basename(file.path),
@@ -166,13 +168,25 @@ class Uploader {
     }
   }
 
-  Future<UploadResult> uploadFileWithPath(String path, String contentKey, String masterKeyId, [bool sign = false]) {
+  Future<UploadResult> uploadFileWithPath(
+    String path,
+    String contentKey,
+    String encryptedContentKey,
+    String masterKeyId, [
+    bool sign = false,
+  ]) {
     final file = File(path);
 
-    return uploadFile(file, contentKey, masterKeyId, sign);
+    return uploadFile(file, contentKey, encryptedContentKey, masterKeyId, sign);
   }
 
-  Future<UploadResult> uploadFile(File file, String contentKey, String masterKeyId, [bool sign = false]) async {
+  Future<UploadResult> uploadFile(
+    File file,
+    String contentKey,
+    String encryptedContentKey,
+    String masterKeyId, [
+    bool sign = false,
+  ]) async {
     final jwt = await _user.getJwt();
 
     final out = await Sentc.getApi().fileRegisterFile(
@@ -181,6 +195,7 @@ class Uploader {
       jwt: jwt,
       masterKeyId: masterKeyId,
       contentKey: contentKey,
+      encryptedContentKey: encryptedContentKey,
       belongsToId: _belongsToId,
       belongsToType: _belongsTo,
       fileName: p.basename(file.path),

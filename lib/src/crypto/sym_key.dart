@@ -67,6 +67,27 @@ Future<SymKey> fetchSymKeyByPrivateKey(
   return symKey;
 }
 
+Future<SymKey> getNonRegisteredKey(String masterKey, String key, String masterKeyId, String signKey) async {
+  final keyOut = await Sentc.getApi().doneFetchSymKey(masterKey: masterKey, serverOut: key, nonRegistered: true);
+
+  return SymKey("", "", keyOut, "non_register", masterKeyId, signKey);
+}
+
+Future<SymKey> getNonRegisteredKeyByPrivateKey(
+  String privateKey,
+  String key,
+  String masterKeyId,
+  String signKey,
+) async {
+  final keyOut = await Sentc.getApi().doneFetchSymKeyByPrivateKey(
+    privateKey: privateKey,
+    serverOut: key,
+    nonRegistered: true,
+  );
+
+  return SymKey("", "", keyOut, "non_register", masterKeyId, signKey);
+}
+
 class NonRegisteredKeyOut {
   final SymKey key;
   final String encryptedKey;
@@ -141,6 +162,10 @@ class SymKey {
   }
 
   Future<void> deleteKey(String jwt) {
+    if (keyId == "non_register") {
+      return Future.value();
+    }
+
     return Sentc.getApi().deleteSymKey(baseUrl: baseUrl, authToken: appToken, jwt: jwt, keyId: keyId);
   }
 }

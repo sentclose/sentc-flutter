@@ -24,21 +24,23 @@ class FileMetaInformation {
   final String masterKeyId;
   final String? belongsTo;
   final BelongsToType belongsToType;
-  final String keyId;
+  final String encryptedKey;
+  final String encryptedKeyAlg;
   final List<FilePartListItem> partList;
   String? fileName;
   final String? encryptedFileName;
 
-  FileMetaInformation(
-    this.fileId,
-    this.masterKeyId,
+  FileMetaInformation({
+    required this.fileId,
+    required this.masterKeyId,
     this.belongsTo,
-    this.belongsToType,
-    this.keyId,
-    this.partList,
+    required this.belongsToType,
+    required this.encryptedKey,
+    required this.encryptedKeyAlg,
+    required this.partList,
     this.fileName,
     this.encryptedFileName,
-  );
+  });
 }
 
 class DownloadResult {
@@ -94,14 +96,14 @@ class Downloader {
     }
 
     return FileMetaInformation(
-      meta.fileId,
-      meta.masterKeyId,
-      meta.belongsTo,
-      meta.belongsToType,
-      meta.keyId,
-      meta.partList,
-      null,
-      meta.encryptedFileName,
+      fileId: meta.fileId,
+      masterKeyId: meta.masterKeyId,
+      belongsToType: meta.belongsToType,
+      encryptedKey: meta.encryptedKey,
+      encryptedKeyAlg: meta.encryptedKeyAlg,
+      partList: partList,
+      belongsTo: meta.belongsTo,
+      encryptedFileName: meta.encryptedFileName,
     );
   }
 
