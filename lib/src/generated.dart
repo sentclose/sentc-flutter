@@ -1005,6 +1005,22 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdByPrivateKeyConstMeta;
 
+  Future<String> doneFetchSymKey(
+      {required String masterKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyConstMeta;
+
+  Future<String> doneFetchSymKeyByPrivateKey(
+      {required String privateKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyByPrivateKeyConstMeta;
+
   Future<KeysToMasterKeyFetch> getKeysForMasterKey(
       {required String baseUrl,
       required String authToken,
@@ -1128,6 +1144,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String masterKeyId,
       required String contentKey,
+      required String encryptedContentKey,
       String? belongsToId,
       required String belongsToType,
       String? fileName,
@@ -1140,6 +1157,7 @@ abstract class SentcFlutter {
   Future<FilePrepareRegister> filePrepareRegisterFile(
       {required String masterKeyId,
       required String contentKey,
+      required String encryptedContentKey,
       String? belongsToId,
       required String belongsToType,
       String? fileName,
@@ -1278,7 +1296,8 @@ class FileData {
   final String owner;
   final String? belongsTo;
   final BelongsToType belongsToType;
-  final String keyId;
+  final String encryptedKey;
+  final String encryptedKeyAlg;
   final String? encryptedFileName;
   final List<FilePartListItem> partList;
 
@@ -1288,7 +1307,8 @@ class FileData {
     required this.owner,
     this.belongsTo,
     required this.belongsToType,
-    required this.keyId,
+    required this.encryptedKey,
+    required this.encryptedKeyAlg,
     this.encryptedFileName,
     required this.partList,
   });
@@ -1327,11 +1347,11 @@ class FilePartListItem {
 }
 
 class FilePrepareRegister {
-  final String encryptedFileName;
+  final String? encryptedFileName;
   final String serverInput;
 
   const FilePrepareRegister({
-    required this.encryptedFileName,
+    this.encryptedFileName,
     required this.serverInput,
   });
 }
@@ -1339,12 +1359,12 @@ class FilePrepareRegister {
 class FileRegisterOutput {
   final String fileId;
   final String sessionId;
-  final String encryptedFileName;
+  final String? encryptedFileName;
 
   const FileRegisterOutput({
     required this.fileId,
     required this.sessionId,
-    required this.encryptedFileName,
+    this.encryptedFileName,
   });
 }
 
@@ -4959,6 +4979,54 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: ["baseUrl", "authToken", "keyId", "privateKey"],
       );
 
+  Future<String> doneFetchSymKey(
+      {required String masterKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(masterKey);
+    var arg1 = _platform.api2wire_String(serverOut);
+    var arg2 = nonRegistered;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_done_fetch_sym_key(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_String,
+      constMeta: kDoneFetchSymKeyConstMeta,
+      argValues: [masterKey, serverOut, nonRegistered],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "done_fetch_sym_key",
+        argNames: ["masterKey", "serverOut", "nonRegistered"],
+      );
+
+  Future<String> doneFetchSymKeyByPrivateKey(
+      {required String privateKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(privateKey);
+    var arg1 = _platform.api2wire_String(serverOut);
+    var arg2 = nonRegistered;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_done_fetch_sym_key_by_private_key(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_String,
+      constMeta: kDoneFetchSymKeyByPrivateKeyConstMeta,
+      argValues: [privateKey, serverOut, nonRegistered],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyByPrivateKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "done_fetch_sym_key_by_private_key",
+        argNames: ["privateKey", "serverOut", "nonRegistered"],
+      );
+
   Future<KeysToMasterKeyFetch> getKeysForMasterKey(
       {required String baseUrl,
       required String authToken,
@@ -5381,6 +5449,7 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String masterKeyId,
       required String contentKey,
+      required String encryptedContentKey,
       String? belongsToId,
       required String belongsToType,
       String? fileName,
@@ -5392,14 +5461,15 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(masterKeyId);
     var arg4 = _platform.api2wire_String(contentKey);
-    var arg5 = _platform.api2wire_opt_String(belongsToId);
-    var arg6 = _platform.api2wire_String(belongsToType);
-    var arg7 = _platform.api2wire_opt_String(fileName);
-    var arg8 = _platform.api2wire_opt_String(groupId);
-    var arg9 = _platform.api2wire_opt_String(groupAsMember);
+    var arg5 = _platform.api2wire_String(encryptedContentKey);
+    var arg6 = _platform.api2wire_opt_String(belongsToId);
+    var arg7 = _platform.api2wire_String(belongsToType);
+    var arg8 = _platform.api2wire_opt_String(fileName);
+    var arg9 = _platform.api2wire_opt_String(groupId);
+    var arg10 = _platform.api2wire_opt_String(groupAsMember);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_file_register_file(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
+      callFfi: (port_) => _platform.inner.wire_file_register_file(port_, arg0,
+          arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10),
       parseSuccessData: _wire2api_file_register_output,
       constMeta: kFileRegisterFileConstMeta,
       argValues: [
@@ -5408,6 +5478,7 @@ class SentcFlutterImpl implements SentcFlutter {
         jwt,
         masterKeyId,
         contentKey,
+        encryptedContentKey,
         belongsToId,
         belongsToType,
         fileName,
@@ -5427,6 +5498,7 @@ class SentcFlutterImpl implements SentcFlutter {
           "jwt",
           "masterKeyId",
           "contentKey",
+          "encryptedContentKey",
           "belongsToId",
           "belongsToType",
           "fileName",
@@ -5438,23 +5510,26 @@ class SentcFlutterImpl implements SentcFlutter {
   Future<FilePrepareRegister> filePrepareRegisterFile(
       {required String masterKeyId,
       required String contentKey,
+      required String encryptedContentKey,
       String? belongsToId,
       required String belongsToType,
       String? fileName,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(masterKeyId);
     var arg1 = _platform.api2wire_String(contentKey);
-    var arg2 = _platform.api2wire_opt_String(belongsToId);
-    var arg3 = _platform.api2wire_String(belongsToType);
-    var arg4 = _platform.api2wire_opt_String(fileName);
+    var arg2 = _platform.api2wire_String(encryptedContentKey);
+    var arg3 = _platform.api2wire_opt_String(belongsToId);
+    var arg4 = _platform.api2wire_String(belongsToType);
+    var arg5 = _platform.api2wire_opt_String(fileName);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_file_prepare_register_file(port_, arg0, arg1, arg2, arg3, arg4),
+      callFfi: (port_) => _platform.inner.wire_file_prepare_register_file(
+          port_, arg0, arg1, arg2, arg3, arg4, arg5),
       parseSuccessData: _wire2api_file_prepare_register,
       constMeta: kFilePrepareRegisterFileConstMeta,
       argValues: [
         masterKeyId,
         contentKey,
+        encryptedContentKey,
         belongsToId,
         belongsToType,
         fileName
@@ -5469,6 +5544,7 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: [
           "masterKeyId",
           "contentKey",
+          "encryptedContentKey",
           "belongsToId",
           "belongsToType",
           "fileName"
@@ -5766,17 +5842,18 @@ class SentcFlutterImpl implements SentcFlutter {
 
   FileData _wire2api_file_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
     return FileData(
       fileId: _wire2api_String(arr[0]),
       masterKeyId: _wire2api_String(arr[1]),
       owner: _wire2api_String(arr[2]),
       belongsTo: _wire2api_opt_String(arr[3]),
       belongsToType: _wire2api_belongs_to_type(arr[4]),
-      keyId: _wire2api_String(arr[5]),
-      encryptedFileName: _wire2api_opt_String(arr[6]),
-      partList: _wire2api_list_file_part_list_item(arr[7]),
+      encryptedKey: _wire2api_String(arr[5]),
+      encryptedKeyAlg: _wire2api_String(arr[6]),
+      encryptedFileName: _wire2api_opt_String(arr[7]),
+      partList: _wire2api_list_file_part_list_item(arr[8]),
     );
   }
 
@@ -5816,7 +5893,7 @@ class SentcFlutterImpl implements SentcFlutter {
     if (arr.length != 2)
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
     return FilePrepareRegister(
-      encryptedFileName: _wire2api_String(arr[0]),
+      encryptedFileName: _wire2api_opt_String(arr[0]),
       serverInput: _wire2api_String(arr[1]),
     );
   }
@@ -5828,7 +5905,7 @@ class SentcFlutterImpl implements SentcFlutter {
     return FileRegisterOutput(
       fileId: _wire2api_String(arr[0]),
       sessionId: _wire2api_String(arr[1]),
-      encryptedFileName: _wire2api_String(arr[2]),
+      encryptedFileName: _wire2api_opt_String(arr[2]),
     );
   }
 
@@ -9762,6 +9839,57 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_done_fetch_sym_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> master_key,
+    ffi.Pointer<wire_uint_8_list> server_out,
+    bool non_registered,
+  ) {
+    return _wire_done_fetch_sym_key(
+      port_,
+      master_key,
+      server_out,
+      non_registered,
+    );
+  }
+
+  late final _wire_done_fetch_sym_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool)>>('wire_done_fetch_sym_key');
+  late final _wire_done_fetch_sym_key = _wire_done_fetch_sym_keyPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, bool)>();
+
+  void wire_done_fetch_sym_key_by_private_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> server_out,
+    bool non_registered,
+  ) {
+    return _wire_done_fetch_sym_key_by_private_key(
+      port_,
+      private_key,
+      server_out,
+      non_registered,
+    );
+  }
+
+  late final _wire_done_fetch_sym_key_by_private_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool)>>('wire_done_fetch_sym_key_by_private_key');
+  late final _wire_done_fetch_sym_key_by_private_key =
+      _wire_done_fetch_sym_key_by_private_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, bool)>();
+
   void wire_get_keys_for_master_key(
     int port_,
     ffi.Pointer<wire_uint_8_list> base_url,
@@ -10200,6 +10328,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> jwt,
     ffi.Pointer<wire_uint_8_list> master_key_id,
     ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_content_key,
     ffi.Pointer<wire_uint_8_list> belongs_to_id,
     ffi.Pointer<wire_uint_8_list> belongs_to_type,
     ffi.Pointer<wire_uint_8_list> file_name,
@@ -10213,6 +10342,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       jwt,
       master_key_id,
       content_key,
+      encrypted_content_key,
       belongs_to_id,
       belongs_to_type,
       file_name,
@@ -10225,6 +10355,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
@@ -10247,12 +10378,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_file_prepare_register_file(
     int port_,
     ffi.Pointer<wire_uint_8_list> master_key_id,
     ffi.Pointer<wire_uint_8_list> content_key,
+    ffi.Pointer<wire_uint_8_list> encrypted_content_key,
     ffi.Pointer<wire_uint_8_list> belongs_to_id,
     ffi.Pointer<wire_uint_8_list> belongs_to_type,
     ffi.Pointer<wire_uint_8_list> file_name,
@@ -10261,6 +10394,7 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       port_,
       master_key_id,
       content_key,
+      encrypted_content_key,
       belongs_to_id,
       belongs_to_type,
       file_name,
@@ -10275,12 +10409,14 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>,
                   ffi.Pointer<wire_uint_8_list>)>>(
       'wire_file_prepare_register_file');
   late final _wire_file_prepare_register_file =
       _wire_file_prepare_register_filePtr.asFunction<
           void Function(
               int,
+              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
