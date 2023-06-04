@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:sentc/sentc.dart';
 
+import 'sym_key.dart' as sym_key;
+
 class SymKeyToEncryptResult {
   final String id;
   final String key;
@@ -125,7 +127,14 @@ abstract class AbstractSymCrypto {
     final out = await Sentc.getApi().generateNonRegisterSymKey(masterKey: keyData.key);
 
     return NonRegisteredKeyOut(
-      SymKey(baseUrl, appToken, out.key, "non_register", keyData.id, await getSignKey()),
+      SymKey(
+        baseUrl,
+        appToken,
+        out.key,
+        "non_register",
+        keyData.id,
+        await getSignKey(),
+      ),
       out.encryptedKey,
     );
   }
@@ -134,5 +143,11 @@ abstract class AbstractSymCrypto {
     final key = await getSymKeyById(masterKeyId);
 
     return fetchSymKey(baseUrl, appToken, keyId, key, masterKeyId, await getSignKey());
+  }
+
+  Future<SymKey> getNonRegisteredKey(String masterKeyId, String key) async {
+    final masterKey = await getSymKeyById(masterKeyId);
+
+    return sym_key.getNonRegisteredKey(masterKey, key, masterKeyId, await getSignKey());
   }
 }
