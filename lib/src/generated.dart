@@ -1206,7 +1206,7 @@ abstract class SentcFlutter {
       required String jwt,
       required String fileId,
       required String contentKey,
-      required String fileName,
+      String? fileName,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFileFileNameUpdateConstMeta;
@@ -5696,14 +5696,14 @@ class SentcFlutterImpl implements SentcFlutter {
       required String jwt,
       required String fileId,
       required String contentKey,
-      required String fileName,
+      String? fileName,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(jwt);
     var arg3 = _platform.api2wire_String(fileId);
     var arg4 = _platform.api2wire_String(contentKey);
-    var arg5 = _platform.api2wire_String(fileName);
+    var arg5 = _platform.api2wire_opt_String(fileName);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_file_file_name_update(
           port_, arg0, arg1, arg2, arg3, arg4, arg5),

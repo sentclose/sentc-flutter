@@ -689,4 +689,18 @@ class User {
       joinReqGroupId: id,
     );
   }
+
+  //____________________________________________________________________________________________________________________
+
+  Future<void> updateFileName(String fileId, SymKey contentKey, String? fileName) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().fileFileNameUpdate(
+      baseUrl: _baseUrl,
+      authToken: _appToken,
+      jwt: jwt,
+      fileId: fileId,
+      contentKey: contentKey.key,
+    );
+  }
 }
