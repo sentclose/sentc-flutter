@@ -6,10 +6,9 @@ documentation: https://sentc.com/
 repository: https://github.com/sentclose/sentc-flutter
 topics:
   - crypto
-  - end-to-end encryption
   - sdk
   - sentc
-  - end to end encryption
+  - encryption
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
