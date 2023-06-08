@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sentc/sentc.dart';
@@ -59,7 +60,7 @@ void main() {
   setUpAll(() async {
     final init = await Sentc.init(
       appToken: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
-      baseUrl: "http://192.168.178.21:3002",
+      baseUrl: dotenv.env["SENTC_TEST_URL"],
     );
 
     expect(init, null);
@@ -102,7 +103,7 @@ void main() {
     final out = await group.prepareRegisterFile(file);
 
     final res = await http.post(
-      Uri.parse("http://192.168.178.21:3002/api/v1/group/${group.groupId}/file"),
+      Uri.parse("${dotenv.env["SENTC_TEST_URL"]}/api/v1/group/${group.groupId}/file"),
       body: out.serverInput,
       headers: {
         "Accept": "application/json",

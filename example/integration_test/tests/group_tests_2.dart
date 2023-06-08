@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sentc/sentc.dart';
 
@@ -16,7 +17,7 @@ void main() {
   setUpAll(() async {
     final init = await Sentc.init(
       appToken: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi",
-      baseUrl: "http://192.168.178.21:3002",
+      baseUrl: dotenv.env["SENTC_TEST_URL"],
     );
 
     expect(init, null);
