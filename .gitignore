@@ -33,6 +33,8 @@ build/
 windows/rust/sentc_flutter.dll
 windows/rust/sentc_flutter.lib
 
+linux/rust/libsentc_flutter.a
+
 android/src/main/jniLibs/arm64-v8a/libsentc_flutter.so
 android/src/main/jniLibs/armeabi-v7a/libsentc_flutter.so
 android/src/main/jniLibs/x86_64/libsentc_flutter.so
