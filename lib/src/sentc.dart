@@ -47,7 +47,6 @@ class Sentc {
   static String baseUrl = "";
   static String appToken = "";
   static RefreshOption refreshEndpoint = RefreshOption.api;
-  static String _refreshEndpointUrl = "";
   static Future<String> Function(String oldJwt) _endpointFn = (String oldJwt) async {
     return "";
   };
@@ -85,9 +84,6 @@ class Sentc {
 
     RefreshOption refreshEndpoint = refreshOptions != null ? refreshOptions.endpoint : RefreshOption.api;
 
-    String refreshEndpointUrl =
-        refreshOptions != null ? refreshOptions.endpointUrl ?? "/api/v1/refresh" : "/api/v1/refresh";
-
     var refreshEndpointFn = refreshOptions != null
         ? refreshOptions.endpointFn ??
             (String oldJwt) async {
@@ -100,7 +96,6 @@ class Sentc {
     _api = api;
     Sentc.appToken = appToken;
     Sentc.refreshEndpoint = refreshEndpoint;
-    _refreshEndpointUrl = refreshEndpointUrl;
     _endpointFn = refreshEndpointFn;
     Sentc.filePartUrl = filePartUrl;
 
