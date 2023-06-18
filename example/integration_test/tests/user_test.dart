@@ -249,6 +249,44 @@ void main() {
     expect(verify, true);
   });
 
+  const string = "hello there £ Я a a";
+  late String encryptedString;
+
+  testWidgets("encrypt string data for another user", (widgetTester) async {
+    encryptedString = await user.encryptString(string, user2.userId);
+
+    //should not decrypt it again
+    try {
+      await user.decryptString(encryptedString);
+    } catch (e) {
+      final error = SentcError.fromError(e);
+
+      expect(error.status, "server_304");
+    }
+  });
+
+  testWidgets("decrypt the string for the other user", (widgetTester) async {
+    final decrypt = await user2.decryptString(encryptedString);
+
+    expect(decrypt, string);
+  });
+
+  testWidgets("encrypt string with sign", (widgetTester) async {
+    encryptedString = await user.encryptString(string, user2.userId, true);
+  });
+
+  testWidgets("decrypt the signed string without verify", (widgetTester) async {
+    final decrypt = await user2.decryptString(encryptedString);
+
+    expect(decrypt, string);
+  });
+
+  testWidgets("decrypt the string with verify", (widgetTester) async {
+    final decrypt = await user2.decryptString(encryptedString, true, user.userId);
+
+    expect(decrypt, string);
+  });
+
   testWidgets("delete user", (widgetTester) async {
     await user.deleteUser("password");
     await user2.deleteUser("password");
