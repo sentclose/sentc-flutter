@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:sentc/src/crypto/abstract_asym_crypto.dart';
 import 'package:sentc/src/group.dart' as group;
 import 'package:sentc/sentc.dart';
 import '../src/generated.dart' as plugin;
@@ -138,9 +139,7 @@ class UserVerifyKeyCompareInfo {
   UserVerifyKeyCompareInfo(this.userId, this.verifyKeyId);
 }
 
-class User {
-  final String _baseUrl;
-  final String _appToken;
+class User extends AbstractAsymCrypto {
   final String _userIdentifier;
   late String jwt;
   final String refreshToken;
@@ -164,8 +163,8 @@ class User {
   late List<GroupInviteReqList> groupInvites;
 
   User._(
-    this._baseUrl,
-    this._appToken,
+    super.baseUrl,
+    super.appToken,
     this._userIdentifier,
     this.jwt,
     this.refreshToken,
@@ -184,10 +183,8 @@ class User {
     this._hmacKeys,
   );
 
-  User.fromJson(Map<String, dynamic> json, String baseUrl, String appToken)
-      : _baseUrl = baseUrl,
-        _appToken = appToken,
-        jwt = json["jwt"],
+  User.fromJson(Map<String, dynamic> json, super.baseUrl, super.appToken)
+      : jwt = json["jwt"],
         refreshToken = json["refreshToken"],
         userId = json["userId"],
         deviceId = json["deviceId"],
@@ -224,6 +221,7 @@ class User {
     };
   }
 
+  @override
   Future<String> getJwt() async {
     final jwtData = await Sentc.getApi().decodeJwt(jwt: jwt);
 
@@ -265,8 +263,8 @@ class User {
     final jwt = await getJwt();
 
     final userKeys = await Sentc.getApi().fetchUserKey(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       keyId: keyId,
       privateKey: _privateDeviceKey,
@@ -314,12 +312,14 @@ class User {
     return list;
   }
 
+  @override
   Future<String> getPrivateKey(String keyId) async {
     final key = await _getUserKeys(keyId);
 
     return key.privateGroupKey;
   }
 
+  @override
   Future<PublicKeyData> getPublicKey(String replyId) {
     return Sentc.getUserPublicKey(replyId);
   }
@@ -338,6 +338,7 @@ class User {
     return _getNewestKey().signKey;
   }
 
+  @override
   Future<String> getSignKey() {
     return Future.value(getNewestSignKey());
   }
@@ -355,7 +356,7 @@ class User {
   //____________________________________________________________________________________________________________________
 
   Future<void> updateUser(String newIdentifier) {
-    return Sentc.getApi().updateUser(baseUrl: _baseUrl, authToken: _appToken, jwt: jwt, userIdentifier: newIdentifier);
+    return Sentc.getApi().updateUser(baseUrl: baseUrl, authToken: appToken, jwt: jwt, userIdentifier: newIdentifier);
   }
 
   Future<void> resetPassword(String newPassword) async {
@@ -365,8 +366,8 @@ class User {
     final decryptedSignKey = _signDeviceKey;
 
     return Sentc.getApi().resetPassword(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       newPassword: newPassword,
       decryptedPrivateKey: decryptedPrivateKey,
@@ -376,8 +377,8 @@ class User {
 
   Future<void> changePassword(String oldPassword, String newPassword) {
     return Sentc.getApi().changePassword(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       userIdentifier: _userIdentifier,
       oldPassword: oldPassword,
       newPassword: newPassword,
@@ -392,8 +393,8 @@ class User {
 
   Future<void> deleteUser(String password) async {
     await Sentc.getApi().deleteUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       userIdentifier: _userIdentifier,
       password: password,
     );
@@ -403,8 +404,8 @@ class User {
 
   Future<void> deleteDevice(String password, String deviceId) async {
     await Sentc.getApi().deleteDevice(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       deviceIdentifier: _userIdentifier,
       password: password,
       deviceId: deviceId,
@@ -438,8 +439,8 @@ class User {
     final jwt = await getJwt();
 
     final out = await Sentc.getApi().registerDevice(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       serverOutput: serverOutput,
       keyCount: keyCount,
@@ -463,8 +464,8 @@ class User {
       nextPage = nextKeys.end;
 
       p.add(Sentc.getApi().userDeviceKeySessionUpload(
-        baseUrl: _baseUrl,
-        authToken: _appToken,
+        baseUrl: baseUrl,
+        authToken: appToken,
         jwt: jwt,
         sessionId: sessionId,
         userPublicKey: publicKey,
@@ -484,8 +485,8 @@ class User {
     final lastId = lastFetchedItem?.deviceId ?? "none";
 
     return Sentc.getApi().getUserDevices(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedId: lastId,
@@ -513,8 +514,8 @@ class User {
     final jwt = await getJwt();
 
     final keyId = await Sentc.getApi().userKeyRotation(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       publicDeviceKey: _publicDeviceKey,
       preUserKey: _getNewestKey().groupKey,
@@ -527,7 +528,7 @@ class User {
     final jwt = await getJwt();
 
     List<KeyRotationGetOut> keys =
-        await Sentc.getApi().userPreDoneKeyRotation(baseUrl: _baseUrl, authToken: _appToken, jwt: jwt);
+        await Sentc.getApi().userPreDoneKeyRotation(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     bool nextRound = false;
     int roundsLeft = 10;
@@ -552,8 +553,8 @@ class User {
         }
 
         await Sentc.getApi().userFinishKeyRotation(
-          baseUrl: _baseUrl,
-          authToken: _appToken,
+          baseUrl: baseUrl,
+          authToken: appToken,
           jwt: jwt,
           serverOutput: key.serverOutput,
           preGroupKey: preKey.groupKey,
@@ -588,15 +589,15 @@ class User {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupCreateGroup(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       creatorsPublicKey: getNewestPublicKey(),
     );
   }
 
   Future<group.Group> getGroup(String groupId, [String? groupAsMember]) {
-    return group.getGroup(groupId, _baseUrl, _appToken, this, false, groupAsMember);
+    return group.getGroup(groupId, baseUrl, appToken, this, false, groupAsMember);
   }
 
   Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
@@ -606,8 +607,8 @@ class User {
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetGroupsForUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedGroupId,
@@ -621,8 +622,8 @@ class User {
     final lastFetchedGroupId = lastItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetInvitesForUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedGroupId,
@@ -633,8 +634,8 @@ class User {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupAcceptInvite(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupIdToAccept,
     );
@@ -644,8 +645,8 @@ class User {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupRejectInvite(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupIdToReject,
     );
@@ -655,12 +656,11 @@ class User {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupJoinReq(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       id: groupId,
       groupId: "",
-      groupAsMember: "",
     );
   }
 
@@ -671,8 +671,8 @@ class User {
     final lastFetchedId = lastFetchedItem?.groupId ?? "none";
 
     return Sentc.getApi().groupGetSentJoinReqUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       lastFetchedTime: lastFetchedTime,
       lastFetchedGroupId: lastFetchedId,
@@ -683,8 +683,8 @@ class User {
     final jwt = await getJwt();
 
     return Sentc.getApi().groupDeleteSentJoinReqUser(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       joinReqGroupId: id,
     );
@@ -696,8 +696,8 @@ class User {
     final jwt = await getJwt();
 
     return Sentc.getApi().fileFileNameUpdate(
-      baseUrl: _baseUrl,
-      authToken: _appToken,
+      baseUrl: baseUrl,
+      authToken: appToken,
       jwt: jwt,
       fileId: fileId,
       contentKey: contentKey.key,
