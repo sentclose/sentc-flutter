@@ -455,6 +455,11 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kGroupDecryptHmacKeyConstMeta;
 
+  Future<String> groupDecryptSortableKey(
+      {required String groupKey, required String serverKeyData, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGroupDecryptSortableKeyConstMeta;
+
   Future<List<GroupUserListItem>> groupGetMember(
       {required String baseUrl,
       required String authToken,
@@ -1081,6 +1086,26 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kSearchConstMeta;
 
+  Future<int> sortableEncryptRawNumber(
+      {required String key, required int data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptRawNumberConstMeta;
+
+  Future<SortableEncryptOutput> sortableEncryptNumber(
+      {required String key, required int data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptNumberConstMeta;
+
+  Future<int> sortableEncryptRawString(
+      {required String key, required String data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptRawStringConstMeta;
+
+  Future<SortableEncryptOutput> sortableEncryptString(
+      {required String key, required String data, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptStringConstMeta;
+
   Future<List<ListContentItem>> contentFetchForGroup(
       {required String baseUrl,
       required String authToken,
@@ -1449,6 +1474,7 @@ class GroupOutData {
   final String joinedTime;
   final List<GroupOutDataKeys> keys;
   final List<GroupOutDataHmacKeys> hmacKeys;
+  final List<GroupOutDataSortableKeys> sortableKeys;
   final String? accessByGroupAsMember;
   final String? accessByParentGroup;
   final bool isConnectedGroup;
@@ -1462,6 +1488,7 @@ class GroupOutData {
     required this.joinedTime,
     required this.keys,
     required this.hmacKeys,
+    required this.sortableKeys,
     this.accessByGroupAsMember,
     this.accessByParentGroup,
     required this.isConnectedGroup,
@@ -1484,6 +1511,16 @@ class GroupOutDataKeys {
 
   const GroupOutDataKeys({
     required this.privateKeyId,
+    required this.keyData,
+  });
+}
+
+class GroupOutDataSortableKeys {
+  final String groupKeyId;
+  final String keyData;
+
+  const GroupOutDataSortableKeys({
+    required this.groupKeyId,
     required this.keyData,
   });
 }
@@ -1685,6 +1722,18 @@ class SignHead {
   const SignHead({
     required this.id,
     required this.alg,
+  });
+}
+
+class SortableEncryptOutput {
+  final int number;
+  final String alg;
+  final String keyId;
+
+  const SortableEncryptOutput({
+    required this.number,
+    required this.alg,
+    required this.keyId,
   });
 }
 
@@ -3061,6 +3110,26 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kGroupDecryptHmacKeyConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "group_decrypt_hmac_key",
+        argNames: ["groupKey", "serverKeyData"],
+      );
+
+  Future<String> groupDecryptSortableKey(
+      {required String groupKey, required String serverKeyData, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(groupKey);
+    var arg1 = _platform.api2wire_String(serverKeyData);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_group_decrypt_sortable_key(port_, arg0, arg1),
+      parseSuccessData: _wire2api_String,
+      constMeta: kGroupDecryptSortableKeyConstMeta,
+      argValues: [groupKey, serverKeyData],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGroupDecryptSortableKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "group_decrypt_sortable_key",
         argNames: ["groupKey", "serverKeyData"],
       );
 
@@ -5233,6 +5302,86 @@ class SentcFlutterImpl implements SentcFlutter {
         ],
       );
 
+  Future<int> sortableEncryptRawNumber(
+      {required String key, required int data, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_u64(data);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_sortable_encrypt_raw_number(port_, arg0, arg1),
+      parseSuccessData: _wire2api_u64,
+      constMeta: kSortableEncryptRawNumberConstMeta,
+      argValues: [key, data],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptRawNumberConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "sortable_encrypt_raw_number",
+        argNames: ["key", "data"],
+      );
+
+  Future<SortableEncryptOutput> sortableEncryptNumber(
+      {required String key, required int data, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_u64(data);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_sortable_encrypt_number(port_, arg0, arg1),
+      parseSuccessData: _wire2api_sortable_encrypt_output,
+      constMeta: kSortableEncryptNumberConstMeta,
+      argValues: [key, data],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptNumberConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "sortable_encrypt_number",
+        argNames: ["key", "data"],
+      );
+
+  Future<int> sortableEncryptRawString(
+      {required String key, required String data, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_String(data);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_sortable_encrypt_raw_string(port_, arg0, arg1),
+      parseSuccessData: _wire2api_u64,
+      constMeta: kSortableEncryptRawStringConstMeta,
+      argValues: [key, data],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptRawStringConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "sortable_encrypt_raw_string",
+        argNames: ["key", "data"],
+      );
+
+  Future<SortableEncryptOutput> sortableEncryptString(
+      {required String key, required String data, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_String(data);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_sortable_encrypt_string(port_, arg0, arg1),
+      parseSuccessData: _wire2api_sortable_encrypt_output,
+      constMeta: kSortableEncryptStringConstMeta,
+      argValues: [key, data],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kSortableEncryptStringConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "sortable_encrypt_string",
+        argNames: ["key", "data"],
+      );
+
   Future<List<ListContentItem>> contentFetchForGroup(
       {required String baseUrl,
       required String authToken,
@@ -5978,8 +6127,8 @@ class SentcFlutterImpl implements SentcFlutter {
 
   GroupOutData _wire2api_group_out_data(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 11)
-      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    if (arr.length != 12)
+      throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
     return GroupOutData(
       groupId: _wire2api_String(arr[0]),
       parentGroupId: _wire2api_opt_String(arr[1]),
@@ -5989,9 +6138,10 @@ class SentcFlutterImpl implements SentcFlutter {
       joinedTime: _wire2api_String(arr[5]),
       keys: _wire2api_list_group_out_data_keys(arr[6]),
       hmacKeys: _wire2api_list_group_out_data_hmac_keys(arr[7]),
-      accessByGroupAsMember: _wire2api_opt_String(arr[8]),
-      accessByParentGroup: _wire2api_opt_String(arr[9]),
-      isConnectedGroup: _wire2api_bool(arr[10]),
+      sortableKeys: _wire2api_list_group_out_data_sortable_keys(arr[8]),
+      accessByGroupAsMember: _wire2api_opt_String(arr[9]),
+      accessByParentGroup: _wire2api_opt_String(arr[10]),
+      isConnectedGroup: _wire2api_bool(arr[11]),
     );
   }
 
@@ -6011,6 +6161,16 @@ class SentcFlutterImpl implements SentcFlutter {
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
     return GroupOutDataKeys(
       privateKeyId: _wire2api_String(arr[0]),
+      keyData: _wire2api_String(arr[1]),
+    );
+  }
+
+  GroupOutDataSortableKeys _wire2api_group_out_data_sortable_keys(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return GroupOutDataSortableKeys(
+      groupKeyId: _wire2api_String(arr[0]),
       keyData: _wire2api_String(arr[1]),
     );
   }
@@ -6136,6 +6296,13 @@ class SentcFlutterImpl implements SentcFlutter {
     return (raw as List<dynamic>).map(_wire2api_group_out_data_keys).toList();
   }
 
+  List<GroupOutDataSortableKeys> _wire2api_list_group_out_data_sortable_keys(
+      dynamic raw) {
+    return (raw as List<dynamic>)
+        .map(_wire2api_group_out_data_sortable_keys)
+        .toList();
+  }
+
   List<GroupUserListItem> _wire2api_list_group_user_list_item(dynamic raw) {
     return (raw as List<dynamic>).map(_wire2api_group_user_list_item).toList();
   }
@@ -6255,6 +6422,21 @@ class SentcFlutterImpl implements SentcFlutter {
       id: _wire2api_String(arr[0]),
       alg: _wire2api_String(arr[1]),
     );
+  }
+
+  SortableEncryptOutput _wire2api_sortable_encrypt_output(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return SortableEncryptOutput(
+      number: _wire2api_u64(arr[0]),
+      alg: _wire2api_String(arr[1]),
+      keyId: _wire2api_String(arr[2]),
+    );
+  }
+
+  int _wire2api_u64(dynamic raw) {
+    return castInt(raw);
   }
 
   int _wire2api_u8(dynamic raw) {
@@ -6402,6 +6584,11 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   @protected
   ffi.Pointer<ffi.Uint32> api2wire_opt_box_autoadd_u32(int? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_u32(raw);
+  }
+
+  @protected
+  int api2wire_u64(int raw) {
+    return raw;
   }
 
   @protected
@@ -7872,6 +8059,28 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>)>>('wire_group_decrypt_hmac_key');
   late final _wire_group_decrypt_hmac_key =
       _wire_group_decrypt_hmac_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_group_decrypt_sortable_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> group_key,
+    ffi.Pointer<wire_uint_8_list> server_key_data,
+  ) {
+    return _wire_group_decrypt_sortable_key(
+      port_,
+      group_key,
+      server_key_data,
+    );
+  }
+
+  late final _wire_group_decrypt_sortable_keyPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_group_decrypt_sortable_key');
+  late final _wire_group_decrypt_sortable_key =
+      _wire_group_decrypt_sortable_keyPtr.asFunction<
           void Function(int, ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
@@ -10109,6 +10318,88 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_sortable_encrypt_raw_number(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    int data,
+  ) {
+    return _wire_sortable_encrypt_raw_number(
+      port_,
+      key,
+      data,
+    );
+  }
+
+  late final _wire_sortable_encrypt_raw_numberPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Uint64)>>('wire_sortable_encrypt_raw_number');
+  late final _wire_sortable_encrypt_raw_number =
+      _wire_sortable_encrypt_raw_numberPtr
+          .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, int)>();
+
+  void wire_sortable_encrypt_number(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    int data,
+  ) {
+    return _wire_sortable_encrypt_number(
+      port_,
+      key,
+      data,
+    );
+  }
+
+  late final _wire_sortable_encrypt_numberPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Uint64)>>('wire_sortable_encrypt_number');
+  late final _wire_sortable_encrypt_number = _wire_sortable_encrypt_numberPtr
+      .asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>, int)>();
+
+  void wire_sortable_encrypt_raw_string(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+  ) {
+    return _wire_sortable_encrypt_raw_string(
+      port_,
+      key,
+      data,
+    );
+  }
+
+  late final _wire_sortable_encrypt_raw_stringPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+                  ffi.Pointer<wire_uint_8_list>)>>(
+      'wire_sortable_encrypt_raw_string');
+  late final _wire_sortable_encrypt_raw_string =
+      _wire_sortable_encrypt_raw_stringPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_sortable_encrypt_string(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> key,
+    ffi.Pointer<wire_uint_8_list> data,
+  ) {
+    return _wire_sortable_encrypt_string(
+      port_,
+      key,
+      data,
+    );
+  }
+
+  late final _wire_sortable_encrypt_stringPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_sortable_encrypt_string');
+  late final _wire_sortable_encrypt_string =
+      _wire_sortable_encrypt_stringPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_content_fetch_for_group(
     int port_,
