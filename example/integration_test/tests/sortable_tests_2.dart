@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:sentc/sentc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,7 +62,9 @@ void main() {
     final b = await group.encryptSortableRawNumber(263);
     final c = await group.encryptSortableRawNumber(65321);
 
-    print("a: $a, b: $b, c: $c");
+    if (kDebugMode) {
+      print("a: $a, b: $b, c: $c");
+    }
 
     expect((a < b), true);
     expect((b < c), true);
