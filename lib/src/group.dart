@@ -132,6 +132,7 @@ Future<Group> getGroup(
     out.accessByParentGroup,
     accessByGroupAsMember,
     [],
+    [],
     DateTime.now().millisecondsSinceEpoch,
   );
 
@@ -155,6 +156,9 @@ Future<Group> getGroup(
   //now decrypt the hmac key for searchable encryption, the right key must be fetched before
   final decryptedHmacKeys = await groupObj.decryptHmacKeys(out.hmacKeys);
   groupObj._hmacKeys = decryptedHmacKeys;
+
+  final decryptedSortableKeys = await groupObj.decryptSortableKeys(out.sortableKeys);
+  groupObj._sortableKeys = decryptedSortableKeys;
 
   await Future.wait([
     //store the group data
@@ -225,6 +229,7 @@ class Group extends AbstractSymCrypto {
 
   List<GroupKey> _keys;
   List<String> _hmacKeys;
+  List<String> _sortableKeys;
   Map<String, int> _keyMap;
   String _newestKeyId;
   final String? accessByParentGroup;
@@ -247,6 +252,7 @@ class Group extends AbstractSymCrypto {
     this.accessByParentGroup,
     this.accessByGroupAsMember,
     this._hmacKeys,
+    this._sortableKeys,
     this.lastCheckTime,
   );
 
@@ -268,7 +274,8 @@ class Group extends AbstractSymCrypto {
         accessByParentGroup = json["accessByParentGroup"],
         accessByGroupAsMember = json["accessByGroupAsMember"],
         _keys = (jsonDecode(json["keys"]) as List).map((e) => GroupKey.fromJson(e)).toList(),
-        _hmacKeys = (jsonDecode(json["hmacKeys"]) as List<dynamic>).map((e) => e as String).toList();
+        _hmacKeys = (jsonDecode(json["hmacKeys"]) as List<dynamic>).map((e) => e as String).toList(),
+        _sortableKeys = (jsonDecode(json["sortableKeys"]) as List<dynamic>).map((e) => e as String).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -283,6 +290,7 @@ class Group extends AbstractSymCrypto {
       "accessByParentGroup": accessByParentGroup,
       "accessByGroupAsMember": accessByGroupAsMember,
       "hmacKeys": jsonEncode(_hmacKeys),
+      "sortableKeys": jsonEncode(_sortableKeys),
       "lastCheckTime": lastCheckTime,
       "keyUpdate": keyUpdate,
     };
@@ -315,6 +323,10 @@ class Group extends AbstractSymCrypto {
 
   String getNewestHmacKey() {
     return _hmacKeys[0];
+  }
+
+  String getNewestSortableKey() {
+    return _sortableKeys[0];
   }
 
   //____________________________________________________________________________________________________________________
@@ -514,6 +526,22 @@ class Group extends AbstractSymCrypto {
       final decryptedHmacKey = await Sentc.getApi().groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
 
       list.add(decryptedHmacKey);
+    }
+
+    return list;
+  }
+
+  Future<List<String>> decryptSortableKeys(List<GroupOutDataSortableKeys> keys) async {
+    List<String> list = [];
+
+    for (var i = 0; i < keys.length; ++i) {
+      var key = keys[i];
+
+      final groupKey = await getSymKeyById(key.groupKeyId);
+
+      final decryptedKey = await Sentc.getApi().groupDecryptSortableKey(groupKey: groupKey, serverKeyData: key.keyData);
+
+      list.add(decryptedKey);
     }
 
     return list;
@@ -1451,6 +1479,36 @@ class Group extends AbstractSymCrypto {
       lastFetchedGroupId: lastId,
     );
   }
+
+  //____________________________________________________________________________________________________________________
+  //sortable
+
+  Future<int> encryptSortableRawNumber(int number) {
+    final key = getNewestSortableKey();
+
+    return Sentc.getApi().sortableEncryptRawNumber(key: key, data: number);
+  }
+
+  Future<SortableEncryptOutput> encryptSortableNumber(int number) {
+    final key = getNewestSortableKey();
+
+    return Sentc.getApi().sortableEncryptNumber(key: key, data: number);
+  }
+
+  Future<int> encryptSortableRawString(String data) {
+    final key = getNewestSortableKey();
+
+    return Sentc.getApi().sortableEncryptRawString(key: key, data: data);
+  }
+
+  Future<SortableEncryptOutput> encryptSortableString(String data) {
+    final key = getNewestSortableKey();
+
+    return Sentc.getApi().sortableEncryptString(key: key, data: data);
+  }
+
+  //____________________________________________________________________________________________________________________
+  //content
 
   Future<List<ListContentItem>> fetchContent({
     ListContentItem? lastFetchedItem,

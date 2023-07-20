@@ -196,10 +196,10 @@ class User extends AbstractAsymCrypto {
         _exportedVerifyDeviceKey = json["exportedVerifyDeviceKey"],
         groupInvites = [],
         _userIdentifier = json["userIdentifier"],
-        _keyMap = jsonDecode(json["keyMap"]),
+        _keyMap = Map<String, int>.from(jsonDecode(json["keyMap"]) as Map<String, dynamic>),
         _newestKeyId = json["newestKeyId"],
         _userKeys = (jsonDecode(json["userKeys"]) as List).map((e) => UserKey.fromJson(e)).toList(),
-        _hmacKeys = (json["hmacKeys"] as List<dynamic>).map((e) => e as String).toList();
+        _hmacKeys = (jsonDecode(json["hmacKeys"]) as List<dynamic>).map((e) => e as String).toList();
 
   Map<String, dynamic> toJson() {
     return {
