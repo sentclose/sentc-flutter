@@ -64,6 +64,52 @@ void main() {
     expect(c1, c);
   });
 
+  final strValues = ["a", "az", "azzz", "b", "ba", "baaa", "o", "oe", "z", "zaaa"];
+  final encryptedValues = <int>[];
+
+  testWidgets("encrypt a string", (widgetTester) async {
+    for (var i = 0; i < strValues.length; ++i) {
+      var v = strValues[i];
+
+      encryptedValues.add(await group.encryptSortableRawString(v));
+    }
+
+    //check
+    int pastItem = 0;
+
+    for (var i = 0; i < encryptedValues.length; ++i) {
+      var item = encryptedValues[i];
+
+      expect(pastItem < item, true);
+
+      pastItem = item;
+    }
+  });
+
+  testWidgets("encrypt the same values", (widgetTester) async {
+    final newValues = <int>[];
+
+    for (var i = 0; i < strValues.length; ++i) {
+      var v = strValues[i];
+
+      newValues.add(await groupForUser1.encryptSortableRawString(v));
+    }
+
+    //check
+    int pastItem = 0;
+
+    for (var i = 0; i < newValues.length; ++i) {
+      var item = newValues[i];
+      var checkItem = encryptedValues[i];
+
+      expect(pastItem < item, true);
+
+      expect(checkItem, item);
+
+      pastItem = item;
+    }
+  });
+
   tearDownAll(() async {
     await group.deleteGroup();
     await user0.deleteUser(pw);
