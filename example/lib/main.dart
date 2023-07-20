@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sentc/sentc.dart';
 
@@ -53,7 +54,9 @@ class _MyHomepageState extends State<MyHomepage> {
     //now every user in the group can decrypt the string
     final decrypted = await group.decryptString(encrypted);
 
-    print(decrypted); //hello there!
+    if (kDebugMode) {
+      print(decrypted); //hello there!
+    }
 
     //delete a group
     await group.deleteGroup();
