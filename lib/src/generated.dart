@@ -1023,43 +1023,26 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta;
 
-  Future<String> prepareCreateSearchable(
-      {required String key,
-      required String itemRef,
-      required String category,
-      required String data,
-      required bool full,
-      int? limit,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableConstMeta;
-
-  Future<SearchCreateDataLight> prepareCreateSearchableLight(
+  Future<List<String>> createSearchableRaw(
       {required String key,
       required String data,
       required bool full,
       int? limit,
       dynamic hint});
 
-  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableLightConstMeta;
+  FlutterRustBridgeTaskConstMeta get kCreateSearchableRawConstMeta;
 
-  Future<String> prepareSearch(
+  Future<SearchableCreateOutput> createSearchable(
+      {required String key,
+      required String data,
+      required bool full,
+      int? limit,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kCreateSearchableConstMeta;
+
+  Future<String> search(
       {required String key, required String data, dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kPrepareSearchConstMeta;
-
-  Future<List<ListSearchItem>> search(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String groupId,
-      String? groupAsMember,
-      required String key,
-      required String data,
-      required String catId,
-      required String lastFetchedTime,
-      required String lastFetchedGroupId,
-      dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kSearchConstMeta;
 
@@ -1628,18 +1611,6 @@ class ListGroups {
   });
 }
 
-class ListSearchItem {
-  final String id;
-  final String itemRef;
-  final String time;
-
-  const ListSearchItem({
-    required this.id,
-    required this.itemRef,
-    required this.time,
-  });
-}
-
 class NonRegisteredKeyOutput {
   final String key;
   final String encryptedKey;
@@ -1670,12 +1641,12 @@ class RegisterDeviceData {
   });
 }
 
-class SearchCreateDataLight {
+class SearchableCreateOutput {
   final List<String> hashes;
   final String alg;
   final String keyId;
 
-  const SearchCreateDataLight({
+  const SearchableCreateOutput({
     required this.hashes,
     required this.alg,
     required this.keyId,
@@ -5064,37 +5035,7 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: ["baseUrl", "authToken", "jwt", "keyId"],
       );
 
-  Future<String> prepareCreateSearchable(
-      {required String key,
-      required String itemRef,
-      required String category,
-      required String data,
-      required bool full,
-      int? limit,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(key);
-    var arg1 = _platform.api2wire_String(itemRef);
-    var arg2 = _platform.api2wire_String(category);
-    var arg3 = _platform.api2wire_String(data);
-    var arg4 = full;
-    var arg5 = _platform.api2wire_opt_box_autoadd_u32(limit);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_prepare_create_searchable(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5),
-      parseSuccessData: _wire2api_String,
-      constMeta: kPrepareCreateSearchableConstMeta,
-      argValues: [key, itemRef, category, data, full, limit],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "prepare_create_searchable",
-        argNames: ["key", "itemRef", "category", "data", "full", "limit"],
-      );
-
-  Future<SearchCreateDataLight> prepareCreateSearchableLight(
+  Future<List<String>> createSearchableRaw(
       {required String key,
       required String data,
       required bool full,
@@ -5106,79 +5047,55 @@ class SentcFlutterImpl implements SentcFlutter {
     var arg3 = _platform.api2wire_opt_box_autoadd_u32(limit);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner
-          .wire_prepare_create_searchable_light(port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_search_create_data_light,
-      constMeta: kPrepareCreateSearchableLightConstMeta,
+          .wire_create_searchable_raw(port_, arg0, arg1, arg2, arg3),
+      parseSuccessData: _wire2api_StringList,
+      constMeta: kCreateSearchableRawConstMeta,
       argValues: [key, data, full, limit],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kPrepareCreateSearchableLightConstMeta =>
+  FlutterRustBridgeTaskConstMeta get kCreateSearchableRawConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
-        debugName: "prepare_create_searchable_light",
+        debugName: "create_searchable_raw",
         argNames: ["key", "data", "full", "limit"],
       );
 
-  Future<String> prepareSearch(
-      {required String key, required String data, dynamic hint}) {
+  Future<SearchableCreateOutput> createSearchable(
+      {required String key,
+      required String data,
+      required bool full,
+      int? limit,
+      dynamic hint}) {
     var arg0 = _platform.api2wire_String(key);
     var arg1 = _platform.api2wire_String(data);
+    var arg2 = full;
+    var arg3 = _platform.api2wire_opt_box_autoadd_u32(limit);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
-          _platform.inner.wire_prepare_search(port_, arg0, arg1),
-      parseSuccessData: _wire2api_String,
-      constMeta: kPrepareSearchConstMeta,
-      argValues: [key, data],
+          _platform.inner.wire_create_searchable(port_, arg0, arg1, arg2, arg3),
+      parseSuccessData: _wire2api_searchable_create_output,
+      constMeta: kCreateSearchableConstMeta,
+      argValues: [key, data, full, limit],
       hint: hint,
     ));
   }
 
-  FlutterRustBridgeTaskConstMeta get kPrepareSearchConstMeta =>
+  FlutterRustBridgeTaskConstMeta get kCreateSearchableConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
-        debugName: "prepare_search",
-        argNames: ["key", "data"],
+        debugName: "create_searchable",
+        argNames: ["key", "data", "full", "limit"],
       );
 
-  Future<List<ListSearchItem>> search(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String groupId,
-      String? groupAsMember,
-      required String key,
-      required String data,
-      required String catId,
-      required String lastFetchedTime,
-      required String lastFetchedGroupId,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(jwt);
-    var arg3 = _platform.api2wire_String(groupId);
-    var arg4 = _platform.api2wire_opt_String(groupAsMember);
-    var arg5 = _platform.api2wire_String(key);
-    var arg6 = _platform.api2wire_String(data);
-    var arg7 = _platform.api2wire_String(catId);
-    var arg8 = _platform.api2wire_String(lastFetchedTime);
-    var arg9 = _platform.api2wire_String(lastFetchedGroupId);
+  Future<String> search(
+      {required String key, required String data, dynamic hint}) {
+    var arg0 = _platform.api2wire_String(key);
+    var arg1 = _platform.api2wire_String(data);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_search(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9),
-      parseSuccessData: _wire2api_list_list_search_item,
+      callFfi: (port_) => _platform.inner.wire_search(port_, arg0, arg1),
+      parseSuccessData: _wire2api_String,
       constMeta: kSearchConstMeta,
-      argValues: [
-        baseUrl,
-        authToken,
-        jwt,
-        groupId,
-        groupAsMember,
-        key,
-        data,
-        catId,
-        lastFetchedTime,
-        lastFetchedGroupId
-      ],
+      argValues: [key, data],
       hint: hint,
     ));
   }
@@ -5186,18 +5103,7 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kSearchConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "search",
-        argNames: [
-          "baseUrl",
-          "authToken",
-          "jwt",
-          "groupId",
-          "groupAsMember",
-          "key",
-          "data",
-          "catId",
-          "lastFetchedTime",
-          "lastFetchedGroupId"
-        ],
+        argNames: ["key", "data"],
       );
 
   Future<int> sortableEncryptRawNumber(
@@ -6230,21 +6136,6 @@ class SentcFlutterImpl implements SentcFlutter {
     return (raw as List<dynamic>).map(_wire2api_list_groups).toList();
   }
 
-  List<ListSearchItem> _wire2api_list_list_search_item(dynamic raw) {
-    return (raw as List<dynamic>).map(_wire2api_list_search_item).toList();
-  }
-
-  ListSearchItem _wire2api_list_search_item(dynamic raw) {
-    final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-    return ListSearchItem(
-      id: _wire2api_String(arr[0]),
-      itemRef: _wire2api_String(arr[1]),
-      time: _wire2api_String(arr[2]),
-    );
-  }
-
   List<UserDeviceList> _wire2api_list_user_device_list(dynamic raw) {
     return (raw as List<dynamic>).map(_wire2api_user_device_list).toList();
   }
@@ -6291,11 +6182,11 @@ class SentcFlutterImpl implements SentcFlutter {
     );
   }
 
-  SearchCreateDataLight _wire2api_search_create_data_light(dynamic raw) {
+  SearchableCreateOutput _wire2api_searchable_create_output(dynamic raw) {
     final arr = raw as List<dynamic>;
     if (arr.length != 3)
       throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-    return SearchCreateDataLight(
+    return SearchableCreateOutput(
       hashes: _wire2api_StringList(arr[0]),
       alg: _wire2api_String(arr[1]),
       keyId: _wire2api_String(arr[2]),
@@ -9989,55 +9880,43 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
-  void wire_prepare_create_searchable(
+  void wire_create_searchable_raw(
     int port_,
     ffi.Pointer<wire_uint_8_list> key,
-    ffi.Pointer<wire_uint_8_list> item_ref,
-    ffi.Pointer<wire_uint_8_list> category,
     ffi.Pointer<wire_uint_8_list> data,
     bool full,
     ffi.Pointer<ffi.Uint32> limit,
   ) {
-    return _wire_prepare_create_searchable(
+    return _wire_create_searchable_raw(
       port_,
       key,
-      item_ref,
-      category,
       data,
       full,
       limit,
     );
   }
 
-  late final _wire_prepare_create_searchablePtr = _lookup<
+  late final _wire_create_searchable_rawPtr = _lookup<
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Int64,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
               ffi.Bool,
-              ffi.Pointer<ffi.Uint32>)>>('wire_prepare_create_searchable');
-  late final _wire_prepare_create_searchable =
-      _wire_prepare_create_searchablePtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              bool,
-              ffi.Pointer<ffi.Uint32>)>();
+              ffi.Pointer<ffi.Uint32>)>>('wire_create_searchable_raw');
+  late final _wire_create_searchable_raw =
+      _wire_create_searchable_rawPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, bool, ffi.Pointer<ffi.Uint32>)>();
 
-  void wire_prepare_create_searchable_light(
+  void wire_create_searchable(
     int port_,
     ffi.Pointer<wire_uint_8_list> key,
     ffi.Pointer<wire_uint_8_list> data,
     bool full,
     ffi.Pointer<ffi.Uint32> limit,
   ) {
-    return _wire_prepare_create_searchable_light(
+    return _wire_create_searchable(
       port_,
       key,
       data,
@@ -10046,95 +9925,37 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     );
   }
 
-  late final _wire_prepare_create_searchable_lightPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Int64,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Bool,
-                  ffi.Pointer<ffi.Uint32>)>>(
-      'wire_prepare_create_searchable_light');
-  late final _wire_prepare_create_searchable_light =
-      _wire_prepare_create_searchable_lightPtr.asFunction<
-          void Function(int, ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>, bool, ffi.Pointer<ffi.Uint32>)>();
-
-  void wire_prepare_search(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> key,
-    ffi.Pointer<wire_uint_8_list> data,
-  ) {
-    return _wire_prepare_search(
-      port_,
-      key,
-      data,
-    );
-  }
-
-  late final _wire_prepare_searchPtr = _lookup<
+  late final _wire_create_searchablePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_prepare_search');
-  late final _wire_prepare_search = _wire_prepare_searchPtr.asFunction<
-      void Function(
-          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool,
+              ffi.Pointer<ffi.Uint32>)>>('wire_create_searchable');
+  late final _wire_create_searchable = _wire_create_searchablePtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, bool, ffi.Pointer<ffi.Uint32>)>();
 
   void wire_search(
     int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> jwt,
-    ffi.Pointer<wire_uint_8_list> group_id,
-    ffi.Pointer<wire_uint_8_list> group_as_member,
     ffi.Pointer<wire_uint_8_list> key,
     ffi.Pointer<wire_uint_8_list> data,
-    ffi.Pointer<wire_uint_8_list> cat_id,
-    ffi.Pointer<wire_uint_8_list> last_fetched_time,
-    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
   ) {
     return _wire_search(
       port_,
-      base_url,
-      auth_token,
-      jwt,
-      group_id,
-      group_as_member,
       key,
       data,
-      cat_id,
-      last_fetched_time,
-      last_fetched_group_id,
     );
   }
 
   late final _wire_searchPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
+          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_search');
   late final _wire_search = _wire_searchPtr.asFunction<
       void Function(
-          int,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>)>();
+          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_sortable_encrypt_raw_number(
     int port_,

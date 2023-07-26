@@ -1431,53 +1431,22 @@ class Group extends AbstractSymCrypto {
   //____________________________________________________________________________________________________________________
   //searchable encryption
 
-  Future<SearchCreateDataLight> prepareCreateSearchableItemLight(String data, bool full, int? limit) {
+  Future<List<String>> createSearchRaw(String data, [bool? full, int? limit]) {
     final key = getNewestHmacKey();
 
-    return Sentc.getApi().prepareCreateSearchableLight(key: key, data: data, full: full, limit: limit);
+    return Sentc.getApi().createSearchableRaw(key: key, data: data, full: full ?? false, limit: limit);
   }
 
-  Future<String> prepareCreateSearchableItem(String itemRef, String data, bool full, String? category, int? limit) {
+  Future<SearchableCreateOutput> createSearch(String data, [bool? full, int? limit]) {
     final key = getNewestHmacKey();
 
-    return Sentc.getApi().prepareCreateSearchable(
-      key: key,
-      data: data,
-      full: full,
-      limit: limit,
-      category: category ?? "",
-      itemRef: itemRef,
-    );
+    return Sentc.getApi().createSearchable(key: key, data: data, full: full ?? false, limit: limit);
   }
 
-  Future<String> prepareSearchItem(String data) {
+  Future<String> search(String data) {
     final key = getNewestHmacKey();
 
-    return Sentc.getApi().prepareSearch(key: key, data: data);
-  }
-
-  Future<List<ListSearchItem>> searchItem({
-    required String data,
-    ListSearchItem? lastFetchedItem,
-    String? catId,
-  }) async {
-    final jwt = await getJwt();
-
-    final lastTime = lastFetchedItem?.time ?? "0";
-    final lastId = lastFetchedItem?.id ?? "none";
-
-    return Sentc.getApi().search(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      jwt: jwt,
-      groupId: groupId,
-      groupAsMember: accessByGroupAsMember,
-      key: getNewestHmacKey(),
-      data: data,
-      catId: catId ?? "",
-      lastFetchedTime: lastTime,
-      lastFetchedGroupId: lastId,
-    );
+    return Sentc.getApi().search(key: key, data: data);
   }
 
   //____________________________________________________________________________________________________________________
