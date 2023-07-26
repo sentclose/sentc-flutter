@@ -240,35 +240,6 @@ class Sentc {
     );
   }
 
-  static Future<String> prepareLoginStart(String userIdentifier) {
-    return getApi().prepareLoginStart(baseUrl: baseUrl, authToken: appToken, userIdentifier: userIdentifier);
-  }
-
-  static Future<PrepareLoginOutput> prepareLogin(
-    String userIdentifier,
-    String password,
-    String prepareLoginServerOutput,
-  ) {
-    return getApi().prepareLogin(
-      userIdentifier: userIdentifier,
-      password: password,
-      serverOutput: prepareLoginServerOutput,
-    );
-  }
-
-  static Future<User> doneLogin(
-    String deviceIdentifier,
-    String masterKeyEncryptionKey,
-    String doneLoginServerOutput,
-  ) async {
-    final out = await getApi().doneLogin(
-      masterKeyEncryption: masterKeyEncryptionKey,
-      serverOutput: doneLoginServerOutput,
-    );
-
-    return getUser(deviceIdentifier, out);
-  }
-
   static Future<User> login(
     String deviceIdentifier,
     String password,

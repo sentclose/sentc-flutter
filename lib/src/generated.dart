@@ -141,29 +141,6 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kUserDeviceKeySessionUploadConstMeta;
 
-  Future<String> prepareLoginStart(
-      {required String baseUrl,
-      required String authToken,
-      required String userIdentifier,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kPrepareLoginStartConstMeta;
-
-  Future<PrepareLoginOutput> prepareLogin(
-      {required String userIdentifier,
-      required String password,
-      required String serverOutput,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kPrepareLoginConstMeta;
-
-  Future<UserData> doneLogin(
-      {required String masterKeyEncryption,
-      required String serverOutput,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kDoneLoginConstMeta;
-
   ///
   ///# Login the user to this app
   ///
@@ -1683,16 +1660,6 @@ class PreRegisterDeviceData {
   });
 }
 
-class PrepareLoginOutput {
-  final String authKey;
-  final String masterKeyEncryptionKey;
-
-  const PrepareLoginOutput({
-    required this.authKey,
-    required this.masterKeyEncryptionKey,
-  });
-}
-
 class RegisterDeviceData {
   final String sessionId;
   final String exportedPublicKey;
@@ -2152,75 +2119,6 @@ class SentcFlutterImpl implements SentcFlutter {
           "userPublicKey",
           "groupKeys"
         ],
-      );
-
-  Future<String> prepareLoginStart(
-      {required String baseUrl,
-      required String authToken,
-      required String userIdentifier,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(userIdentifier);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) =>
-          _platform.inner.wire_prepare_login_start(port_, arg0, arg1, arg2),
-      parseSuccessData: _wire2api_String,
-      constMeta: kPrepareLoginStartConstMeta,
-      argValues: [baseUrl, authToken, userIdentifier],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kPrepareLoginStartConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "prepare_login_start",
-        argNames: ["baseUrl", "authToken", "userIdentifier"],
-      );
-
-  Future<PrepareLoginOutput> prepareLogin(
-      {required String userIdentifier,
-      required String password,
-      required String serverOutput,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(userIdentifier);
-    var arg1 = _platform.api2wire_String(password);
-    var arg2 = _platform.api2wire_String(serverOutput);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) =>
-          _platform.inner.wire_prepare_login(port_, arg0, arg1, arg2),
-      parseSuccessData: _wire2api_prepare_login_output,
-      constMeta: kPrepareLoginConstMeta,
-      argValues: [userIdentifier, password, serverOutput],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kPrepareLoginConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "prepare_login",
-        argNames: ["userIdentifier", "password", "serverOutput"],
-      );
-
-  Future<UserData> doneLogin(
-      {required String masterKeyEncryption,
-      required String serverOutput,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(masterKeyEncryption);
-    var arg1 = _platform.api2wire_String(serverOutput);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_done_login(port_, arg0, arg1),
-      parseSuccessData: _wire2api_user_data,
-      constMeta: kDoneLoginConstMeta,
-      argValues: [masterKeyEncryption, serverOutput],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kDoneLoginConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "done_login",
-        argNames: ["masterKeyEncryption", "serverOutput"],
       );
 
   Future<UserData> login(
@@ -6383,16 +6281,6 @@ class SentcFlutterImpl implements SentcFlutter {
     );
   }
 
-  PrepareLoginOutput _wire2api_prepare_login_output(dynamic raw) {
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return PrepareLoginOutput(
-      authKey: _wire2api_String(arr[0]),
-      masterKeyEncryptionKey: _wire2api_String(arr[1]),
-    );
-  }
-
   RegisterDeviceData _wire2api_register_device_data(dynamic raw) {
     final arr = raw as List<dynamic>;
     if (arr.length != 2)
@@ -7041,77 +6929,6 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_prepare_login_start(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> user_identifier,
-  ) {
-    return _wire_prepare_login_start(
-      port_,
-      base_url,
-      auth_token,
-      user_identifier,
-    );
-  }
-
-  late final _wire_prepare_login_startPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_prepare_login_start');
-  late final _wire_prepare_login_start =
-      _wire_prepare_login_startPtr.asFunction<
-          void Function(int, ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_prepare_login(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> user_identifier,
-    ffi.Pointer<wire_uint_8_list> password,
-    ffi.Pointer<wire_uint_8_list> server_output,
-  ) {
-    return _wire_prepare_login(
-      port_,
-      user_identifier,
-      password,
-      server_output,
-    );
-  }
-
-  late final _wire_prepare_loginPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_prepare_login');
-  late final _wire_prepare_login = _wire_prepare_loginPtr.asFunction<
-      void Function(int, ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_done_login(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> master_key_encryption,
-    ffi.Pointer<wire_uint_8_list> server_output,
-  ) {
-    return _wire_done_login(
-      port_,
-      master_key_encryption,
-      server_output,
-    );
-  }
-
-  late final _wire_done_loginPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_done_login');
-  late final _wire_done_login = _wire_done_loginPtr.asFunction<
-      void Function(
-          int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_login(
     int port_,
