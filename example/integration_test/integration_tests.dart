@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'tests/user_test.dart' as user_tests;
+import 'tests/user_tests_2.dart' as user_tests_2;
 import 'tests/group_tests_1.dart' as group_tests_1;
 import 'tests/group_tests_2.dart' as group_tests_2;
 import 'tests/searchable_tests.dart' as searchable_tests;
@@ -13,6 +14,8 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   group("user tests", user_tests.main);
+
+  group("user tests 2", user_tests_2.main);
 
   group("group tests 1", group_tests_1.main);
 
