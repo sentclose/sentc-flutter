@@ -37,7 +37,7 @@ class _MyHomepageState extends State<MyHomepage> {
     await Sentc.register("userIdentifier", "password");
 
     //log in a user
-    final user = await Sentc.login("userIdentifier", "password");
+    final user = await Sentc.loginForced("userIdentifier", "password");
 
     //create a group
     final groupId = await user.createGroup();
