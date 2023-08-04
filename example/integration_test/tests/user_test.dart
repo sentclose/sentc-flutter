@@ -28,7 +28,13 @@ void main() {
   });
 
   testWidgets("login user", (widgetTester) async {
-    user = await Sentc.login("userIdentifier1", "password");
+    final userLogin = await Sentc.login("userIdentifier1", "password");
+
+    if (userLogin.isRight) {
+      throw Exception("Wrong user obj, no mfa excepted here.");
+    }
+
+    user = userLogin.left;
 
     expect(user.userId, userId);
   });
@@ -50,7 +56,7 @@ void main() {
   });
 
   testWidgets("should login with the new password", (widgetTester) async {
-    user = await Sentc.login("userIdentifier1", "newPassword");
+    user = await Sentc.loginForced("userIdentifier1", "newPassword");
   });
 
   testWidgets("reset password", (widgetTester) async {
@@ -69,7 +75,7 @@ void main() {
   });
 
   testWidgets("login with the new password after reset", (widgetTester) async {
-    user = await Sentc.login("userIdentifier1", "password");
+    user = await Sentc.loginForced("userIdentifier1", "password");
   });
 
   group("device tests", () {
@@ -100,7 +106,7 @@ void main() {
     });
 
     testWidgets("login the new device", (widgetTester) async {
-      newDevice = await Sentc.login(deviceIdentifier, devicePw);
+      newDevice = await Sentc.loginForced(deviceIdentifier, devicePw);
     });
 
     //key rotation
@@ -132,7 +138,7 @@ void main() {
       //and now end register
       await user.registerDevice(deviceRegisterResult);
 
-      newDevice1 = await Sentc.login(deviceIdentifier1, devicePw1);
+      newDevice1 = await Sentc.loginForced(deviceIdentifier1, devicePw1);
     });
 
     testWidgets("get the same key id for all devices", (widgetTester) async {
@@ -187,7 +193,7 @@ void main() {
     testWidgets("create a combined safety number", (widgetTester) async {
       //first register new user
       await Sentc.register("userIdentifier2", "password");
-      user2 = await Sentc.login("userIdentifier2", "password");
+      user2 = await Sentc.loginForced("userIdentifier2", "password");
 
       final storage = Sentc.getStorage();
 
@@ -206,7 +212,7 @@ void main() {
 
     testWidgets("not create the same number with different users", (widgetTester) async {
       await Sentc.register("userIdentifier3", "password");
-      user3 = await Sentc.login("userIdentifier3", "password");
+      user3 = await Sentc.loginForced("userIdentifier3", "password");
 
       final storage = Sentc.getStorage();
 

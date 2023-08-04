@@ -23,13 +23,13 @@ void main() {
     expect(init, null);
 
     await Sentc.register(username0, pw);
-    user0 = await Sentc.login(username0, pw);
+    user0 = await Sentc.loginForced(username0, pw);
 
     await Sentc.register(username1, pw);
-    user1 = await Sentc.login(username1, pw);
+    user1 = await Sentc.loginForced(username1, pw);
 
     await Sentc.register(username2, pw);
-    user2 = await Sentc.login(username2, pw);
+    user2 = await Sentc.loginForced(username2, pw);
 
     final groupId = await user0.createGroup();
     sentcGroup = await user0.getGroup(groupId);
