@@ -24,7 +24,7 @@ void main() {
   late List<String> recoveryKeys;
 
   testWidgets("register otp", (widgetTester) async {
-    final out = await user.registerRawOtp();
+    final out = await user.registerRawOtp(pw);
 
     sec = out.secret;
     recoveryKeys = out.recover;
@@ -54,7 +54,11 @@ void main() {
   });
 
   testWidgets("get all recover keys", (widgetTester) async {
-    final keys = await user.getOtpRecoverKeys();
+    final totp = Totp.fromBase32(
+      secret: sec,
+    );
+
+    final keys = await user.getOtpRecoverKeys(pw, totp.now(), false);
 
     expect(keys.length, 6);
   });
@@ -73,26 +77,42 @@ void main() {
   });
 
   testWidgets("get one recover key less", (widgetTester) async {
-    final keys = await user.getOtpRecoverKeys();
+    final totp = Totp.fromBase32(
+      secret: sec,
+    );
+
+    final keys = await user.getOtpRecoverKeys(pw, totp.now(), false);
 
     expect(keys.length, 5);
   });
 
   testWidgets("should reset otp", (widgetTester) async {
-    final out = await user.resetRawOtp();
+    final totp = Totp.fromBase32(
+      secret: sec,
+    );
+
+    final out = await user.resetRawOtp(pw, totp.now(), false);
 
     sec = out.secret;
     recoveryKeys = out.recover;
   });
 
   testWidgets("get all keys back", (widgetTester) async {
-    final keys = await user.getOtpRecoverKeys();
+    final totp = Totp.fromBase32(
+      secret: sec,
+    );
+
+    final keys = await user.getOtpRecoverKeys(pw, totp.now(), false);
 
     expect(keys.length, 6);
   });
 
   testWidgets("disable otp", (widgetTester) async {
-    await user.disableOtp();
+    final totp = Totp.fromBase32(
+      secret: sec,
+    );
+
+    await user.disableOtp(pw, totp.now(), false);
   });
 
   testWidgets("login without otp after disabled", (widgetTester) async {
