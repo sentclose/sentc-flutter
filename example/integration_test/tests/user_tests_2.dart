@@ -40,9 +40,7 @@ void main() {
     final u = await Sentc.login(username0, pw);
 
     if (u.isRight) {
-      final totp = Totp.fromBase32(
-        secret: sec,
-      );
+      final totp = Totp.fromBase32(secret: sec, digits: 6);
 
       final u1 = await Sentc.mfaLogin(totp.now(), u.right);
 
@@ -54,9 +52,7 @@ void main() {
   });
 
   testWidgets("get all recover keys", (widgetTester) async {
-    final totp = Totp.fromBase32(
-      secret: sec,
-    );
+    final totp = Totp.fromBase32(secret: sec, digits: 6);
 
     final keys = await user.getOtpRecoverKeys(pw, totp.now(), false);
 
@@ -77,9 +73,7 @@ void main() {
   });
 
   testWidgets("get one recover key less", (widgetTester) async {
-    final totp = Totp.fromBase32(
-      secret: sec,
-    );
+    final totp = Totp.fromBase32(secret: sec, digits: 6);
 
     final keys = await user.getOtpRecoverKeys(pw, totp.now(), false);
 
@@ -87,9 +81,7 @@ void main() {
   });
 
   testWidgets("should reset otp", (widgetTester) async {
-    final totp = Totp.fromBase32(
-      secret: sec,
-    );
+    final totp = Totp.fromBase32(secret: sec, digits: 6);
 
     final out = await user.resetRawOtp(pw, totp.now(), false);
 
@@ -98,9 +90,7 @@ void main() {
   });
 
   testWidgets("get all keys back", (widgetTester) async {
-    final totp = Totp.fromBase32(
-      secret: sec,
-    );
+    final totp = Totp.fromBase32(secret: sec, digits: 6);
 
     final keys = await user.getOtpRecoverKeys(pw, totp.now(), false);
 
@@ -108,9 +98,7 @@ void main() {
   });
 
   testWidgets("disable otp", (widgetTester) async {
-    final totp = Totp.fromBase32(
-      secret: sec,
-    );
+    final totp = Totp.fromBase32(secret: sec, digits: 6);
 
     await user.disableOtp(pw, totp.now(), false);
   });
