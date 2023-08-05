@@ -43,6 +43,7 @@ void main() {
           "privateDeviceKey": "abc",
           "publicDeviceKey": "abc",
           "signDeviceKey": "abc",
+          "mfa": false,
           "verifyDeviceKey": "abc",
           "exportedPublicDeviceKey": "abc",
           "exportedVerifyDeviceKey": "abc",
