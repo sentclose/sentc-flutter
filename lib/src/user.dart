@@ -5,7 +5,7 @@ import 'package:sentc/src/group.dart' as group;
 import 'package:sentc/sentc.dart';
 import '../src/generated.dart' as plugin;
 
-Future<User> getUser(String deviceIdentifier, UserData data) async {
+Future<User> getUser(String deviceIdentifier, UserData data, bool mfa) async {
   final Map<String, int> keyMap = {};
 
   final List<UserKey> userKeys = [];
@@ -31,6 +31,7 @@ Future<User> getUser(String deviceIdentifier, UserData data) async {
     refreshToken,
     data.userId,
     data.deviceId,
+    mfa,
     data.keys.privateKey,
     data.keys.publicKey,
     data.keys.signKey,
@@ -145,6 +146,7 @@ class User extends AbstractAsymCrypto {
   final String refreshToken;
   final String userId;
   final String deviceId;
+  bool mfa;
 
   //device keys
   final String _privateDeviceKey;
@@ -170,6 +172,7 @@ class User extends AbstractAsymCrypto {
     this.refreshToken,
     this.userId,
     this.deviceId,
+    this.mfa,
     this._privateDeviceKey,
     this._publicDeviceKey,
     this._signDeviceKey,
@@ -188,6 +191,7 @@ class User extends AbstractAsymCrypto {
         refreshToken = json["refreshToken"],
         userId = json["userId"],
         deviceId = json["deviceId"],
+        mfa = json["mfa"],
         _privateDeviceKey = json["privateDeviceKey"],
         _publicDeviceKey = json["publicDeviceKey"],
         _signDeviceKey = json["signDeviceKey"],
@@ -207,6 +211,7 @@ class User extends AbstractAsymCrypto {
       "refreshToken": refreshToken,
       "userId": userId,
       "deviceId": deviceId,
+      "mfa": mfa,
       "privateDeviceKey": _privateDeviceKey,
       "publicDeviceKey": _publicDeviceKey,
       "signDeviceKey": _signDeviceKey,
@@ -219,6 +224,10 @@ class User extends AbstractAsymCrypto {
       "newestKeyId": _newestKeyId,
       "hmacKeys": jsonEncode(_hmacKeys),
     };
+  }
+
+  bool enabledMfa() {
+    return mfa;
   }
 
   @override
@@ -234,6 +243,17 @@ class User extends AbstractAsymCrypto {
     }
 
     return jwt;
+  }
+
+  Future<String> getFreshJwt(String userIdentifier, String password, [String? mfaToken, bool? mfaRecovery]) {
+    return Sentc.getApi().getFreshJwt(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userIdentifier: userIdentifier,
+      password: password,
+      mfaToken: mfaToken,
+      mfaRecovery: mfaRecovery,
+    );
   }
 
   /// Fetch key for the actual user group
@@ -359,6 +379,104 @@ class User extends AbstractAsymCrypto {
     return Sentc.getApi().updateUser(baseUrl: baseUrl, authToken: appToken, jwt: jwt, userIdentifier: newIdentifier);
   }
 
+  Future<OtpRegister> registerRawOtp(String password, [String? mfaToken, bool? mfaRecovery]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    final out = await Sentc.getApi().registerRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+
+    mfa = true;
+
+    final storage = Sentc.getStorage();
+
+    await storage.set("user_data_$_userIdentifier", jsonEncode(this));
+
+    return out;
+  }
+
+  Future<(String, List<String>)> registerOtp(
+    String issuer,
+    String audience,
+    String password, [
+    String? mfaToken,
+    bool? mfaRecovery,
+  ]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    final out = await Sentc.getApi().registerOtp(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      jwt: jwt,
+      issuer: issuer,
+      audience: audience,
+    );
+
+    mfa = true;
+
+    final storage = Sentc.getStorage();
+
+    await storage.set("user_data_$_userIdentifier", jsonEncode(this));
+
+    return (out.url, out.recover);
+  }
+
+  Future<List<String>> getOtpRecoverKeys(
+    String password, [
+    String? mfaToken,
+    bool? mfaRecovery,
+  ]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    final out = await Sentc.getApi().getOtpRecoverKeys(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+
+    return out.keys;
+  }
+
+  Future<OtpRegister> resetRawOtp(
+    String password, [
+    String? mfaToken,
+    bool? mfaRecovery,
+  ]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    return Sentc.getApi().resetRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+  }
+
+  Future<(String, List<String>)> resetOtp(
+    String issuer,
+    String audience,
+    String password, [
+    String? mfaToken,
+    bool? mfaRecovery,
+  ]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    final out = await Sentc.getApi().resetOtp(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      jwt: jwt,
+      issuer: issuer,
+      audience: audience,
+    );
+
+    return (out.url, out.recover);
+  }
+
+  Future<void> disableOtp(
+    String password, [
+    String? mfaToken,
+    bool? mfaRecovery,
+  ]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    await Sentc.getApi().disableOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+
+    mfa = true;
+
+    final storage = Sentc.getStorage();
+
+    await storage.set("user_data_$_userIdentifier", jsonEncode(this));
+  }
+
   Future<void> resetPassword(String newPassword) async {
     final jwt = await getJwt();
 
@@ -375,13 +493,15 @@ class User extends AbstractAsymCrypto {
     );
   }
 
-  Future<void> changePassword(String oldPassword, String newPassword) {
+  Future<void> changePassword(String oldPassword, String newPassword, [String? mfaToken, bool? mfaRecovery]) {
     return Sentc.getApi().changePassword(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: _userIdentifier,
       oldPassword: oldPassword,
       newPassword: newPassword,
+      mfaToken: mfaToken,
+      mfaRecovery: mfaRecovery,
     );
   }
 
@@ -391,25 +511,18 @@ class User extends AbstractAsymCrypto {
     return storage.delete("user_data_$_userIdentifier");
   }
 
-  Future<void> deleteUser(String password) async {
-    await Sentc.getApi().deleteUser(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      userIdentifier: _userIdentifier,
-      password: password,
-    );
+  Future<void> deleteUser(String password, [String? mfaToken, bool? mfaRecovery]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    await Sentc.getApi().deleteUser(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt);
 
     return logOut();
   }
 
-  Future<void> deleteDevice(String password, String deviceId) async {
-    await Sentc.getApi().deleteDevice(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      deviceIdentifier: _userIdentifier,
-      password: password,
-      deviceId: deviceId,
-    );
+  Future<void> deleteDevice(String password, String deviceId, [String? mfaToken, bool? mfaRecovery]) async {
+    final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
+
+    await Sentc.getApi().deleteDevice(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt, deviceId: deviceId);
 
     if (deviceId == this.deviceId) {
       //only log the device out if it is the actual used device
@@ -424,11 +537,7 @@ class User extends AbstractAsymCrypto {
 
     final keyString = group.prepareKeys(_userKeys, page).str;
 
-    return Sentc.getApi().prepareRegisterDevice(
-      serverOutput: serverOutput,
-      userKeys: keyString,
-      keyCount: keyCount,
-    );
+    return Sentc.getApi().prepareRegisterDevice(serverOutput: serverOutput, userKeys: keyString, keyCount: keyCount);
   }
 
   Future<void> registerDevice(String serverOutput) async {

@@ -25,16 +25,16 @@ void main() {
     expect(init, null);
 
     await Sentc.register(username0, pw);
-    user0 = await Sentc.login(username0, pw);
+    user0 = await Sentc.loginForced(username0, pw);
 
     await Sentc.register(username1, pw);
-    user1 = await Sentc.login(username1, pw);
+    user1 = await Sentc.loginForced(username1, pw);
 
     await Sentc.register(username2, pw);
-    user2 = await Sentc.login(username2, pw);
+    user2 = await Sentc.loginForced(username2, pw);
 
     await Sentc.register(username3, pw);
-    user3 = await Sentc.login(username3, pw);
+    user3 = await Sentc.loginForced(username3, pw);
   });
 
   testWidgets("create a group", (widgetTester) async {

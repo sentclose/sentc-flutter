@@ -58,7 +58,7 @@ class _FilePageState extends State<FilePage> {
   void _prepareTest() async {
     await Sentc.register("userIdentifier1", "password");
 
-    user = await Sentc.login("userIdentifier1", "password");
+    user = await Sentc.loginForced("userIdentifier1", "password");
 
     final groupId = await user.createGroup();
     group = await user.getGroup(groupId);

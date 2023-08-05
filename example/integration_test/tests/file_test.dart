@@ -66,10 +66,10 @@ void main() {
     expect(init, null);
 
     await Sentc.register(username0, pw);
-    user0 = await Sentc.login(username0, pw);
+    user0 = await Sentc.loginForced(username0, pw);
 
     await Sentc.register(username1, pw);
-    user1 = await Sentc.login(username1, pw);
+    user1 = await Sentc.loginForced(username1, pw);
   });
 
   testWidgets("prepare test file", (widgetTester) async {
