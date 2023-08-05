@@ -97,7 +97,7 @@ void main() {
       } catch (e) {
         final error = SentcError.fromError(e);
 
-        expect(error.status, "server_112");
+        expect(error.status, "server_100");
       }
     });
 
