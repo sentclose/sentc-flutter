@@ -7,6 +7,7 @@ export 'src/user.dart';
 export 'src/group.dart';
 export 'src/generated.dart';
 export 'src/crypto/sym_key.dart';
+export 'src/either.dart';
 
 //file handling
 export 'src/file/uploader.dart';

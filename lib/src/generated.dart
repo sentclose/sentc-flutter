@@ -150,7 +150,7 @@ abstract class SentcFlutter {
   ///
   ///The other backend can validate the jwt
   ///
-  Future<UserData> login(
+  Future<UserLoginOut> login(
       {required String baseUrl,
       required String authToken,
       required String userIdentifier,
@@ -158,6 +158,18 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kLoginConstMeta;
+
+  Future<UserData> mfaLogin(
+      {required String baseUrl,
+      required String authToken,
+      required String masterKeyEncryption,
+      required String authKey,
+      required String userIdentifier,
+      required String token,
+      required bool recovery,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kMfaLoginConstMeta;
 
   Future<UserKeyData> doneFetchUserKey(
       {required String privateKey, required String serverOutput, dynamic hint});
@@ -173,6 +185,17 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFetchUserKeyConstMeta;
+
+  Future<String> getFreshJwt(
+      {required String baseUrl,
+      required String authToken,
+      required String userIdentifier,
+      required String password,
+      String? mfaToken,
+      bool? mfaRecovery,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetFreshJwtConstMeta;
 
   Future<String> refreshJwt(
       {required String baseUrl,
@@ -233,6 +256,8 @@ abstract class SentcFlutter {
       required String userIdentifier,
       required String oldPassword,
       required String newPassword,
+      String? mfaToken,
+      bool? mfaRecovery,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kChangePasswordConstMeta;
@@ -240,8 +265,7 @@ abstract class SentcFlutter {
   Future<void> deleteUser(
       {required String baseUrl,
       required String authToken,
-      required String userIdentifier,
-      required String password,
+      required String freshJwt,
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kDeleteUserConstMeta;
@@ -249,8 +273,7 @@ abstract class SentcFlutter {
   Future<void> deleteDevice(
       {required String baseUrl,
       required String authToken,
-      required String deviceIdentifier,
-      required String password,
+      required String freshJwt,
       required String deviceId,
       dynamic hint});
 
@@ -317,6 +340,58 @@ abstract class SentcFlutter {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kUserFinishKeyRotationConstMeta;
+
+  Future<OtpRegister> registerRawOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kRegisterRawOtpConstMeta;
+
+  Future<OtpRegisterUrl> registerOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String issuer,
+      required String audience,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kRegisterOtpConstMeta;
+
+  Future<OtpRecoveryKeysOutput> getOtpRecoverKeys(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetOtpRecoverKeysConstMeta;
+
+  Future<OtpRegister> resetRawOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kResetRawOtpConstMeta;
+
+  Future<OtpRegisterUrl> resetOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String issuer,
+      required String audience,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kResetOtpConstMeta;
+
+  Future<void> disableOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDisableOtpConstMeta;
 
   ///
   ///Create input for the server api.
@@ -1621,6 +1696,36 @@ class NonRegisteredKeyOutput {
   });
 }
 
+class OtpRecoveryKeysOutput {
+  final List<String> keys;
+
+  const OtpRecoveryKeysOutput({
+    required this.keys,
+  });
+}
+
+class OtpRegister {
+  final String secret;
+  final String alg;
+  final List<String> recover;
+
+  const OtpRegister({
+    required this.secret,
+    required this.alg,
+    required this.recover,
+  });
+}
+
+class OtpRegisterUrl {
+  final String url;
+  final List<String> recover;
+
+  const OtpRegisterUrl({
+    required this.url,
+    required this.recover,
+  });
+}
+
 class PreRegisterDeviceData {
   final String input;
   final String exportedPublicKey;
@@ -1628,6 +1733,16 @@ class PreRegisterDeviceData {
   const PreRegisterDeviceData({
     required this.input,
     required this.exportedPublicKey,
+  });
+}
+
+class PrepareLoginOtpOutput {
+  final String masterKey;
+  final String authKey;
+
+  const PrepareLoginOtpOutput({
+    required this.masterKey,
+    required this.authKey,
   });
 }
 
@@ -1740,6 +1855,16 @@ class UserKeyData {
     required this.exportedPublicKey,
     this.exportedPublicKeySigKeyId,
     required this.exportedVerifyKey,
+  });
+}
+
+class UserLoginOut {
+  final UserData? userData;
+  final PrepareLoginOtpOutput? mfa;
+
+  const UserLoginOut({
+    this.userData,
+    this.mfa,
   });
 }
 
@@ -2092,7 +2217,7 @@ class SentcFlutterImpl implements SentcFlutter {
         ],
       );
 
-  Future<UserData> login(
+  Future<UserLoginOut> login(
       {required String baseUrl,
       required String authToken,
       required String userIdentifier,
@@ -2105,7 +2230,7 @@ class SentcFlutterImpl implements SentcFlutter {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
           _platform.inner.wire_login(port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_user_data,
+      parseSuccessData: _wire2api_user_login_out,
       constMeta: kLoginConstMeta,
       argValues: [baseUrl, authToken, userIdentifier, password],
       hint: hint,
@@ -2116,6 +2241,54 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "login",
         argNames: ["baseUrl", "authToken", "userIdentifier", "password"],
+      );
+
+  Future<UserData> mfaLogin(
+      {required String baseUrl,
+      required String authToken,
+      required String masterKeyEncryption,
+      required String authKey,
+      required String userIdentifier,
+      required String token,
+      required bool recovery,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(masterKeyEncryption);
+    var arg3 = _platform.api2wire_String(authKey);
+    var arg4 = _platform.api2wire_String(userIdentifier);
+    var arg5 = _platform.api2wire_String(token);
+    var arg6 = recovery;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_mfa_login(port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
+      parseSuccessData: _wire2api_user_data,
+      constMeta: kMfaLoginConstMeta,
+      argValues: [
+        baseUrl,
+        authToken,
+        masterKeyEncryption,
+        authKey,
+        userIdentifier,
+        token,
+        recovery
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kMfaLoginConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "mfa_login",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "masterKeyEncryption",
+          "authKey",
+          "userIdentifier",
+          "token",
+          "recovery"
+        ],
       );
 
   Future<UserKeyData> doneFetchUserKey(
@@ -2166,6 +2339,50 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "fetch_user_key",
         argNames: ["baseUrl", "authToken", "jwt", "keyId", "privateKey"],
+      );
+
+  Future<String> getFreshJwt(
+      {required String baseUrl,
+      required String authToken,
+      required String userIdentifier,
+      required String password,
+      String? mfaToken,
+      bool? mfaRecovery,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(userIdentifier);
+    var arg3 = _platform.api2wire_String(password);
+    var arg4 = _platform.api2wire_opt_String(mfaToken);
+    var arg5 = _platform.api2wire_opt_box_autoadd_bool(mfaRecovery);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_get_fresh_jwt(port_, arg0, arg1, arg2, arg3, arg4, arg5),
+      parseSuccessData: _wire2api_String,
+      constMeta: kGetFreshJwtConstMeta,
+      argValues: [
+        baseUrl,
+        authToken,
+        userIdentifier,
+        password,
+        mfaToken,
+        mfaRecovery
+      ],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGetFreshJwtConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_fresh_jwt",
+        argNames: [
+          "baseUrl",
+          "authToken",
+          "userIdentifier",
+          "password",
+          "mfaToken",
+          "mfaRecovery"
+        ],
       );
 
   Future<String> refreshJwt(
@@ -2350,18 +2567,30 @@ class SentcFlutterImpl implements SentcFlutter {
       required String userIdentifier,
       required String oldPassword,
       required String newPassword,
+      String? mfaToken,
+      bool? mfaRecovery,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
     var arg2 = _platform.api2wire_String(userIdentifier);
     var arg3 = _platform.api2wire_String(oldPassword);
     var arg4 = _platform.api2wire_String(newPassword);
+    var arg5 = _platform.api2wire_opt_String(mfaToken);
+    var arg6 = _platform.api2wire_opt_box_autoadd_bool(mfaRecovery);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_change_password(port_, arg0, arg1, arg2, arg3, arg4),
+      callFfi: (port_) => _platform.inner.wire_change_password(
+          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6),
       parseSuccessData: _wire2api_unit,
       constMeta: kChangePasswordConstMeta,
-      argValues: [baseUrl, authToken, userIdentifier, oldPassword, newPassword],
+      argValues: [
+        baseUrl,
+        authToken,
+        userIdentifier,
+        oldPassword,
+        newPassword,
+        mfaToken,
+        mfaRecovery
+      ],
       hint: hint,
     ));
   }
@@ -2374,26 +2603,26 @@ class SentcFlutterImpl implements SentcFlutter {
           "authToken",
           "userIdentifier",
           "oldPassword",
-          "newPassword"
+          "newPassword",
+          "mfaToken",
+          "mfaRecovery"
         ],
       );
 
   Future<void> deleteUser(
       {required String baseUrl,
       required String authToken,
-      required String userIdentifier,
-      required String password,
+      required String freshJwt,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(userIdentifier);
-    var arg3 = _platform.api2wire_String(password);
+    var arg2 = _platform.api2wire_String(freshJwt);
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) =>
-          _platform.inner.wire_delete_user(port_, arg0, arg1, arg2, arg3),
+          _platform.inner.wire_delete_user(port_, arg0, arg1, arg2),
       parseSuccessData: _wire2api_unit,
       constMeta: kDeleteUserConstMeta,
-      argValues: [baseUrl, authToken, userIdentifier, password],
+      argValues: [baseUrl, authToken, freshJwt],
       hint: hint,
     ));
   }
@@ -2401,27 +2630,25 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kDeleteUserConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "delete_user",
-        argNames: ["baseUrl", "authToken", "userIdentifier", "password"],
+        argNames: ["baseUrl", "authToken", "freshJwt"],
       );
 
   Future<void> deleteDevice(
       {required String baseUrl,
       required String authToken,
-      required String deviceIdentifier,
-      required String password,
+      required String freshJwt,
       required String deviceId,
       dynamic hint}) {
     var arg0 = _platform.api2wire_String(baseUrl);
     var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(deviceIdentifier);
-    var arg3 = _platform.api2wire_String(password);
-    var arg4 = _platform.api2wire_String(deviceId);
+    var arg2 = _platform.api2wire_String(freshJwt);
+    var arg3 = _platform.api2wire_String(deviceId);
     return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_delete_device(port_, arg0, arg1, arg2, arg3, arg4),
+      callFfi: (port_) =>
+          _platform.inner.wire_delete_device(port_, arg0, arg1, arg2, arg3),
       parseSuccessData: _wire2api_unit,
       constMeta: kDeleteDeviceConstMeta,
-      argValues: [baseUrl, authToken, deviceIdentifier, password, deviceId],
+      argValues: [baseUrl, authToken, freshJwt, deviceId],
       hint: hint,
     ));
   }
@@ -2429,13 +2656,7 @@ class SentcFlutterImpl implements SentcFlutter {
   FlutterRustBridgeTaskConstMeta get kDeleteDeviceConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "delete_device",
-        argNames: [
-          "baseUrl",
-          "authToken",
-          "deviceIdentifier",
-          "password",
-          "deviceId"
-        ],
+        argNames: ["baseUrl", "authToken", "freshJwt", "deviceId"],
       );
 
   Future<void> updateUser(
@@ -2638,6 +2859,158 @@ class SentcFlutterImpl implements SentcFlutter {
           "publicKey",
           "privateKey"
         ],
+      );
+
+  Future<OtpRegister> registerRawOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_register_raw_otp(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_otp_register,
+      constMeta: kRegisterRawOtpConstMeta,
+      argValues: [baseUrl, authToken, jwt],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kRegisterRawOtpConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "register_raw_otp",
+        argNames: ["baseUrl", "authToken", "jwt"],
+      );
+
+  Future<OtpRegisterUrl> registerOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String issuer,
+      required String audience,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    var arg3 = _platform.api2wire_String(issuer);
+    var arg4 = _platform.api2wire_String(audience);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_register_otp(port_, arg0, arg1, arg2, arg3, arg4),
+      parseSuccessData: _wire2api_otp_register_url,
+      constMeta: kRegisterOtpConstMeta,
+      argValues: [baseUrl, authToken, jwt, issuer, audience],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kRegisterOtpConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "register_otp",
+        argNames: ["baseUrl", "authToken", "jwt", "issuer", "audience"],
+      );
+
+  Future<OtpRecoveryKeysOutput> getOtpRecoverKeys(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_get_otp_recover_keys(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_otp_recovery_keys_output,
+      constMeta: kGetOtpRecoverKeysConstMeta,
+      argValues: [baseUrl, authToken, jwt],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGetOtpRecoverKeysConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_otp_recover_keys",
+        argNames: ["baseUrl", "authToken", "jwt"],
+      );
+
+  Future<OtpRegister> resetRawOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_reset_raw_otp(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_otp_register,
+      constMeta: kResetRawOtpConstMeta,
+      argValues: [baseUrl, authToken, jwt],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kResetRawOtpConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "reset_raw_otp",
+        argNames: ["baseUrl", "authToken", "jwt"],
+      );
+
+  Future<OtpRegisterUrl> resetOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      required String issuer,
+      required String audience,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    var arg3 = _platform.api2wire_String(issuer);
+    var arg4 = _platform.api2wire_String(audience);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_reset_otp(port_, arg0, arg1, arg2, arg3, arg4),
+      parseSuccessData: _wire2api_otp_register_url,
+      constMeta: kResetOtpConstMeta,
+      argValues: [baseUrl, authToken, jwt, issuer, audience],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kResetOtpConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "reset_otp",
+        argNames: ["baseUrl", "authToken", "jwt", "issuer", "audience"],
+      );
+
+  Future<void> disableOtp(
+      {required String baseUrl,
+      required String authToken,
+      required String jwt,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(baseUrl);
+    var arg1 = _platform.api2wire_String(authToken);
+    var arg2 = _platform.api2wire_String(jwt);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_disable_otp(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_unit,
+      constMeta: kDisableOtpConstMeta,
+      argValues: [baseUrl, authToken, jwt],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kDisableOtpConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "disable_otp",
+        argNames: ["baseUrl", "authToken", "jwt"],
       );
 
   Future<String> groupPrepareCreateGroup(
@@ -5742,8 +6115,17 @@ class SentcFlutterImpl implements SentcFlutter {
     return raw as bool;
   }
 
+  PrepareLoginOtpOutput _wire2api_box_autoadd_prepare_login_otp_output(
+      dynamic raw) {
+    return _wire2api_prepare_login_otp_output(raw);
+  }
+
   SignHead _wire2api_box_autoadd_sign_head(dynamic raw) {
     return _wire2api_sign_head(raw);
+  }
+
+  UserData _wire2api_box_autoadd_user_data(dynamic raw) {
+    return _wire2api_user_data(raw);
   }
 
   Claims _wire2api_claims(dynamic raw) {
@@ -6158,8 +6540,49 @@ class SentcFlutterImpl implements SentcFlutter {
     return raw == null ? null : _wire2api_String(raw);
   }
 
+  PrepareLoginOtpOutput? _wire2api_opt_box_autoadd_prepare_login_otp_output(
+      dynamic raw) {
+    return raw == null
+        ? null
+        : _wire2api_box_autoadd_prepare_login_otp_output(raw);
+  }
+
   SignHead? _wire2api_opt_box_autoadd_sign_head(dynamic raw) {
     return raw == null ? null : _wire2api_box_autoadd_sign_head(raw);
+  }
+
+  UserData? _wire2api_opt_box_autoadd_user_data(dynamic raw) {
+    return raw == null ? null : _wire2api_box_autoadd_user_data(raw);
+  }
+
+  OtpRecoveryKeysOutput _wire2api_otp_recovery_keys_output(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return OtpRecoveryKeysOutput(
+      keys: _wire2api_StringList(arr[0]),
+    );
+  }
+
+  OtpRegister _wire2api_otp_register(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return OtpRegister(
+      secret: _wire2api_String(arr[0]),
+      alg: _wire2api_String(arr[1]),
+      recover: _wire2api_StringList(arr[2]),
+    );
+  }
+
+  OtpRegisterUrl _wire2api_otp_register_url(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return OtpRegisterUrl(
+      url: _wire2api_String(arr[0]),
+      recover: _wire2api_StringList(arr[1]),
+    );
   }
 
   PreRegisterDeviceData _wire2api_pre_register_device_data(dynamic raw) {
@@ -6169,6 +6592,16 @@ class SentcFlutterImpl implements SentcFlutter {
     return PreRegisterDeviceData(
       input: _wire2api_String(arr[0]),
       exportedPublicKey: _wire2api_String(arr[1]),
+    );
+  }
+
+  PrepareLoginOtpOutput _wire2api_prepare_login_otp_output(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return PrepareLoginOtpOutput(
+      masterKey: _wire2api_String(arr[0]),
+      authKey: _wire2api_String(arr[1]),
     );
   }
 
@@ -6284,6 +6717,16 @@ class SentcFlutterImpl implements SentcFlutter {
     );
   }
 
+  UserLoginOut _wire2api_user_login_out(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return UserLoginOut(
+      userData: _wire2api_opt_box_autoadd_user_data(arr[0]),
+      mfa: _wire2api_opt_box_autoadd_prepare_login_otp_output(arr[1]),
+    );
+  }
+
   UserPublicKeyData _wire2api_user_public_key_data(dynamic raw) {
     final arr = raw as List<dynamic>;
     if (arr.length != 3)
@@ -6341,6 +6784,11 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Bool> api2wire_box_autoadd_bool(bool raw) {
+    return inner.new_box_autoadd_bool_0(api2wire_bool(raw));
+  }
+
+  @protected
   ffi.Pointer<ffi.Int32> api2wire_box_autoadd_i32(int raw) {
     return inner.new_box_autoadd_i32_0(api2wire_i32(raw));
   }
@@ -6353,6 +6801,11 @@ class SentcFlutterPlatform extends FlutterRustBridgeBase<SentcFlutterWire> {
   @protected
   ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
     return raw == null ? ffi.nullptr : api2wire_String(raw);
+  }
+
+  @protected
+  ffi.Pointer<ffi.Bool> api2wire_opt_box_autoadd_bool(bool? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_bool(raw);
   }
 
   @protected
@@ -6853,6 +7306,50 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_mfa_login(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> master_key_encryption,
+    ffi.Pointer<wire_uint_8_list> auth_key,
+    ffi.Pointer<wire_uint_8_list> user_identifier,
+    ffi.Pointer<wire_uint_8_list> token,
+    bool recovery,
+  ) {
+    return _wire_mfa_login(
+      port_,
+      base_url,
+      auth_token,
+      master_key_encryption,
+      auth_key,
+      user_identifier,
+      token,
+      recovery,
+    );
+  }
+
+  late final _wire_mfa_loginPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool)>>('wire_mfa_login');
+  late final _wire_mfa_login = _wire_mfa_loginPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          bool)>();
+
   void wire_done_fetch_user_key(
     int port_,
     ffi.Pointer<wire_uint_8_list> private_key,
@@ -6909,6 +7406,46 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_get_fresh_jwt(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> user_identifier,
+    ffi.Pointer<wire_uint_8_list> password,
+    ffi.Pointer<wire_uint_8_list> mfa_token,
+    ffi.Pointer<ffi.Bool> mfa_recovery,
+  ) {
+    return _wire_get_fresh_jwt(
+      port_,
+      base_url,
+      auth_token,
+      user_identifier,
+      password,
+      mfa_token,
+      mfa_recovery,
+    );
+  }
+
+  late final _wire_get_fresh_jwtPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<ffi.Bool>)>>('wire_get_fresh_jwt');
+  late final _wire_get_fresh_jwt = _wire_get_fresh_jwtPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<ffi.Bool>)>();
 
   void wire_refresh_jwt(
     int port_,
@@ -7113,6 +7650,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
     ffi.Pointer<wire_uint_8_list> user_identifier,
     ffi.Pointer<wire_uint_8_list> old_password,
     ffi.Pointer<wire_uint_8_list> new_password,
+    ffi.Pointer<wire_uint_8_list> mfa_token,
+    ffi.Pointer<ffi.Bool> mfa_recovery,
   ) {
     return _wire_change_password(
       port_,
@@ -7121,6 +7660,8 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       user_identifier,
       old_password,
       new_password,
+      mfa_token,
+      mfa_recovery,
     );
   }
 
@@ -7132,7 +7673,9 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_change_password');
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<ffi.Bool>)>>('wire_change_password');
   late final _wire_change_password = _wire_change_passwordPtr.asFunction<
       void Function(
           int,
@@ -7140,21 +7683,21 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>)>();
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<ffi.Bool>)>();
 
   void wire_delete_user(
     int port_,
     ffi.Pointer<wire_uint_8_list> base_url,
     ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> user_identifier,
-    ffi.Pointer<wire_uint_8_list> password,
+    ffi.Pointer<wire_uint_8_list> fresh_jwt,
   ) {
     return _wire_delete_user(
       port_,
       base_url,
       auth_token,
-      user_identifier,
-      password,
+      fresh_jwt,
     );
   }
 
@@ -7164,30 +7707,23 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Int64,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_delete_user');
   late final _wire_delete_user = _wire_delete_userPtr.asFunction<
-      void Function(
-          int,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>)>();
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_delete_device(
     int port_,
     ffi.Pointer<wire_uint_8_list> base_url,
     ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> device_identifier,
-    ffi.Pointer<wire_uint_8_list> password,
+    ffi.Pointer<wire_uint_8_list> fresh_jwt,
     ffi.Pointer<wire_uint_8_list> device_id,
   ) {
     return _wire_delete_device(
       port_,
       base_url,
       auth_token,
-      device_identifier,
-      password,
+      fresh_jwt,
       device_id,
     );
   }
@@ -7199,12 +7735,10 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>>('wire_delete_device');
   late final _wire_delete_device = _wire_delete_devicePtr.asFunction<
       void Function(
           int,
-          ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
@@ -7426,6 +7960,179 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_register_raw_otp(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+  ) {
+    return _wire_register_raw_otp(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+    );
+  }
+
+  late final _wire_register_raw_otpPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_register_raw_otp');
+  late final _wire_register_raw_otp = _wire_register_raw_otpPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_register_otp(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> issuer,
+    ffi.Pointer<wire_uint_8_list> audience,
+  ) {
+    return _wire_register_otp(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      issuer,
+      audience,
+    );
+  }
+
+  late final _wire_register_otpPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_register_otp');
+  late final _wire_register_otp = _wire_register_otpPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_get_otp_recover_keys(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+  ) {
+    return _wire_get_otp_recover_keys(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+    );
+  }
+
+  late final _wire_get_otp_recover_keysPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_get_otp_recover_keys');
+  late final _wire_get_otp_recover_keys =
+      _wire_get_otp_recover_keysPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_reset_raw_otp(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+  ) {
+    return _wire_reset_raw_otp(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+    );
+  }
+
+  late final _wire_reset_raw_otpPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_reset_raw_otp');
+  late final _wire_reset_raw_otp = _wire_reset_raw_otpPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_reset_otp(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+    ffi.Pointer<wire_uint_8_list> issuer,
+    ffi.Pointer<wire_uint_8_list> audience,
+  ) {
+    return _wire_reset_otp(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+      issuer,
+      audience,
+    );
+  }
+
+  late final _wire_reset_otpPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_reset_otp');
+  late final _wire_reset_otp = _wire_reset_otpPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_disable_otp(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> base_url,
+    ffi.Pointer<wire_uint_8_list> auth_token,
+    ffi.Pointer<wire_uint_8_list> jwt,
+  ) {
+    return _wire_disable_otp(
+      port_,
+      base_url,
+      auth_token,
+      jwt,
+    );
+  }
+
+  late final _wire_disable_otpPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>)>>('wire_disable_otp');
+  late final _wire_disable_otp = _wire_disable_otpPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
   void wire_group_prepare_create_group(
     int port_,
@@ -10562,6 +11269,20 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>,
           ffi.Pointer<wire_uint_8_list>)>();
+
+  ffi.Pointer<ffi.Bool> new_box_autoadd_bool_0(
+    bool value,
+  ) {
+    return _new_box_autoadd_bool_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_bool_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Bool> Function(ffi.Bool)>>(
+          'new_box_autoadd_bool_0');
+  late final _new_box_autoadd_bool_0 = _new_box_autoadd_bool_0Ptr
+      .asFunction<ffi.Pointer<ffi.Bool> Function(bool)>();
 
   ffi.Pointer<ffi.Int32> new_box_autoadd_i32_0(
     int value,

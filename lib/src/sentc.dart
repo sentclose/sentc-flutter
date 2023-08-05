@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
+import 'package:sentc/src/either.dart';
 import 'package:sentc/src/generated.dart';
 import 'package:sentc/src/storage/shared_preferences_storage.dart';
 import 'package:sentc/src/storage/storage_interface.dart';
@@ -240,10 +241,7 @@ class Sentc {
     );
   }
 
-  static Future<User> login(
-    String deviceIdentifier,
-    String password,
-  ) async {
+  static Future<User> loginForced(String deviceIdentifier, String password) async {
     final out = await getApi().login(
       baseUrl: baseUrl,
       authToken: appToken,
@@ -251,7 +249,58 @@ class Sentc {
       password: password,
     );
 
-    return getUser(deviceIdentifier, out);
+    if (out.mfa != null) {
+      throw Exception("User enabled mfa and this must be handled.");
+    }
+
+    return getUser(deviceIdentifier, out.userData!, false);
+  }
+
+  static Future<Either<User, UserMfaLogin>> login(String deviceIdentifier, String password) async {
+    final out = await getApi().login(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      userIdentifier: deviceIdentifier,
+      password: password,
+    );
+
+    if (out.mfa != null) {
+      return Right(UserMfaLogin(
+        masterKey: out.mfa!.masterKey,
+        authKey: out.mfa!.authKey,
+        deviceIdentifier: deviceIdentifier,
+      ));
+    }
+
+    return Left(await getUser(deviceIdentifier, out.userData!, false));
+  }
+
+  static Future<User> mfaLogin(String token, UserMfaLogin loginData) async {
+    final out = await getApi().mfaLogin(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      masterKeyEncryption: loginData.masterKey,
+      authKey: loginData.authKey,
+      userIdentifier: loginData.deviceIdentifier,
+      token: token,
+      recovery: false,
+    );
+
+    return getUser(loginData.deviceIdentifier, out, true);
+  }
+
+  static Future<User> mfaRecoveryLogin(String recoveryToken, UserMfaLogin loginData) async {
+    final out = await getApi().mfaLogin(
+      baseUrl: baseUrl,
+      authToken: appToken,
+      masterKeyEncryption: loginData.masterKey,
+      authKey: loginData.authKey,
+      userIdentifier: loginData.deviceIdentifier,
+      token: recoveryToken,
+      recovery: true,
+    );
+
+    return getUser(loginData.deviceIdentifier, out, true);
   }
 
   //________________________________________________________________________________________________
@@ -386,4 +435,18 @@ class PublicKeyData {
       "publicKeySigKeyId": publicKeySigKeyId
     };
   }
+}
+
+//______________________________________________________________________________________________________________________
+
+class UserMfaLogin {
+  final String masterKey;
+  final String authKey;
+  final String deviceIdentifier;
+
+  const UserMfaLogin({
+    required this.masterKey,
+    required this.authKey,
+    required this.deviceIdentifier,
+  });
 }
