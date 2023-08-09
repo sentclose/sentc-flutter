@@ -30,11 +30,11 @@ void main() {
   testWidgets("login user", (widgetTester) async {
     final userLogin = await Sentc.login("userIdentifier1", "password");
 
-    if (userLogin.isRight) {
+    if (userLogin is MfaLogin) {
       throw Exception("Wrong user obj, no mfa excepted here.");
+    } else if (userLogin is UserLogin) {
+      user = userLogin.u;
     }
-
-    user = userLogin.left;
 
     expect(user.userId, userId);
   });
