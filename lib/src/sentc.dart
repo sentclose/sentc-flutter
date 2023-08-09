@@ -3,7 +3,6 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
-import 'package:sentc/src/either.dart';
 import 'package:sentc/src/generated.dart';
 import 'package:sentc/src/storage/shared_preferences_storage.dart';
 import 'package:sentc/src/storage/storage_interface.dart';
@@ -256,7 +255,7 @@ class Sentc {
     return getUser(deviceIdentifier, out.userData!, false);
   }
 
-  static Future<Either<User, UserMfaLogin>> login(String deviceIdentifier, String password) async {
+  static Future<LoginUser> login(String deviceIdentifier, String password) async {
     final out = await getApi().login(
       baseUrl: baseUrl,
       authToken: appToken,
@@ -265,14 +264,14 @@ class Sentc {
     );
 
     if (out.mfa != null) {
-      return Right(UserMfaLogin(
+      return MfaLogin(UserMfaLogin(
         masterKey: out.mfa!.masterKey,
         authKey: out.mfa!.authKey,
         deviceIdentifier: deviceIdentifier,
       ));
     }
 
-    return Left(await getUser(deviceIdentifier, out.userData!, false));
+    return UserLogin(await getUser(deviceIdentifier, out.userData!, false));
   }
 
   static Future<User> mfaLogin(String token, UserMfaLogin loginData) async {
@@ -438,6 +437,20 @@ class PublicKeyData {
 }
 
 //______________________________________________________________________________________________________________________
+
+sealed class LoginUser {}
+
+class MfaLogin extends LoginUser {
+  final UserMfaLogin u;
+
+  MfaLogin(this.u);
+}
+
+class UserLogin extends LoginUser {
+  final User u;
+
+  UserLogin(this.u);
+}
 
 class UserMfaLogin {
   final String masterKey;
