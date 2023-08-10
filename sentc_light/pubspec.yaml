@@ -3,7 +3,7 @@ description: Sentc sdk light with user and group management.
 version: 0.10.0
 homepage: https://sentc.com/
 documentation: https://sentc.com/
-repository: https://github.com/sentclose/sentc-flutter-light
+repository: https://github.com/sentclose/sentc-flutter
 topics:
   - crypto
   - sdk
