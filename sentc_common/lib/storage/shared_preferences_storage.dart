@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:sentc/src/storage/storage_interface.dart';
+import 'package:sentc_common/storage/storage_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesStorage implements StorageInterface {
