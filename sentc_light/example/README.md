@@ -1,6 +1,6 @@
-# sentc_example
+# sentc_light_example
 
-Demonstrates how to use the sentc plugin.
+Demonstrates how to use the sentc_light plugin.
 
 ## Getting Started
 
