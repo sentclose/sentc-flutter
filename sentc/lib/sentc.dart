@@ -11,7 +11,3 @@ export 'src/crypto/sym_key.dart';
 //file handling
 export 'src/file/uploader.dart';
 export 'src/file/downloader.dart';
-
-//storage
-export 'src/storage/storage_interface.dart';
-export 'src/storage/shared_preferences_storage.dart';

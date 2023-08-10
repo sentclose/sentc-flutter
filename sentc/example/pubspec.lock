@@ -398,6 +398,13 @@ packages:
       relative: true
     source: path
     version: "0.9.0"
+  sentc_common:
+    dependency: transitive
+    description:
+      path: "../../sentc_common"
+      relative: true
+    source: path
+    version: "0.10.0"
   shared_preferences:
     dependency: transitive
     description:

@@ -41,3 +41,6 @@ sentc_light_flutter.dll
 sentc_light_flutter.lib
 
 libsentc_light_flutter.so
+
+.flutter-plugins
+.flutter-plugins-dependencies

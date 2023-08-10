@@ -3,11 +3,9 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
-import 'package:sentc_light/src/either.dart';
 import 'package:sentc_light/src/generated.dart';
-import 'package:sentc_light/src/storage/shared_preferences_storage.dart';
-import 'package:sentc_light/src/storage/storage_interface.dart';
 import 'package:sentc_light/src/user.dart';
+import 'package:sentc_common/sentc_common.dart' as common;
 
 enum RefreshOption { cookie, cookieFn, api }
 
@@ -43,7 +41,7 @@ class SentcError {
 
 class Sentc {
   static SentcFlutterRustLightImpl? _api;
-  static StorageInterface? _storage;
+  static common.StorageInterface? _storage;
 
   static String baseUrl = "";
   static String appToken = "";
@@ -59,7 +57,7 @@ class Sentc {
     String? baseUrl,
     required String appToken,
     RefreshOptions? refreshOptions,
-    StorageInterface? storage,
+    common.StorageInterface? storage,
   }) async {
     if (_api != null) {
       //no Init, only once
@@ -98,7 +96,7 @@ class Sentc {
     Sentc.refreshEndpoint = refreshEndpoint;
     _endpointFn = refreshEndpointFn;
 
-    _storage = storage ?? SharedPreferencesStorage();
+    _storage = storage ?? common.SharedPreferencesStorage();
     await _storage!.init();
 
     try {
@@ -128,7 +126,7 @@ class Sentc {
     return null;
   }
 
-  static StorageInterface getStorage() {
+  static common.StorageInterface getStorage() {
     return _storage!;
   }
 
@@ -238,7 +236,7 @@ class Sentc {
     return getUser(deviceIdentifier, out.userData!, false);
   }
 
-  static Future<Either<User, UserMfaLogin>> login(String deviceIdentifier, String password) async {
+  static Future<LoginUser> login(String deviceIdentifier, String password) async {
     final out = await getApi().login(
       baseUrl: baseUrl,
       authToken: appToken,
@@ -247,14 +245,14 @@ class Sentc {
     );
 
     if (out.mfa != null) {
-      return Right(UserMfaLogin(
+      return MfaLogin(UserMfaLogin(
         masterKey: out.mfa!.masterKey,
         authKey: out.mfa!.authKey,
         deviceIdentifier: deviceIdentifier,
       ));
     }
 
-    return Left(await getUser(deviceIdentifier, out.userData!, false));
+    return UserLogin(await getUser(deviceIdentifier, out.userData!, false));
   }
 
   static Future<User> mfaLogin(String token, UserMfaLogin loginData) async {
@@ -302,14 +300,10 @@ class Sentc {
 
 //______________________________________________________________________________________________________________________
 
-class UserMfaLogin {
-  final String masterKey;
-  final String authKey;
-  final String deviceIdentifier;
+typedef UserLogin = common.UserLogin<User>;
 
-  const UserMfaLogin({
-    required this.masterKey,
-    required this.authKey,
-    required this.deviceIdentifier,
-  });
-}
+typedef MfaLogin = common.MfaLogin;
+
+typedef UserMfaLogin = common.UserMfaLogin;
+
+typedef LoginUser = common.LoginUser;

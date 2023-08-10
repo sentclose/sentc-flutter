@@ -4,9 +4,8 @@ import 'dart:io';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:sentc/src/generated.dart';
-import 'package:sentc/src/storage/shared_preferences_storage.dart';
-import 'package:sentc/src/storage/storage_interface.dart';
 import 'package:sentc/src/user.dart';
+import 'package:sentc_common/sentc_common.dart' as common;
 
 enum RefreshOption { cookie, cookieFn, api }
 
@@ -42,7 +41,7 @@ class SentcError {
 
 class Sentc {
   static SentcFlutterImpl? _api;
-  static StorageInterface? _storage;
+  static common.StorageInterface? _storage;
 
   static String baseUrl = "";
   static String appToken = "";
@@ -59,7 +58,7 @@ class Sentc {
     required String appToken,
     String? filePartUrl,
     RefreshOptions? refreshOptions,
-    StorageInterface? storage,
+    common.StorageInterface? storage,
   }) async {
     if (_api != null) {
       //no Init, only once
@@ -99,7 +98,7 @@ class Sentc {
     _endpointFn = refreshEndpointFn;
     Sentc.filePartUrl = filePartUrl;
 
-    _storage = storage ?? SharedPreferencesStorage();
+    _storage = storage ?? common.SharedPreferencesStorage();
     await _storage!.init();
 
     try {
@@ -129,7 +128,7 @@ class Sentc {
     return null;
   }
 
-  static StorageInterface getStorage() {
+  static common.StorageInterface getStorage() {
     return _storage!;
   }
 
@@ -438,28 +437,10 @@ class PublicKeyData {
 
 //______________________________________________________________________________________________________________________
 
-sealed class LoginUser {}
+typedef UserLogin = common.UserLogin<User>;
 
-class MfaLogin extends LoginUser {
-  final UserMfaLogin u;
+typedef MfaLogin = common.MfaLogin;
 
-  MfaLogin(this.u);
-}
+typedef UserMfaLogin = common.UserMfaLogin;
 
-class UserLogin extends LoginUser {
-  final User u;
-
-  UserLogin(this.u);
-}
-
-class UserMfaLogin {
-  final String masterKey;
-  final String authKey;
-  final String deviceIdentifier;
-
-  const UserMfaLogin({
-    required this.masterKey,
-    required this.authKey,
-    required this.deviceIdentifier,
-  });
-}
+typedef LoginUser = common.LoginUser;

@@ -33,16 +33,16 @@ void main() {
   testWidgets("not login without otp", (widgetTester) async {
     final u = await Sentc.login(username0, pw);
 
-    expect(u.isRight, true);
+    expect(u is MfaLogin, true);
   });
 
   testWidgets("login with otp", (widgetTester) async {
     final u = await Sentc.login(username0, pw);
 
-    if (u.isRight) {
+    if (u is MfaLogin) {
       final totp = Totp.fromBase32(secret: sec, digits: 6);
 
-      final u1 = await Sentc.mfaLogin(totp.now(), u.right);
+      final u1 = await Sentc.mfaLogin(totp.now(), u.u);
 
       expect(u1.mfa, true);
     } else {
@@ -62,8 +62,8 @@ void main() {
   testWidgets("login with otp recover keys", (widgetTester) async {
     final u = await Sentc.login(username0, pw);
 
-    if (u.isRight) {
-      final u1 = await Sentc.mfaRecoveryLogin(recoveryKeys[0], u.right);
+    if (u is MfaLogin) {
+      final u1 = await Sentc.mfaRecoveryLogin(recoveryKeys[0], u.u);
 
       expect(u1.mfa, true);
     } else {
@@ -106,7 +106,7 @@ void main() {
   testWidgets("login without otp after disabled", (widgetTester) async {
     final u = await Sentc.login(username0, pw);
 
-    expect(u.isLeft, true);
+    expect(u is UserLogin, true);
   });
 
   tearDownAll(() async {

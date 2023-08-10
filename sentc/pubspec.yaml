@@ -22,7 +22,8 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
-  shared_preferences: ^2.0.15
+  sentc_common: #0.10.0
+   path: ../sentc_common   #local dev
   path: ^1.8.1
   meta: ^1.9.1
   uuid: ^3.0.7
