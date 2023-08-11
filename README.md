@@ -1,4 +1,4 @@
-# Sentc light sdk
+# Sentc
 
 from sentclose.
 
@@ -25,6 +25,14 @@ demo() async {
 
   //invite another user to the group. Not here in the example because we only got one user so far
   // await group.inviteAuto("other user id");
+
+  //encrypt a string for the group
+  final encrypted = await group.encryptString("hello there!");
+
+  //now every user in the group can decrypt the string
+  final decrypted = await group.decryptString(encrypted);
+
+  print(decrypted); //hello there!
 
   //delete a group
   await group.deleteGroup();
