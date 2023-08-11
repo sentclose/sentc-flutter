@@ -354,9 +354,10 @@ packages:
   sentc_common:
     dependency: transitive
     description:
-      path: "../../sentc_common"
-      relative: true
-    source: path
+      name: sentc_common
+      sha256: "38e591a44ffb6c3b5c99461dd60e8672b39146d01a467aa088cb62fc4f57756f"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.10.0"
   sentc_light:
     dependency: "direct main"
