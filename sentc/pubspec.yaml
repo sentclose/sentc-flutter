@@ -17,7 +17,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rust_bridge: 1.77.0
+  flutter_rust_bridge: ^1.82.1
   ffi: ^2.0.1
   flutter_web_plugins:
     sdk: flutter

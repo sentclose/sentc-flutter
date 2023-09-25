@@ -31,10 +31,22 @@ class SentcError {
       );
 
   factory SentcError.fromError(Object e) {
-    return SentcError.fromException(e as FfiException);
+    if (e is FrbAnyhowException) {
+      return SentcError.fromAnyhowException(e);
+    }
+
+    if (e is FfiException) {
+      return SentcError.fromFfiException(e);
+    }
+
+    return SentcError(status: "client_0", errorMessage: "Unknown exception object: ${e.toString()}");
   }
 
-  factory SentcError.fromException(FfiException e) {
+  factory SentcError.fromAnyhowException(FrbAnyhowException e) {
+    return SentcError.fromJson(jsonDecode(e.anyhow));
+  }
+
+  factory SentcError.fromFfiException(FfiException e) {
     return SentcError.fromJson(jsonDecode(e.message));
   }
 }
