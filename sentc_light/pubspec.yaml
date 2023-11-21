@@ -1,6 +1,6 @@
 name: sentc_light
 description: Sentc sdk light with user and group management.
-version: 0.11.0
+version: 0.11.1
 homepage: https://sentc.com/
 documentation: https://sentc.com/
 repository: https://github.com/sentclose/sentc-flutter
