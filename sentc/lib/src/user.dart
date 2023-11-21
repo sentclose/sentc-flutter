@@ -279,6 +279,21 @@ class User extends AbstractAsymCrypto {
     }
   }
 
+  UserKey _getUserKeysSync(String keyId) {
+    var index = _keyMap[keyId];
+
+    if (index == null) {
+      //key not found
+      throw Exception("Key not found");
+    }
+
+    try {
+      return _userKeys[index];
+    } catch (e) {
+      throw Exception("Key not found");
+    }
+  }
+
   fetchUserKey(String keyId, [bool first = false]) async {
     final jwt = await getJwt();
 
@@ -340,6 +355,13 @@ class User extends AbstractAsymCrypto {
   }
 
   @override
+  String getPrivateKeySync(String keyId) {
+    final key = _getUserKeysSync(keyId);
+
+    return key.privateGroupKey;
+  }
+
+  @override
   Future<PublicKeyData> getPublicKey(String replyId) {
     return Sentc.getUserPublicKey(replyId);
   }
@@ -361,6 +383,11 @@ class User extends AbstractAsymCrypto {
   @override
   Future<String> getSignKey() {
     return Future.value(getNewestSignKey());
+  }
+
+  @override
+  String getSignKeySync() {
+    return getNewestSignKey();
   }
 
   Future<String> _getUserSymKey(String keyId) async {

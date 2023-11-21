@@ -308,8 +308,21 @@ class Group extends AbstractSymCrypto {
   }
 
   @override
+  String getSignKeySync() {
+    //always use the users sign key
+    return _user.getSignKeySync();
+  }
+
+  @override
   Future<String> getSymKeyById(String keyId) async {
     final key = await getGroupKey(keyId);
+
+    return key.groupKey;
+  }
+
+  @override
+  String getSymKeyByIdSync(String keyId) {
+    final key = getGroupKeySync(keyId);
 
     return key.groupKey;
   }
@@ -321,6 +334,13 @@ class Group extends AbstractSymCrypto {
     return Future.value(SymKeyToEncryptResult(latestKey.groupKeyId, latestKey.groupKey));
   }
 
+  @override
+  SymKeyToEncryptResult getSymKeyToEncryptSync() {
+    final latestKey = _getNewestKey()!;
+
+    return SymKeyToEncryptResult(latestKey.groupKeyId, latestKey.groupKey);
+  }
+
   String getNewestHmacKey() {
     return _hmacKeys[0];
   }
@@ -330,6 +350,20 @@ class Group extends AbstractSymCrypto {
   }
 
   //____________________________________________________________________________________________________________________
+
+  GroupKey getGroupKeySync(String keyId) {
+    var keyIndex = _keyMap[keyId];
+
+    if (keyIndex == null) {
+      throw Exception("Group key not found. Maybe done key rotation will help");
+    }
+
+    try {
+      return _keys[keyIndex];
+    } catch (e) {
+      throw Exception("Group key not found. Maybe done key rotation will help");
+    }
+  }
 
   Future<GroupKey> getGroupKey(String keyId, [bool newKeys = false]) async {
     var keyIndex = _keyMap[keyId];

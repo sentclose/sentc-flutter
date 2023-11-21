@@ -142,6 +142,18 @@ void main() {
 
       expect(decrypted, "hello there £ Я a a 👍");
     });
+
+    testWidgets("test sync encrypt and decrypt", (widgetTester) async {
+      final en = await sentcGroup.encryptStringSync("hello there £ Я a a 👍");
+
+      final de = await sentcGroup.decryptStringSync(en);
+
+      expect(de, "hello there £ Я a a 👍");
+
+      final decrypted = await sentcGroup.decryptStringSync(encryptedStringByUser0);
+
+      expect(decrypted, "hello there £ Я a a 👍");
+    });
   });
 
   group("key rotation", () {

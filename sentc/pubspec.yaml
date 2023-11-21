@@ -1,6 +1,6 @@
 name: sentc
 description: An end to end encryption sdk for every developer. The sdk is focused on group encryption and supports child and connected groups.
-version: 0.11.0
+version: 0.12.0
 homepage: https://sentc.com/
 documentation: https://sentc.com/
 repository: https://github.com/sentclose/sentc-flutter
