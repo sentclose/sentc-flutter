@@ -75,7 +75,7 @@ class Sentc {
     if (_api != null) {
       //no Init, only once
       try {
-        return await getActualUser(jwt: true);
+        return await getActualUser();
       } catch (e) {
         return null;
       }
