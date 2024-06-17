@@ -1025,79 +1025,6 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kDecryptSymKeyByPrivateKeyConstMeta;
 
-  Future<KeyGenOutput> generateAndRegisterSymKey(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String masterKey,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kGenerateAndRegisterSymKeyConstMeta;
-
-  Future<KeyGenOutput> generateAndRegisterSymKeyByPublicKey(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String publicKey,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta
-      get kGenerateAndRegisterSymKeyByPublicKeyConstMeta;
-
-  Future<String> getSymKeyById(
-      {required String baseUrl,
-      required String authToken,
-      required String keyId,
-      required String masterKey,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdConstMeta;
-
-  Future<String> getSymKeyByIdByPrivateKey(
-      {required String baseUrl,
-      required String authToken,
-      required String keyId,
-      required String privateKey,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdByPrivateKeyConstMeta;
-
-  Future<String> doneFetchSymKey(
-      {required String masterKey,
-      required String serverOut,
-      required bool nonRegistered,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyConstMeta;
-
-  Future<String> doneFetchSymKeyByPrivateKey(
-      {required String privateKey,
-      required String serverOut,
-      required bool nonRegistered,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyByPrivateKeyConstMeta;
-
-  Future<KeysToMasterKeyFetch> getKeysForMasterKey(
-      {required String baseUrl,
-      required String authToken,
-      required String masterKeyId,
-      required String lastFetchedTime,
-      required String lastKeyId,
-      required String masterKey,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kGetKeysForMasterKeyConstMeta;
-
-  Future<void> deleteSymKey(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String keyId,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta;
-
   Future<List<String>> createSearchableRaw(
       {required String key,
       required String data,
@@ -1140,20 +1067,6 @@ abstract class SentcFlutter {
       {required String key, required String data, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kSortableEncryptStringConstMeta;
-
-  Future<List<ListContentItem>> contentFetchForGroup(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String groupId,
-      String? groupAsMember,
-      required String catId,
-      required String lastFetchedTime,
-      required String lastFetchedGroupId,
-      required ContentFetchLimit limit,
-      dynamic hint});
-
-  FlutterRustBridgeTaskConstMeta get kContentFetchForGroupConstMeta;
 
   Future<FileData> fileDownloadFileMeta(
       {required String baseUrl,
@@ -1303,13 +1216,6 @@ class Claims {
     required this.iat,
     required this.fresh,
   });
-}
-
-enum ContentFetchLimit {
-  Small,
-  Medium,
-  Large,
-  XLarge,
 }
 
 class CryptoRawOutput {
@@ -1584,16 +1490,6 @@ class GroupUserListItem {
   });
 }
 
-class KeyGenOutput {
-  final String key;
-  final String keyId;
-
-  const KeyGenOutput({
-    required this.key,
-    required this.keyId,
-  });
-}
-
 class KeyRotationGetOut {
   final String preGroupKeyId;
   final String newGroupKeyId;
@@ -1633,40 +1529,6 @@ class KeyRotationInput {
     required this.previousGroupKeyId,
     required this.time,
     required this.newGroupKeyId,
-  });
-}
-
-class KeysToMasterKeyFetch {
-  final String lastFetchedTime;
-  final String lastKeyId;
-  final List<String> keys;
-
-  const KeysToMasterKeyFetch({
-    required this.lastFetchedTime,
-    required this.lastKeyId,
-    required this.keys,
-  });
-}
-
-class ListContentItem {
-  final String id;
-  final String item;
-  final String? belongsToGroup;
-  final String? belongsToUser;
-  final String creator;
-  final String time;
-  final String? category;
-  final String? accessFromGroup;
-
-  const ListContentItem({
-    required this.id,
-    required this.item,
-    this.belongsToGroup,
-    this.belongsToUser,
-    required this.creator,
-    required this.time,
-    this.category,
-    this.accessFromGroup,
   });
 }
 
@@ -5288,238 +5150,6 @@ class SentcFlutterImpl implements SentcFlutter {
         argNames: ["privateKey", "encryptedSymmetricKeyInfo"],
       );
 
-  Future<KeyGenOutput> generateAndRegisterSymKey(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String masterKey,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(jwt);
-    var arg3 = _platform.api2wire_String(masterKey);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_generate_and_register_sym_key(port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_key_gen_output,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kGenerateAndRegisterSymKeyConstMeta,
-      argValues: [baseUrl, authToken, jwt, masterKey],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kGenerateAndRegisterSymKeyConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "generate_and_register_sym_key",
-        argNames: ["baseUrl", "authToken", "jwt", "masterKey"],
-      );
-
-  Future<KeyGenOutput> generateAndRegisterSymKeyByPublicKey(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String publicKey,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(jwt);
-    var arg3 = _platform.api2wire_String(publicKey);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_generate_and_register_sym_key_by_public_key(
-              port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_key_gen_output,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kGenerateAndRegisterSymKeyByPublicKeyConstMeta,
-      argValues: [baseUrl, authToken, jwt, publicKey],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta
-      get kGenerateAndRegisterSymKeyByPublicKeyConstMeta =>
-          const FlutterRustBridgeTaskConstMeta(
-            debugName: "generate_and_register_sym_key_by_public_key",
-            argNames: ["baseUrl", "authToken", "jwt", "publicKey"],
-          );
-
-  Future<String> getSymKeyById(
-      {required String baseUrl,
-      required String authToken,
-      required String keyId,
-      required String masterKey,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(keyId);
-    var arg3 = _platform.api2wire_String(masterKey);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) =>
-          _platform.inner.wire_get_sym_key_by_id(port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_String,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kGetSymKeyByIdConstMeta,
-      argValues: [baseUrl, authToken, keyId, masterKey],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "get_sym_key_by_id",
-        argNames: ["baseUrl", "authToken", "keyId", "masterKey"],
-      );
-
-  Future<String> getSymKeyByIdByPrivateKey(
-      {required String baseUrl,
-      required String authToken,
-      required String keyId,
-      required String privateKey,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(keyId);
-    var arg3 = _platform.api2wire_String(privateKey);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_get_sym_key_by_id_by_private_key(port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_String,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kGetSymKeyByIdByPrivateKeyConstMeta,
-      argValues: [baseUrl, authToken, keyId, privateKey],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kGetSymKeyByIdByPrivateKeyConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "get_sym_key_by_id_by_private_key",
-        argNames: ["baseUrl", "authToken", "keyId", "privateKey"],
-      );
-
-  Future<String> doneFetchSymKey(
-      {required String masterKey,
-      required String serverOut,
-      required bool nonRegistered,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(masterKey);
-    var arg1 = _platform.api2wire_String(serverOut);
-    var arg2 = nonRegistered;
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) =>
-          _platform.inner.wire_done_fetch_sym_key(port_, arg0, arg1, arg2),
-      parseSuccessData: _wire2api_String,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kDoneFetchSymKeyConstMeta,
-      argValues: [masterKey, serverOut, nonRegistered],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "done_fetch_sym_key",
-        argNames: ["masterKey", "serverOut", "nonRegistered"],
-      );
-
-  Future<String> doneFetchSymKeyByPrivateKey(
-      {required String privateKey,
-      required String serverOut,
-      required bool nonRegistered,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(privateKey);
-    var arg1 = _platform.api2wire_String(serverOut);
-    var arg2 = nonRegistered;
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner
-          .wire_done_fetch_sym_key_by_private_key(port_, arg0, arg1, arg2),
-      parseSuccessData: _wire2api_String,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kDoneFetchSymKeyByPrivateKeyConstMeta,
-      argValues: [privateKey, serverOut, nonRegistered],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyByPrivateKeyConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "done_fetch_sym_key_by_private_key",
-        argNames: ["privateKey", "serverOut", "nonRegistered"],
-      );
-
-  Future<KeysToMasterKeyFetch> getKeysForMasterKey(
-      {required String baseUrl,
-      required String authToken,
-      required String masterKeyId,
-      required String lastFetchedTime,
-      required String lastKeyId,
-      required String masterKey,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(masterKeyId);
-    var arg3 = _platform.api2wire_String(lastFetchedTime);
-    var arg4 = _platform.api2wire_String(lastKeyId);
-    var arg5 = _platform.api2wire_String(masterKey);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_get_keys_for_master_key(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5),
-      parseSuccessData: _wire2api_keys_to_master_key_fetch,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kGetKeysForMasterKeyConstMeta,
-      argValues: [
-        baseUrl,
-        authToken,
-        masterKeyId,
-        lastFetchedTime,
-        lastKeyId,
-        masterKey
-      ],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kGetKeysForMasterKeyConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "get_keys_for_master_key",
-        argNames: [
-          "baseUrl",
-          "authToken",
-          "masterKeyId",
-          "lastFetchedTime",
-          "lastKeyId",
-          "masterKey"
-        ],
-      );
-
-  Future<void> deleteSymKey(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String keyId,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(jwt);
-    var arg3 = _platform.api2wire_String(keyId);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) =>
-          _platform.inner.wire_delete_sym_key(port_, arg0, arg1, arg2, arg3),
-      parseSuccessData: _wire2api_unit,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kDeleteSymKeyConstMeta,
-      argValues: [baseUrl, authToken, jwt, keyId],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kDeleteSymKeyConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "delete_sym_key",
-        argNames: ["baseUrl", "authToken", "jwt", "keyId"],
-      );
-
   Future<List<String>> createSearchableRaw(
       {required String key,
       required String data,
@@ -5676,63 +5306,6 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "sortable_encrypt_string",
         argNames: ["key", "data"],
-      );
-
-  Future<List<ListContentItem>> contentFetchForGroup(
-      {required String baseUrl,
-      required String authToken,
-      required String jwt,
-      required String groupId,
-      String? groupAsMember,
-      required String catId,
-      required String lastFetchedTime,
-      required String lastFetchedGroupId,
-      required ContentFetchLimit limit,
-      dynamic hint}) {
-    var arg0 = _platform.api2wire_String(baseUrl);
-    var arg1 = _platform.api2wire_String(authToken);
-    var arg2 = _platform.api2wire_String(jwt);
-    var arg3 = _platform.api2wire_String(groupId);
-    var arg4 = _platform.api2wire_opt_String(groupAsMember);
-    var arg5 = _platform.api2wire_String(catId);
-    var arg6 = _platform.api2wire_String(lastFetchedTime);
-    var arg7 = _platform.api2wire_String(lastFetchedGroupId);
-    var arg8 = api2wire_content_fetch_limit(limit);
-    return _platform.executeNormal(FlutterRustBridgeTask(
-      callFfi: (port_) => _platform.inner.wire_content_fetch_for_group(
-          port_, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8),
-      parseSuccessData: _wire2api_list_list_content_item,
-      parseErrorData: _wire2api_FrbAnyhowException,
-      constMeta: kContentFetchForGroupConstMeta,
-      argValues: [
-        baseUrl,
-        authToken,
-        jwt,
-        groupId,
-        groupAsMember,
-        catId,
-        lastFetchedTime,
-        lastFetchedGroupId,
-        limit
-      ],
-      hint: hint,
-    ));
-  }
-
-  FlutterRustBridgeTaskConstMeta get kContentFetchForGroupConstMeta =>
-      const FlutterRustBridgeTaskConstMeta(
-        debugName: "content_fetch_for_group",
-        argNames: [
-          "baseUrl",
-          "authToken",
-          "jwt",
-          "groupId",
-          "groupAsMember",
-          "catId",
-          "lastFetchedTime",
-          "lastFetchedGroupId",
-          "limit"
-        ],
       );
 
   Future<FileData> fileDownloadFileMeta(
@@ -6522,16 +6095,6 @@ class SentcFlutterImpl implements SentcFlutter {
     return raw as int;
   }
 
-  KeyGenOutput _wire2api_key_gen_output(dynamic raw) {
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return KeyGenOutput(
-      key: _wire2api_String(arr[0]),
-      keyId: _wire2api_String(arr[1]),
-    );
-  }
-
   KeyRotationGetOut _wire2api_key_rotation_get_out(dynamic raw) {
     final arr = raw as List<dynamic>;
     if (arr.length != 7)
@@ -6560,33 +6123,6 @@ class SentcFlutterImpl implements SentcFlutter {
       previousGroupKeyId: _wire2api_String(arr[5]),
       time: _wire2api_String(arr[6]),
       newGroupKeyId: _wire2api_String(arr[7]),
-    );
-  }
-
-  KeysToMasterKeyFetch _wire2api_keys_to_master_key_fetch(dynamic raw) {
-    final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-    return KeysToMasterKeyFetch(
-      lastFetchedTime: _wire2api_String(arr[0]),
-      lastKeyId: _wire2api_String(arr[1]),
-      keys: _wire2api_StringList(arr[2]),
-    );
-  }
-
-  ListContentItem _wire2api_list_content_item(dynamic raw) {
-    final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
-    return ListContentItem(
-      id: _wire2api_String(arr[0]),
-      item: _wire2api_String(arr[1]),
-      belongsToGroup: _wire2api_opt_String(arr[2]),
-      belongsToUser: _wire2api_opt_String(arr[3]),
-      creator: _wire2api_String(arr[4]),
-      time: _wire2api_String(arr[5]),
-      category: _wire2api_opt_String(arr[6]),
-      accessFromGroup: _wire2api_opt_String(arr[7]),
     );
   }
 
@@ -6643,10 +6179,6 @@ class SentcFlutterImpl implements SentcFlutter {
 
   List<KeyRotationGetOut> _wire2api_list_key_rotation_get_out(dynamic raw) {
     return (raw as List<dynamic>).map(_wire2api_key_rotation_get_out).toList();
-  }
-
-  List<ListContentItem> _wire2api_list_list_content_item(dynamic raw) {
-    return (raw as List<dynamic>).map(_wire2api_list_content_item).toList();
   }
 
   List<ListGroups> _wire2api_list_list_groups(dynamic raw) {
@@ -6883,11 +6415,6 @@ class SentcFlutterImpl implements SentcFlutter {
 @protected
 bool api2wire_bool(bool raw) {
   return raw;
-}
-
-@protected
-int api2wire_content_fetch_limit(ContentFetchLimit raw) {
-  return api2wire_i32(raw.index);
 }
 
 @protected
@@ -10464,264 +9991,6 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
           void Function(int, ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
 
-  void wire_generate_and_register_sym_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> jwt,
-    ffi.Pointer<wire_uint_8_list> master_key,
-  ) {
-    return _wire_generate_and_register_sym_key(
-      port_,
-      base_url,
-      auth_token,
-      jwt,
-      master_key,
-    );
-  }
-
-  late final _wire_generate_and_register_sym_keyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Int64,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>)>>(
-      'wire_generate_and_register_sym_key');
-  late final _wire_generate_and_register_sym_key =
-      _wire_generate_and_register_sym_keyPtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_generate_and_register_sym_key_by_public_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> jwt,
-    ffi.Pointer<wire_uint_8_list> public_key,
-  ) {
-    return _wire_generate_and_register_sym_key_by_public_key(
-      port_,
-      base_url,
-      auth_token,
-      jwt,
-      public_key,
-    );
-  }
-
-  late final _wire_generate_and_register_sym_key_by_public_keyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Int64,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>)>>(
-      'wire_generate_and_register_sym_key_by_public_key');
-  late final _wire_generate_and_register_sym_key_by_public_key =
-      _wire_generate_and_register_sym_key_by_public_keyPtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_get_sym_key_by_id(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> key_id,
-    ffi.Pointer<wire_uint_8_list> master_key,
-  ) {
-    return _wire_get_sym_key_by_id(
-      port_,
-      base_url,
-      auth_token,
-      key_id,
-      master_key,
-    );
-  }
-
-  late final _wire_get_sym_key_by_idPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_get_sym_key_by_id');
-  late final _wire_get_sym_key_by_id = _wire_get_sym_key_by_idPtr.asFunction<
-      void Function(
-          int,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_get_sym_key_by_id_by_private_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> key_id,
-    ffi.Pointer<wire_uint_8_list> private_key,
-  ) {
-    return _wire_get_sym_key_by_id_by_private_key(
-      port_,
-      base_url,
-      auth_token,
-      key_id,
-      private_key,
-    );
-  }
-
-  late final _wire_get_sym_key_by_id_by_private_keyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Int64,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>,
-                  ffi.Pointer<wire_uint_8_list>)>>(
-      'wire_get_sym_key_by_id_by_private_key');
-  late final _wire_get_sym_key_by_id_by_private_key =
-      _wire_get_sym_key_by_id_by_private_keyPtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_done_fetch_sym_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> master_key,
-    ffi.Pointer<wire_uint_8_list> server_out,
-    bool non_registered,
-  ) {
-    return _wire_done_fetch_sym_key(
-      port_,
-      master_key,
-      server_out,
-      non_registered,
-    );
-  }
-
-  late final _wire_done_fetch_sym_keyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Bool)>>('wire_done_fetch_sym_key');
-  late final _wire_done_fetch_sym_key = _wire_done_fetch_sym_keyPtr.asFunction<
-      void Function(int, ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>, bool)>();
-
-  void wire_done_fetch_sym_key_by_private_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> private_key,
-    ffi.Pointer<wire_uint_8_list> server_out,
-    bool non_registered,
-  ) {
-    return _wire_done_fetch_sym_key_by_private_key(
-      port_,
-      private_key,
-      server_out,
-      non_registered,
-    );
-  }
-
-  late final _wire_done_fetch_sym_key_by_private_keyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Bool)>>('wire_done_fetch_sym_key_by_private_key');
-  late final _wire_done_fetch_sym_key_by_private_key =
-      _wire_done_fetch_sym_key_by_private_keyPtr.asFunction<
-          void Function(int, ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>, bool)>();
-
-  void wire_get_keys_for_master_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> master_key_id,
-    ffi.Pointer<wire_uint_8_list> last_fetched_time,
-    ffi.Pointer<wire_uint_8_list> last_key_id,
-    ffi.Pointer<wire_uint_8_list> master_key,
-  ) {
-    return _wire_get_keys_for_master_key(
-      port_,
-      base_url,
-      auth_token,
-      master_key_id,
-      last_fetched_time,
-      last_key_id,
-      master_key,
-    );
-  }
-
-  late final _wire_get_keys_for_master_keyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_get_keys_for_master_key');
-  late final _wire_get_keys_for_master_key =
-      _wire_get_keys_for_master_keyPtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_delete_sym_key(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> jwt,
-    ffi.Pointer<wire_uint_8_list> key_id,
-  ) {
-    return _wire_delete_sym_key(
-      port_,
-      base_url,
-      auth_token,
-      jwt,
-      key_id,
-    );
-  }
-
-  late final _wire_delete_sym_keyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>)>>('wire_delete_sym_key');
-  late final _wire_delete_sym_key = _wire_delete_sym_keyPtr.asFunction<
-      void Function(
-          int,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>,
-          ffi.Pointer<wire_uint_8_list>)>();
-
   void wire_create_searchable_raw(
     int port_,
     ffi.Pointer<wire_uint_8_list> key,
@@ -10880,59 +10149,6 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       _wire_sortable_encrypt_stringPtr.asFunction<
           void Function(int, ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
-
-  void wire_content_fetch_for_group(
-    int port_,
-    ffi.Pointer<wire_uint_8_list> base_url,
-    ffi.Pointer<wire_uint_8_list> auth_token,
-    ffi.Pointer<wire_uint_8_list> jwt,
-    ffi.Pointer<wire_uint_8_list> group_id,
-    ffi.Pointer<wire_uint_8_list> group_as_member,
-    ffi.Pointer<wire_uint_8_list> cat_id,
-    ffi.Pointer<wire_uint_8_list> last_fetched_time,
-    ffi.Pointer<wire_uint_8_list> last_fetched_group_id,
-    int limit,
-  ) {
-    return _wire_content_fetch_for_group(
-      port_,
-      base_url,
-      auth_token,
-      jwt,
-      group_id,
-      group_as_member,
-      cat_id,
-      last_fetched_time,
-      last_fetched_group_id,
-      limit,
-    );
-  }
-
-  late final _wire_content_fetch_for_groupPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Int32)>>('wire_content_fetch_for_group');
-  late final _wire_content_fetch_for_group =
-      _wire_content_fetch_for_groupPtr.asFunction<
-          void Function(
-              int,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              ffi.Pointer<wire_uint_8_list>,
-              int)>();
 
   void wire_file_download_file_meta(
     int port_,
