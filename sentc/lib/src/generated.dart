@@ -1025,6 +1025,22 @@ abstract class SentcFlutter {
 
   FlutterRustBridgeTaskConstMeta get kDecryptSymKeyByPrivateKeyConstMeta;
 
+  Future<String> doneFetchSymKey(
+      {required String masterKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyConstMeta;
+
+  Future<String> doneFetchSymKeyByPrivateKey(
+      {required String privateKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyByPrivateKeyConstMeta;
+
   Future<List<String>> createSearchableRaw(
       {required String key,
       required String data,
@@ -5148,6 +5164,56 @@ class SentcFlutterImpl implements SentcFlutter {
       const FlutterRustBridgeTaskConstMeta(
         debugName: "decrypt_sym_key_by_private_key",
         argNames: ["privateKey", "encryptedSymmetricKeyInfo"],
+      );
+
+  Future<String> doneFetchSymKey(
+      {required String masterKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(masterKey);
+    var arg1 = _platform.api2wire_String(serverOut);
+    var arg2 = nonRegistered;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_done_fetch_sym_key(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_String,
+      parseErrorData: _wire2api_FrbAnyhowException,
+      constMeta: kDoneFetchSymKeyConstMeta,
+      argValues: [masterKey, serverOut, nonRegistered],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "done_fetch_sym_key",
+        argNames: ["masterKey", "serverOut", "nonRegistered"],
+      );
+
+  Future<String> doneFetchSymKeyByPrivateKey(
+      {required String privateKey,
+      required String serverOut,
+      required bool nonRegistered,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(privateKey);
+    var arg1 = _platform.api2wire_String(serverOut);
+    var arg2 = nonRegistered;
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner
+          .wire_done_fetch_sym_key_by_private_key(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_String,
+      parseErrorData: _wire2api_FrbAnyhowException,
+      constMeta: kDoneFetchSymKeyByPrivateKeyConstMeta,
+      argValues: [privateKey, serverOut, nonRegistered],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kDoneFetchSymKeyByPrivateKeyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "done_fetch_sym_key_by_private_key",
+        argNames: ["privateKey", "serverOut", "nonRegistered"],
       );
 
   Future<List<String>> createSearchableRaw(
@@ -9990,6 +10056,57 @@ class SentcFlutterWire implements FlutterRustBridgeWireBase {
       _wire_decrypt_sym_key_by_private_keyPtr.asFunction<
           void Function(int, ffi.Pointer<wire_uint_8_list>,
               ffi.Pointer<wire_uint_8_list>)>();
+
+  void wire_done_fetch_sym_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> master_key,
+    ffi.Pointer<wire_uint_8_list> server_out,
+    bool non_registered,
+  ) {
+    return _wire_done_fetch_sym_key(
+      port_,
+      master_key,
+      server_out,
+      non_registered,
+    );
+  }
+
+  late final _wire_done_fetch_sym_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool)>>('wire_done_fetch_sym_key');
+  late final _wire_done_fetch_sym_key = _wire_done_fetch_sym_keyPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, bool)>();
+
+  void wire_done_fetch_sym_key_by_private_key(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> private_key,
+    ffi.Pointer<wire_uint_8_list> server_out,
+    bool non_registered,
+  ) {
+    return _wire_done_fetch_sym_key_by_private_key(
+      port_,
+      private_key,
+      server_out,
+      non_registered,
+    );
+  }
+
+  late final _wire_done_fetch_sym_key_by_private_keyPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Bool)>>('wire_done_fetch_sym_key_by_private_key');
+  late final _wire_done_fetch_sym_key_by_private_key =
+      _wire_done_fetch_sym_key_by_private_keyPtr.asFunction<
+          void Function(int, ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>, bool)>();
 
   void wire_create_searchable_raw(
     int port_,
