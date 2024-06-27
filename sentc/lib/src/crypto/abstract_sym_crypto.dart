@@ -177,21 +177,6 @@ abstract class AbstractSymCrypto {
 
   //____________________________________________________________________________________________________________________
 
-  Future<SymKey> registerKey() async {
-    final keyData = await getSymKeyToEncrypt();
-
-    final jwt = await getJwt();
-
-    final out = await Sentc.getApi().generateAndRegisterSymKey(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      jwt: jwt,
-      masterKey: keyData.key,
-    );
-
-    return SymKey(baseUrl, appToken, out.key, out.keyId, keyData.id, await getSignKey());
-  }
-
   Future<NonRegisteredKeyOut> generateNonRegisteredKey() async {
     final keyData = await getSymKeyToEncrypt();
 
@@ -208,12 +193,6 @@ abstract class AbstractSymCrypto {
       ),
       out.encryptedKey,
     );
-  }
-
-  Future<SymKey> fetchKey(String keyId, String masterKeyId) async {
-    final key = await getSymKeyById(masterKeyId);
-
-    return fetchSymKey(baseUrl, appToken, keyId, key, masterKeyId, await getSignKey());
   }
 
   Future<SymKey> getNonRegisteredKey(String masterKeyId, String key) async {

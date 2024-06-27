@@ -143,20 +143,6 @@ abstract class AbstractAsymCrypto {
 
   //____________________________________________________________________________________________________________________
 
-  Future<SymKey> registerKey(String replyId) async {
-    final key = await getPublicKey(replyId);
-    final jwt = await getJwt();
-
-    final out = await Sentc.getApi().generateAndRegisterSymKeyByPublicKey(
-      baseUrl: baseUrl,
-      authToken: appToken,
-      jwt: jwt,
-      publicKey: key.publicKey,
-    );
-
-    return SymKey(baseUrl, appToken, out.key, out.keyId, key.publicKeyId, await getSignKey());
-  }
-
   Future<NonRegisteredKeyOut> generateNonRegisteredKey(String replyId) async {
     final key = await getPublicKey(replyId);
 
@@ -173,12 +159,6 @@ abstract class AbstractAsymCrypto {
       ),
       out.encryptedKey,
     );
-  }
-
-  Future<SymKey> fetchGeneratedKey(String keyId, String masterKeyId) async {
-    final key = await getPrivateKey(masterKeyId);
-
-    return fetchSymKeyByPrivateKey(baseUrl, appToken, keyId, key, masterKeyId, await getSignKey());
   }
 
   Future<SymKey> getNonRegisteredKey(String masterKeyId, String key) async {

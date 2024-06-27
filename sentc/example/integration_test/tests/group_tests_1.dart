@@ -372,12 +372,6 @@ void main() {
     });
   });
 
-  testWidgets("fetch content in the group", (widgetTester) async {
-    final list = await sentcGroup.fetchContent(catId: "jo");
-
-    expect(list.length, 0);
-  });
-
   group("child group", () {
     testWidgets("create a child group", (widgetTester) async {
       final id = await sentcGroup.createChildGroup();
@@ -507,57 +501,6 @@ void main() {
 
       expect(decrypt1, string);
       expect(decrypt2, string);
-    });
-  });
-
-  group("register sym key", () {
-    late SymKey registeredKey;
-    late String encryptedString;
-
-    testWidgets("create a generated key from a group", (widgetTester) async {
-      registeredKey = await sentcGroup.registerKey();
-
-      encryptedString = await registeredKey.encryptString("string");
-    });
-
-    testWidgets("fetch registered key", (widgetTester) async {
-      final key = await groupForUser1.fetchKey(registeredKey.keyId, registeredKey.masterKeyId);
-
-      final decryptedStr = await key.decryptString(encryptedString);
-
-      expect(decryptedStr, "string");
-
-      //fetch key again to check if it is cached
-      //test the cached key to decrypt
-      final key1 = await groupForUser1.fetchKey(registeredKey.keyId, registeredKey.masterKeyId);
-
-      final decryptedStr1 = await key1.decryptString(encryptedString);
-
-      expect(decryptedStr1, "string");
-    });
-
-    testWidgets("not delete the sym key when user got no access", (widgetTester) async {
-      //no error but the key must be still there
-      await registeredKey.deleteKey(await user1.getJwt());
-
-      //fetch a non-registered version
-      final keyCheck = await sentcGroup.fetchKey(registeredKey.keyId, registeredKey.masterKeyId);
-      expect(keyCheck.keyId, registeredKey.keyId);
-    });
-
-    testWidgets("delete the sym key", (widgetTester) async {
-      await registeredKey.deleteKey(await user0.getJwt());
-
-      final storage = Sentc.getStorage();
-      await storage.delete("sym_key_id_${registeredKey.keyId}");
-
-      try {
-        await sentcGroup.fetchKey(registeredKey.keyId, registeredKey.masterKeyId);
-      } catch (e) {
-        final err = SentcError.fromError(e);
-
-        expect(err.status, "server_400");
-      }
     });
   });
 

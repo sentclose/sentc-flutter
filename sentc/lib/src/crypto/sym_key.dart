@@ -1,71 +1,6 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:sentc/sentc.dart';
-
-Future<SymKey> fetchSymKey(
-  String baseUrl,
-  String appToken,
-  String keyId,
-  String masterKey,
-  String masterKeyId,
-  String signKey,
-) async {
-  final storage = Sentc.getStorage();
-
-  final cacheKey = "sym_key_id_$keyId";
-
-  final symKeyRawString = await storage.getItem(cacheKey);
-
-  if (symKeyRawString != null) {
-    return SymKey.fromJson(jsonDecode(symKeyRawString), signKey, baseUrl, appToken);
-  }
-
-  final out = await Sentc.getApi().getSymKeyById(
-    baseUrl: baseUrl,
-    authToken: appToken,
-    keyId: keyId,
-    masterKey: masterKey,
-  );
-
-  final symKey = SymKey(baseUrl, appToken, out, keyId, masterKeyId, signKey);
-
-  await storage.set(cacheKey, jsonEncode(symKey));
-
-  return symKey;
-}
-
-Future<SymKey> fetchSymKeyByPrivateKey(
-  String baseUrl,
-  String appToken,
-  String keyId,
-  String masterKey,
-  String masterKeyId,
-  String signKey,
-) async {
-  final storage = Sentc.getStorage();
-
-  final cacheKey = "sym_key_id_$keyId";
-
-  final symKeyRawString = await storage.getItem(cacheKey);
-
-  if (symKeyRawString != null) {
-    return SymKey.fromJson(jsonDecode(symKeyRawString), signKey, baseUrl, appToken);
-  }
-
-  final out = await Sentc.getApi().getSymKeyByIdByPrivateKey(
-    baseUrl: baseUrl,
-    authToken: appToken,
-    keyId: keyId,
-    privateKey: masterKey,
-  );
-
-  final symKey = SymKey(baseUrl, appToken, out, keyId, masterKeyId, signKey);
-
-  await storage.set(cacheKey, jsonEncode(symKey));
-
-  return symKey;
-}
 
 Future<SymKey> getNonRegisteredKey(String masterKey, String key, String masterKeyId, String signKey) async {
   final keyOut = await Sentc.getApi().doneFetchSymKey(masterKey: masterKey, serverOut: key, nonRegistered: true);
@@ -159,13 +94,5 @@ class SymKey {
 
   Future<String> decryptString(String data, [String? verifyKey]) {
     return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
-  }
-
-  Future<void> deleteKey(String jwt) {
-    if (keyId == "non_register") {
-      return Future.value();
-    }
-
-    return Sentc.getApi().deleteSymKey(baseUrl: baseUrl, authToken: appToken, jwt: jwt, keyId: keyId);
   }
 }
