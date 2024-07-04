@@ -1,3 +1,8 @@
+## 0.13.0
+
+- fixed kyber and x25519
+- slim the code
+
 ## 0.12.0
 
 - added offline support for encrypt and decrypt functions for group and user
