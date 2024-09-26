@@ -12,7 +12,11 @@ void main() {
   const pw = "12345";
 
   late User user0, user1, user2;
-  late Group sentcGroup, group1, group2, connectedGroup, childGroupConnectedGroup;
+  late Group sentcGroup,
+      group1,
+      group2,
+      connectedGroup,
+      childGroupConnectedGroup;
 
   setUpAll(() async {
     final init = await Sentc.init(
@@ -52,18 +56,24 @@ void main() {
 
   testWidgets("do a key rotation in the connected group", (widgetTester) async {
     final storage = Sentc.getStorage();
-    final oldUserJson = await storage.getItem("group_data_user_${sentcGroup.groupId}_id_${connectedGroup.groupId}");
+    final oldUserJson = await storage.getItem(
+        "group_data_user_${sentcGroup.groupId}_id_${connectedGroup.groupId}");
     final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
     await connectedGroup.keyRotation();
 
-    final newUser1Json = await storage.getItem("group_data_user_${sentcGroup.groupId}_id_${connectedGroup.groupId}");
+    final newUser1Json = await storage.getItem(
+        "group_data_user_${sentcGroup.groupId}_id_${connectedGroup.groupId}");
     final newNewKey = jsonDecode(newUser1Json!)["newestKeyId"];
+
+    await Future.delayed(const Duration(milliseconds: 200));
 
     expect((oldNewestKey == newNewKey), false);
   });
 
-  testWidgets("not access the connected group directly when user don't got direct access", (widgetTester) async {
+  testWidgets(
+      "not access the connected group directly when user don't got direct access",
+      (widgetTester) async {
     try {
       await user0.getGroup(connectedGroup.groupId);
     } catch (e) {
@@ -73,13 +83,17 @@ void main() {
     }
   });
 
-  testWidgets("access the connected group over the user class", (widgetTester) async {
-    final groupC = await user0.getGroup(connectedGroup.groupId, sentcGroup.groupId);
+  testWidgets("access the connected group over the user class",
+      (widgetTester) async {
+    final groupC =
+        await user0.getGroup(connectedGroup.groupId, sentcGroup.groupId);
 
     expect(groupC.accessByGroupAsMember, connectedGroup.accessByGroupAsMember);
   });
 
-  testWidgets("not get the group as member when suer got no access to the connected group", (widgetTester) async {
+  testWidgets(
+      "not get the group as member when suer got no access to the connected group",
+      (widgetTester) async {
     try {
       await user1.getGroup(connectedGroup.groupId, sentcGroup.groupId);
     } catch (e) {
@@ -89,7 +103,8 @@ void main() {
     }
   });
 
-  testWidgets("create a child group from the connected group", (widgetTester) async {
+  testWidgets("create a child group from the connected group",
+      (widgetTester) async {
     final id = await connectedGroup.createChildGroup();
 
     childGroupConnectedGroup = await connectedGroup.getChildGroup(id);
@@ -98,13 +113,17 @@ void main() {
     expect(childGroupConnectedGroup.accessByGroupAsMember, sentcGroup.groupId);
   });
 
-  testWidgets("invite a user to the other group to check access to connected group", (widgetTester) async {
+  testWidgets(
+      "invite a user to the other group to check access to connected group",
+      (widgetTester) async {
     await sentcGroup.inviteAuto(user1.userId);
 
     //delete the old caches to check access without caches
     final storage = Sentc.getStorage();
-    final key = "group_data_user_${sentcGroup.groupId}_id_${childGroupConnectedGroup.groupId}";
-    final key1 = "group_data_user_${sentcGroup.groupId}_id_${connectedGroup.groupId}";
+    final key =
+        "group_data_user_${sentcGroup.groupId}_id_${childGroupConnectedGroup.groupId}";
+    final key1 =
+        "group_data_user_${sentcGroup.groupId}_id_${connectedGroup.groupId}";
 
     await storage.delete(key);
     await storage.delete(key1);
@@ -113,7 +132,8 @@ void main() {
   testWidgets(
     "access the child group of the connected group without loading the other group before",
     (widgetTester) async {
-      final groupCC = await user1.getGroup(childGroupConnectedGroup.groupId, sentcGroup.groupId);
+      final groupCC = await user1.getGroup(
+          childGroupConnectedGroup.groupId, sentcGroup.groupId);
 
       expect(groupCC.accessByGroupAsMember, sentcGroup.groupId);
     },
@@ -133,7 +153,8 @@ void main() {
     expect(groupC.accessByGroupAsMember, group2.groupId);
   });
 
-  testWidgets("send join req from group 2 to the new group", (widgetTester) async {
+  testWidgets("send join req from group 2 to the new group",
+      (widgetTester) async {
     await group1.groupJoinRequest(connectedGroup.groupId);
 
     final joins = await group1.sentJoinReq();
@@ -162,13 +183,15 @@ void main() {
     await connectedGroup.acceptJoinRequest(group1.groupId, 2);
   });
 
-  testWidgets("access the group after accepting group join req", (widgetTester) async {
+  testWidgets("access the group after accepting group join req",
+      (widgetTester) async {
     final groupC = await group1.getConnectedGroup(connectedGroup.groupId);
 
     expect(groupC.accessByGroupAsMember, group1.groupId);
   });
 
-  testWidgets("get all connected groups where the group is member", (widgetTester) async {
+  testWidgets("get all connected groups where the group is member",
+      (widgetTester) async {
     final list = await group1.getGroups();
 
     expect(list.length, 1);
