@@ -1,3 +1,7 @@
+## 0.13.2
+
+- added file handling for users
+
 ## 0.13.0
 
 - fixed kyber and x25519
