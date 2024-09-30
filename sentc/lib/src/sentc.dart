@@ -326,7 +326,7 @@ class Sentc {
 
     final fetchedKey = await getApi().userFetchPublicKey(baseUrl: baseUrl, authToken: appToken, userId: userId);
 
-    final k = PublicKeyData(fetchedKey.publicKey, fetchedKey.publicKeyId, fetchedKey.publicKeySigKeyId, false);
+    final k = PublicKeyData(fetchedKey.publicKeyId, fetchedKey.publicKey, fetchedKey.publicKeySigKeyId, false);
 
     await storage.set("user_public_key_$userId", jsonEncode(k));
 
