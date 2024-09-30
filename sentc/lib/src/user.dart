@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:sentc/src/crypto/abstract_asym_crypto.dart';
 import 'package:sentc/src/group.dart' as group;
@@ -838,5 +839,156 @@ class User extends AbstractAsymCrypto {
       fileId: fileId,
       contentKey: contentKey.key,
     );
+  }
+
+  //____________________________________________________________________________________________________________________
+  //file handling
+
+  Future<FilePrepareCreateOutput> prepareRegisterFile(File file, [String? replyId]) async {
+    final otherUserId = replyId;
+    replyId = replyId ?? userId;
+
+    final keyOut = await generateNonRegisteredKey(replyId);
+    final key = keyOut.key;
+
+    final uploader = Uploader(baseUrl, appToken, this, null, otherUserId, null, null);
+
+    final out = await uploader.prepareFileRegister(file, key.key, keyOut.encryptedKey, key.masterKeyId);
+
+    return FilePrepareCreateOutput(
+      encryptedFileName: out.encryptedFileName,
+      key: key,
+      masterKeyId: key.masterKeyId,
+      serverInput: out.serverInput,
+    );
+  }
+
+  Future<FileDoneRegister> doneFileRegister(String serverOutput) {
+    final uploader = Uploader(baseUrl, appToken, this, null, null, null, null);
+
+    return uploader.doneFileRegister(serverOutput);
+  }
+
+  Future<void> uploadFile({
+    required File file,
+    required SymKey contentKey,
+    required String sessionId,
+    bool sign = false,
+    void Function(double progress)? uploadCallback,
+  }) {
+    final uploader = Uploader(baseUrl, appToken, this, null, null, uploadCallback, null);
+
+    return uploader.checkFileUpload(file, contentKey.key, sessionId, sign);
+  }
+
+  //____________________________________________________________________________________________________________________
+
+  Future<FileCreateOutput> createFileWithPath({
+    required String path,
+    bool sign = false,
+    String? replyId,
+    void Function(double progress)? uploadCallback,
+  }) {
+    final file = File(path);
+
+    return createFile(file: file, replyId: replyId, sign: sign, uploadCallback: uploadCallback);
+  }
+
+  Future<FileCreateOutput> createFile({
+    required File file,
+    bool sign = false,
+    String? replyId,
+    void Function(double progress)? uploadCallback,
+  }) async {
+    final otherUserId = replyId;
+    replyId = replyId ?? userId;
+
+    final keyOut = await generateNonRegisteredKey(replyId);
+    final key = keyOut.key;
+
+    final uploader = Uploader(baseUrl, appToken, this, null, otherUserId, uploadCallback, null);
+
+    final out = await uploader.uploadFile(file, key.key, keyOut.encryptedKey, key.masterKeyId, sign);
+
+    return FileCreateOutput(out.fileId, key.masterKeyId, out.encryptedFileName);
+  }
+
+  Future<DownloadResult> _getFileMetaInfo(
+    String fileId,
+    Downloader downloader, [
+    String? verifyKey,
+  ]) async {
+    final fileMeta = await downloader.downloadFileMetaInformation(fileId);
+
+    final key = await this.getNonRegisteredKey(fileMeta.masterKeyId, fileMeta.encryptedKey);
+
+    if (fileMeta.encryptedFileName != null && fileMeta.encryptedFileName != "") {
+      fileMeta.fileName = await key.decryptString(fileMeta.encryptedFileName!, verifyKey);
+    }
+
+    return DownloadResult(fileMeta, key);
+  }
+
+  Future<DownloadResult> downloadFileMetaInfo(String fileId, [String? verifyKey]) {
+    final downloader = Downloader(baseUrl, appToken, this, null, null);
+
+    return _getFileMetaInfo(fileId, downloader, verifyKey);
+  }
+
+  Future<void> downloadFileWithMetaInfo({
+    required File file,
+    required SymKey key,
+    required FileMetaInformation fileMeta,
+    String? verifyKey,
+    void Function(double progress)? updateProgressCb,
+  }) {
+    final downloader = Downloader(baseUrl, appToken, this, null, null);
+
+    return downloader.downloadFileParts(file, fileMeta.partList, key.key, updateProgressCb, verifyKey);
+  }
+
+  Future<DownloadResult> downloadFileWithFile({
+    required File file,
+    required String fileId,
+    String? verifyKey,
+    void Function(double progress)? updateProgressCb,
+  }) async {
+    final downloader = Downloader(baseUrl, appToken, this, null, null);
+
+    final fileMeta = await _getFileMetaInfo(fileId, downloader, verifyKey);
+
+    await downloader.downloadFileParts(file, fileMeta.meta.partList, fileMeta.key.key, updateProgressCb, verifyKey);
+
+    return fileMeta;
+  }
+
+  Future<DownloadResult> downloadFile({
+    required String path,
+    required String fileId,
+    String? verifyKey,
+    void Function(double progress)? updateProgressCb,
+  }) async {
+    final downloader = Downloader(baseUrl, appToken, this, null, null);
+
+    final fileMeta = await _getFileMetaInfo(fileId, downloader, verifyKey);
+
+    final fileName = fileMeta.meta.fileName ?? "unnamed";
+    File file = File("$path${Platform.pathSeparator}$fileName");
+
+    if (await file.exists()) {
+      final availableFileName = await findAvailableFileName(file.path);
+
+      file = File(availableFileName);
+    }
+
+    await downloader.downloadFileParts(file, fileMeta.meta.partList, fileMeta.key.key, updateProgressCb, verifyKey);
+
+    return fileMeta;
+  }
+
+  Future<void> deleteFile(String fileId) async {
+    final jwt = await getJwt();
+
+    return Sentc.getApi().fileDeleteFile(baseUrl: baseUrl, authToken: appToken, jwt: jwt, fileId: fileId);
   }
 }
