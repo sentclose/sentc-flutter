@@ -718,23 +718,41 @@ class User extends AbstractAsymCrypto {
 
   //____________________________________________________________________________________________________________________
 
-  Future<String> prepareGroupCreate() {
-    return Sentc.getApi().groupPrepareCreateGroup(creatorsPublicKey: getNewestPublicKey());
+  Future<String> prepareGroupCreate([bool sign = false]) {
+    String? signKey;
+
+    if (sign) {
+      signKey = getNewestSignKey();
+    }
+
+    return Sentc.getApi().groupPrepareCreateGroup(
+      creatorsPublicKey: getNewestPublicKey(),
+      starter: userId,
+      signKey: signKey,
+    );
   }
 
-  Future<String> createGroup() async {
+  Future<String> createGroup([bool sign = false]) async {
     final jwt = await getJwt();
+
+    String? signKey;
+
+    if (sign) {
+      signKey = getNewestSignKey();
+    }
 
     return Sentc.getApi().groupCreateGroup(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
       creatorsPublicKey: getNewestPublicKey(),
+      starter: userId,
+      signKey: signKey,
     );
   }
 
-  Future<group.Group> getGroup(String groupId, [String? groupAsMember]) {
-    return group.getGroup(groupId, baseUrl, appToken, this, false, groupAsMember);
+  Future<group.Group> getGroup(String groupId, [String? groupAsMember, int verify = 0]) {
+    return group.getGroup(groupId, baseUrl, appToken, this, false, groupAsMember, verify);
   }
 
   Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
