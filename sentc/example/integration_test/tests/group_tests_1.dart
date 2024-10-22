@@ -15,12 +15,7 @@ void main() {
 
   late User user0, user1, user2, user3;
 
-  late Group sentcGroup,
-      groupForUser1,
-      groupForUser2,
-      childGroup,
-      childGroupForUser2,
-      childGroupForUser3;
+  late Group sentcGroup, groupForUser1, groupForUser2, childGroup, childGroupForUser2, childGroupForUser3;
 
   setUpAll(() async {
     final init = await Sentc.init(
@@ -44,7 +39,7 @@ void main() {
   });
 
   testWidgets("create a group", (widgetTester) async {
-    final groupId = await user0.createGroup();
+    final groupId = await user0.createGroup(true);
 
     sentcGroup = await user0.getGroup(groupId);
 
@@ -57,10 +52,9 @@ void main() {
     expect(out.length, 1);
   });
 
-  testWidgets("not get the group when user is not in the group",
-      (widgetTester) async {
+  testWidgets("not get the group when user is not in the group", (widgetTester) async {
     try {
-      await user1.getGroup(sentcGroup.groupId);
+      await user1.getGroup(sentcGroup.groupId, null, 2);
     } catch (e) {
       final err = SentcError.fromError(e);
 
@@ -91,8 +85,7 @@ void main() {
     expect(list.length, 0);
   });
 
-  testWidgets("invite the user again to accept the invite",
-      (widgetTester) async {
+  testWidgets("invite the user again to accept the invite", (widgetTester) async {
     await sentcGroup.invite(user1.userId);
   });
 
@@ -108,7 +101,7 @@ void main() {
 
     expect(out.length, 1);
 
-    groupForUser1 = await user1.getGroup(out[0].groupId);
+    groupForUser1 = await user1.getGroup(out[0].groupId, null, 2);
 
     expect(groupForUser1.groupId, sentcGroup.groupId);
   });
@@ -142,8 +135,7 @@ void main() {
 
   group("basic encryption", () {
     testWidgets("encrypt a string for the group", (widgetTester) async {
-      encryptedStringByUser0 =
-          await sentcGroup.encryptString("hello there £ Я a a 👍");
+      encryptedStringByUser0 = await sentcGroup.encryptString("hello there £ Я a a 👍");
     });
 
     testWidgets("decrypt string", (widgetTester) async {
@@ -159,8 +151,7 @@ void main() {
 
       expect(de, "hello there £ Я a a 👍");
 
-      final decrypted =
-          await sentcGroup.decryptStringSync(encryptedStringByUser0);
+      final decrypted = await sentcGroup.decryptStringSync(encryptedStringByUser0);
 
       expect(decrypted, "hello there £ Я a a 👍");
     });
@@ -170,14 +161,12 @@ void main() {
     testWidgets("start key rotation", (widgetTester) async {
       final storage = Sentc.getStorage();
 
-      final oldUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await sentcGroup.keyRotation();
 
-      final newUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final newUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final newNewestKey = jsonDecode(newUserJson!)["newestKeyId"];
 
       await Future.delayed(const Duration(milliseconds: 200));
@@ -190,20 +179,17 @@ void main() {
 
       //should be the newest key
       final storage = Sentc.getStorage();
-      final newUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final newUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final newNewestKey = jsonDecode(newUserJson!)["newestKeyId"];
 
       expect(key.id, newNewestKey);
     });
 
     testWidgets("test encrypt after key rotation", (widgetTester) async {
-      encryptedStringByUser0AfterKr =
-          await sentcGroup.encryptString("hello there £ Я a a 👍 1");
+      encryptedStringByUser0AfterKr = await sentcGroup.encryptString("hello there £ Я a a 👍 1");
     });
 
-    testWidgets("not encrypt the string before finish key rotation",
-        (widgetTester) async {
+    testWidgets("not encrypt the string before finish key rotation", (widgetTester) async {
       try {
         await groupForUser1.decryptString(encryptedStringByUser0AfterKr);
       } catch (e) {
@@ -213,18 +199,15 @@ void main() {
       }
     });
 
-    testWidgets("finish the key rotation for the 2nd user",
-        (widgetTester) async {
+    testWidgets("finish the key rotation for the 2nd user", (widgetTester) async {
       final storage = Sentc.getStorage();
 
-      final oldUserJson = await storage.getItem(
-          "group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await groupForUser1.finishKeyRotation();
 
-      final newUserJson = await storage.getItem(
-          "group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
+      final newUserJson = await storage.getItem("group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
       final newNewestKey = jsonDecode(newUserJson!)["newestKeyId"];
 
       expect((oldNewestKey == newNewestKey), false);
@@ -236,38 +219,31 @@ void main() {
 
     expect(decrypted, "hello there £ Я a a 👍");
 
-    final decrypted1 =
-        await groupForUser1.decryptString(encryptedStringByUser0AfterKr);
+    final decrypted1 = await groupForUser1.decryptString(encryptedStringByUser0AfterKr);
 
     expect(decrypted1, "hello there £ Я a a 👍 1");
   });
 
   group("encrypt with sign", () {
     testWidgets("encrypt a string with signing", (widgetTester) async {
-      encryptedStringByUser0WithSign =
-          await sentcGroup.encryptString("hello there £ Я a a 👍", true);
+      encryptedStringByUser0WithSign = await sentcGroup.encryptString("hello there £ Я a a 👍", true);
 
       //should decrypt without verify
-      final decrypt =
-          await sentcGroup.decryptString(encryptedStringByUser0WithSign);
+      final decrypt = await sentcGroup.decryptString(encryptedStringByUser0WithSign);
       expect(decrypt, "hello there £ Я a a 👍");
 
       //now decrypt with verify
-      final decrypt1 = await sentcGroup.decryptString(
-          encryptedStringByUser0WithSign, true, user0.userId);
+      final decrypt1 = await sentcGroup.decryptString(encryptedStringByUser0WithSign, true, user0.userId);
 
       expect(decrypt1, "hello there £ Я a a 👍");
     });
 
-    testWidgets("decrypt the string with verify for other user",
-        (widgetTester) async {
-      final decrypt =
-          await groupForUser1.decryptString(encryptedStringByUser0WithSign);
+    testWidgets("decrypt the string with verify for other user", (widgetTester) async {
+      final decrypt = await groupForUser1.decryptString(encryptedStringByUser0WithSign);
       expect(decrypt, "hello there £ Я a a 👍");
 
       //now decrypt
-      final decrypt1 = await groupForUser1.decryptString(
-          encryptedStringByUser0WithSign, true, user0.userId);
+      final decrypt1 = await groupForUser1.decryptString(encryptedStringByUser0WithSign, true, user0.userId);
       expect(decrypt1, "hello there £ Я a a 👍");
     });
   });
@@ -319,8 +295,7 @@ void main() {
       await user2.groupJoinRequest(sentcGroup.groupId);
     });
 
-    testWidgets("not accept the join req without the rights",
-        (widgetTester) async {
+    testWidgets("not accept the join req without the rights", (widgetTester) async {
       try {
         await groupForUser1.acceptJoinRequest(user2.userId);
       } catch (e) {
@@ -344,13 +319,11 @@ void main() {
     });
 
     testWidgets("decrypt the strings with the new user", (widgetTester) async {
-      final decrypt =
-          await groupForUser2.decryptString(encryptedStringByUser0WithSign);
+      final decrypt = await groupForUser2.decryptString(encryptedStringByUser0WithSign);
       expect(decrypt, "hello there £ Я a a 👍");
 
       //now verify
-      final decrypt1 = await groupForUser2.decryptString(
-          encryptedStringByUser0WithSign, true, user0.userId);
+      final decrypt1 = await groupForUser2.decryptString(encryptedStringByUser0WithSign, true, user0.userId);
       expect(decrypt1, "hello there £ Я a a 👍");
     });
   });
@@ -391,8 +364,7 @@ void main() {
       await groupForUser1.kickUser(user2.userId);
     });
 
-    testWidgets("not get the group data after user was kicked",
-        (widgetTester) async {
+    testWidgets("not get the group data after user was kicked", (widgetTester) async {
       try {
         await user2.getGroup(sentcGroup.groupId);
       } catch (e) {
@@ -421,28 +393,23 @@ void main() {
       childGroup = await sentcGroup.getChildGroup(id);
     });
 
-    testWidgets("get the child group as member of the parent group",
-        (widgetTester) async {
+    testWidgets("get the child group as member of the parent group", (widgetTester) async {
       final group = await groupForUser1.getChildGroup(childGroup.groupId);
 
       final storage = Sentc.getStorage();
-      final newUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
+      final newUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
       final newNewestKey = jsonDecode(newUserJson!)["newestKeyId"];
 
-      final newUser1Json = await storage
-          .getItem("group_data_user_${user1.userId}_id_${group.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user1.userId}_id_${group.groupId}");
       final newNewestKey1 = jsonDecode(newUser1Json!)["newestKeyId"];
 
       expect(newNewestKey, newNewestKey1);
     });
 
-    testWidgets("invite user manually with prepare to child group",
-        (widgetTester) async {
+    testWidgets("invite user manually with prepare to child group", (widgetTester) async {
       final invite = await childGroup.prepareKeysForNewMember(user2.userId, 2);
 
-      final url =
-          "${dotenv.env["SENTC_TEST_URL"]}/api/v1/group/${childGroup.groupId}/invite_auto/${user2.userId}";
+      final url = "${dotenv.env["SENTC_TEST_URL"]}/api/v1/group/${childGroup.groupId}/invite_auto/${user2.userId}";
 
       final jwt = await childGroup.getJwt();
 
@@ -463,8 +430,7 @@ void main() {
       expect(sessionRes.containsKey("session_id"), false);
     });
 
-    testWidgets("fetch the child group for the direct member",
-        (widgetTester) async {
+    testWidgets("fetch the child group for the direct member", (widgetTester) async {
       childGroupForUser2 = await user2.getGroup(childGroup.groupId);
       expect(childGroupForUser2.rank, 2);
     });
@@ -482,12 +448,10 @@ void main() {
       childGroupForUser3 = await user3.getGroup(childGroup.groupId);
 
       final storage = Sentc.getStorage();
-      final newUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
+      final newUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
       final newNewestKey = jsonDecode(newUserJson!)["newestKeyId"];
 
-      final newUser1Json = await storage.getItem(
-          "group_data_user_${user3.userId}_id_${childGroupForUser3.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user3.userId}_id_${childGroupForUser3.groupId}");
       final newNewestKey1 = jsonDecode(newUser1Json!)["newestKeyId"];
 
       expect(newNewestKey, newNewestKey1);
@@ -519,14 +483,12 @@ void main() {
 
     testWidgets("start key rotation in child group", (widgetTester) async {
       final storage = Sentc.getStorage();
-      final oldUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await childGroup.keyRotation();
 
-      final newUser1Json = await storage
-          .getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user0.userId}_id_${childGroup.groupId}");
       newKey = jsonDecode(newUser1Json!)["newestKeyId"];
 
       await Future.delayed(const Duration(milliseconds: 200));
@@ -536,29 +498,24 @@ void main() {
 
     testWidgets("finish key rotation for direct member", (widgetTester) async {
       final storage = Sentc.getStorage();
-      final oldUserJson = await storage.getItem(
-          "group_data_user_${user2.userId}_id_${childGroupForUser2.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user2.userId}_id_${childGroupForUser2.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await childGroupForUser2.finishKeyRotation();
 
-      final newUser1Json = await storage.getItem(
-          "group_data_user_${user2.userId}_id_${childGroupForUser2.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user2.userId}_id_${childGroupForUser2.groupId}");
       final newNewKey = jsonDecode(newUser1Json!)["newestKeyId"];
 
       expect((oldNewestKey == newNewKey), false);
       expect(newNewKey, newKey);
     });
 
-    testWidgets(
-        "not get an error when try to finish an already finished rotation",
-        (widgetTester) async {
+    testWidgets("not get an error when try to finish an already finished rotation", (widgetTester) async {
       //finished because of parent group
       await childGroupForUser3.finishKeyRotation();
     });
 
-    testWidgets("encrypt with the new key for child group",
-        (widgetTester) async {
+    testWidgets("encrypt with the new key for child group", (widgetTester) async {
       const string = "hello there £ Я a a";
 
       final encrypt = await childGroup.encryptString(string);
@@ -577,14 +534,12 @@ void main() {
   group("key rotation with sign", () {
     testWidgets("start key rotation with signed key", (widgetTester) async {
       final storage = Sentc.getStorage();
-      final oldUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await sentcGroup.keyRotation(true);
 
-      final newUser1Json = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final newNewKey = jsonDecode(newUser1Json!)["newestKeyId"];
 
       await Future.delayed(const Duration(milliseconds: 200));
@@ -597,21 +552,17 @@ void main() {
       expect(pKey.id, newNewKey);
 
       //test the key
-      encryptedStringByUser0AfterKr1 =
-          await sentcGroup.encryptString("hello there £ Я a a 👍 1");
+      encryptedStringByUser0AfterKr1 = await sentcGroup.encryptString("hello there £ Я a a 👍 1");
     });
 
-    testWidgets("finish the key rotation for the 2nd user without verify",
-        (widgetTester) async {
+    testWidgets("finish the key rotation for the 2nd user without verify", (widgetTester) async {
       final storage = Sentc.getStorage();
-      final oldUserJson = await storage.getItem(
-          "group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await groupForUser1.finishKeyRotation();
 
-      final newUser1Json = await storage.getItem(
-          "group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
       final newNewKey = jsonDecode(newUser1Json!)["newestKeyId"];
 
       expect((oldNewestKey == newNewKey), false);
@@ -621,23 +572,19 @@ void main() {
 
       expect(decrypt, "hello there £ Я a a 👍");
 
-      final decrypt1 =
-          await groupForUser1.decryptString(encryptedStringByUser0AfterKr1);
+      final decrypt1 = await groupForUser1.decryptString(encryptedStringByUser0AfterKr1);
 
       expect(decrypt1, "hello there £ Я a a 👍 1");
     });
 
-    testWidgets("start key rotation again with signed key",
-        (widgetTester) async {
+    testWidgets("start key rotation again with signed key", (widgetTester) async {
       final storage = Sentc.getStorage();
-      final oldUserJson = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
       await sentcGroup.keyRotation(true);
 
-      final newUser1Json = await storage
-          .getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user0.userId}_id_${sentcGroup.groupId}");
       final newNewKey = jsonDecode(newUser1Json!)["newestKeyId"];
 
       await Future.delayed(const Duration(milliseconds: 200));
@@ -650,21 +597,17 @@ void main() {
       expect(pKey.id, newNewKey);
 
       //test the key
-      encryptedStringByUser0AfterKr1 =
-          await sentcGroup.encryptString("hello there £ Я a a 👍 1");
+      encryptedStringByUser0AfterKr1 = await sentcGroup.encryptString("hello there £ Я a a 👍 1");
     });
 
-    testWidgets("finish the key rotation for the 2nd user with verify",
-        (widgetTester) async {
+    testWidgets("finish the key rotation for the 2nd user with verify", (widgetTester) async {
       final storage = Sentc.getStorage();
-      final oldUserJson = await storage.getItem(
-          "group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
+      final oldUserJson = await storage.getItem("group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
       final oldNewestKey = jsonDecode(oldUserJson!)["newestKeyId"];
 
-      await groupForUser1.finishKeyRotation(true);
+      await groupForUser1.finishKeyRotation(2);
 
-      final newUser1Json = await storage.getItem(
-          "group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
+      final newUser1Json = await storage.getItem("group_data_user_${user1.userId}_id_${groupForUser1.groupId}");
       final newNewKey = jsonDecode(newUser1Json!)["newestKeyId"];
 
       expect((oldNewestKey == newNewKey), false);
@@ -673,8 +616,7 @@ void main() {
 
       expect(decrypt, "hello there £ Я a a 👍");
 
-      final decrypt1 =
-          await groupForUser1.decryptString(encryptedStringByUser0AfterKr1);
+      final decrypt1 = await groupForUser1.decryptString(encryptedStringByUser0AfterKr1);
 
       expect(decrypt1, "hello there £ Я a a 👍 1");
     });
