@@ -1,3 +1,7 @@
+## 0.15.0
+
+- added signed group keys
+
 ## 0.13.2
 
 - added file handling for users
