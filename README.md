@@ -2,7 +2,7 @@
 
 from sentclose.
 
-Sentc is an easy to use end-to-end encryption sdk. It can be used for any kind of data.
+Sentc is easy to use end-to-end encryption sdk. It can be used for any kind of data.
 
 ## Example
 
