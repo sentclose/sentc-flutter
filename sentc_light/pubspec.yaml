@@ -23,7 +23,7 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
   sentc_common: ^0.10.0
-    #path: ../sentc_common   #local dev
+  #path: ../sentc_common   #local dev
   meta: ^1.9.1
   uuid: ^3.0.7
 
@@ -40,12 +40,12 @@ flutter:
       android:
         package: com.sentclose.sentc_light.sentc_light
         pluginClass: SentcLightPlugin
-#      ios:
-#        pluginClass: SentcLightPlugin
+      ios:
+        pluginClass: SentcLightPlugin
       linux:
         pluginClass: SentcLightPlugin
-#      macos:
-#        pluginClass: SentcLightPlugin
+      macos:
+        pluginClass: SentcLightPlugin
       windows:
         pluginClass: SentcLightPluginCApi
 #      web:
