@@ -30,3 +30,7 @@ migrate_working_dir/
 build/
 
 # use this here to publish the binary files but not in git
+
+Sentc.xcframework
+!Sentc.xcframework.zip
+macos/Frameworks

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 
 import 'package:sentc/sentc.dart';
+import 'package:sentc/src/rust/api/file.dart' as api_file;
 
 class UploadResult {
   final String fileId;
@@ -66,23 +67,23 @@ class Uploader {
     int chunkSize = 1024 * 1024 * 4,
   ]) {
     if (_groupId != null && _groupId != "") {
-      _belongsToId = _groupId!;
+      _belongsToId = _groupId;
       _belongsTo = "\"Group\""; //the double "" are important for rust serde json
     } else if (_otherUserId != null && _otherUserId != "") {
-      _belongsToId = _otherUserId!;
+      _belongsToId = _otherUserId;
       _belongsTo = "\"User\"";
     }
 
     _chunkSize = chunkSize;
   }
 
-  Future<FilePrepareRegister> prepareFileRegister(
+  Future<api_file.FilePrepareRegister> prepareFileRegister(
     File file,
     String contentKey,
     String encryptedContentKey,
     String masterKeyId,
   ) {
-    return Sentc.getApi().filePrepareRegisterFile(
+    return api_file.filePrepareRegisterFile(
       masterKeyId: masterKeyId,
       contentKey: contentKey,
       encryptedContentKey: encryptedContentKey,
@@ -92,13 +93,12 @@ class Uploader {
     );
   }
 
-  Future<FileDoneRegister> doneFileRegister(String serverOutput) {
-    return Sentc.getApi().fileDoneRegisterFile(serverOutput: serverOutput);
+  Future<api_file.FileDoneRegister> doneFileRegister(String serverOutput) {
+    return api_file.fileDoneRegisterFile(serverOutput: serverOutput);
   }
 
   Future<void> checkFileUpload(File file, String contentKey, String sessionId, [bool sign = false]) async {
     final jwt = await _user.getJwt();
-    final api = Sentc.getApi();
 
     String? signKey;
 
@@ -130,7 +130,7 @@ class Uploader {
       final isEnd = start >= fileSize;
 
       if (currentChunk == 1) {
-        nextFileKey = await api.fileUploadPartStart(
+        nextFileKey = await api_file.fileUploadPartStart(
           baseUrl: _baseUrl,
           urlPrefix: urlPrefix,
           authToken: _appToken,
@@ -140,10 +140,10 @@ class Uploader {
           sequence: currentChunk,
           contentKey: contentKey,
           signKey: signKey,
-          part: part,
+          part_: part,
         );
       } else {
-        nextFileKey = await api.fileUploadPart(
+        nextFileKey = await api_file.fileUploadPart(
           baseUrl: _baseUrl,
           urlPrefix: urlPrefix,
           authToken: _appToken,
@@ -153,7 +153,7 @@ class Uploader {
           sequence: currentChunk,
           contentKey: nextFileKey,
           signKey: signKey,
-          part: part,
+          part_: part,
         );
       }
 
@@ -189,7 +189,7 @@ class Uploader {
   ]) async {
     final jwt = await _user.getJwt();
 
-    final out = await Sentc.getApi().fileRegisterFile(
+    final out = await api_file.fileRegisterFile(
       baseUrl: _baseUrl,
       authToken: _appToken,
       jwt: jwt,

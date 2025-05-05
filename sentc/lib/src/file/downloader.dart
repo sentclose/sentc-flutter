@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:sentc/sentc.dart';
 import 'package:path/path.dart' as p;
+import 'package:sentc/src/rust/api/file.dart' as api_file;
 
 /// Gets an available file name to download the file to this location
 Future<String> findAvailableFileName(String path) async {
@@ -23,10 +24,10 @@ class FileMetaInformation {
   final String fileId;
   final String masterKeyId;
   final String? belongsTo;
-  final BelongsToType belongsToType;
+  final api_file.BelongsToType belongsToType;
   final String encryptedKey;
   final String encryptedKeyAlg;
-  final List<FilePartListItem> partList;
+  final List<api_file.FilePartListItem> partList;
   String? fileName;
   final String? encryptedFileName;
 
@@ -70,7 +71,7 @@ class Downloader {
   Future<FileMetaInformation> downloadFileMetaInformation(String fileId) async {
     final jwt = await _user.getJwt();
 
-    final meta = await Sentc.getApi().fileDownloadFileMeta(
+    final meta = await api_file.fileDownloadFileMeta(
       baseUrl: _baseUrl,
       authToken: _appToken,
       jwt: jwt,
@@ -107,10 +108,10 @@ class Downloader {
     );
   }
 
-  Future<List<FilePartListItem>> downloadFilePartList(String fileId, FilePartListItem? lastItem) {
+  Future<List<api_file.FilePartListItem>> downloadFilePartList(String fileId, api_file.FilePartListItem? lastItem) {
     final lastSeq = lastItem?.sequence.toString() ?? "";
 
-    return Sentc.getApi().fileDownloadPartList(
+    return api_file.fileDownloadPartList(
       baseUrl: _baseUrl,
       authToken: _appToken,
       fileId: fileId,
@@ -120,13 +121,11 @@ class Downloader {
 
   Future<void> downloadFileParts(
     File file,
-    List<FilePartListItem> partList,
+    List<api_file.FilePartListItem> partList,
     String contentKey, [
     void Function(double progress)? updateProgressCb,
     String? verifyKey,
   ]) async {
-    final api = Sentc.getApi();
-
     final urlPrefix = Sentc.filePartUrl;
 
     Downloader.cancelDownload = false;
@@ -145,7 +144,7 @@ class Downloader {
 
       try {
         if (i == 0) {
-          final res = await api.fileDownloadAndDecryptFilePartStart(
+          final res = await api_file.fileDownloadAndDecryptFilePartStart(
             baseUrl: _baseUrl,
             urlPrefix: partUrlBase,
             authToken: _appToken,
@@ -157,7 +156,7 @@ class Downloader {
           nextFileKey = res.nextFileKey;
           part = res.file;
         } else {
-          final res = await api.fileDownloadAndDecryptFilePart(
+          final res = await api_file.fileDownloadAndDecryptFilePart(
             baseUrl: _baseUrl,
             urlPrefix: partUrlBase,
             authToken: _appToken,

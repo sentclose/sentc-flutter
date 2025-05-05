@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:sentc/sentc.dart';
+import 'package:sentc/src/rust/api/crypto.dart' as api_crypto;
 
 import 'sym_key.dart' as sym_key;
 
@@ -31,7 +32,7 @@ abstract class AbstractSymCrypto {
 
   Future<String> getJwt();
 
-  Future<CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) async {
+  Future<api_crypto.CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) async {
     final key = await getSymKeyToEncrypt();
 
     String? signKey;
@@ -40,10 +41,10 @@ abstract class AbstractSymCrypto {
       signKey = await getSignKey();
     }
 
-    return Sentc.getApi().encryptRawSymmetric(key: key.key, data: data, signKey: signKey);
+    return api_crypto.encryptRawSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
-  Future<CryptoRawOutput> encryptRawSync(Uint8List data, [bool sign = false]) {
+  Future<api_crypto.CryptoRawOutput> encryptRawSync(Uint8List data, [bool sign = false]) {
     final key = getSymKeyToEncryptSync();
 
     String? signKey;
@@ -52,15 +53,15 @@ abstract class AbstractSymCrypto {
       signKey = getSignKeySync();
     }
 
-    return Sentc.getApi().encryptRawSymmetric(key: key.key, data: data, signKey: signKey);
+    return api_crypto.encryptRawSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
   Future<Uint8List> decryptRaw(String head, Uint8List encryptedData, [String? verifyKey]) async {
-    final deHead = await Sentc.getApi().deserializeHeadFromString(head: head);
+    final deHead = await api_crypto.deserializeHeadFromString(head: head);
 
     final key = await getSymKeyById(deHead.id);
 
-    return Sentc.getApi().decryptRawSymmetric(
+    return api_crypto.decryptRawSymmetric(
       key: key,
       encryptedData: encryptedData,
       head: head,
@@ -69,11 +70,11 @@ abstract class AbstractSymCrypto {
   }
 
   Future<Uint8List> decryptRawSync(String head, Uint8List encryptedData, [String? verifyKey]) async {
-    final deHead = await Sentc.getApi().deserializeHeadFromString(head: head);
+    final deHead = await api_crypto.deserializeHeadFromString(head: head);
 
     final key = getSymKeyByIdSync(deHead.id);
 
-    return Sentc.getApi().decryptRawSymmetric(
+    return api_crypto.decryptRawSymmetric(
       key: key,
       encryptedData: encryptedData,
       head: head,
@@ -92,7 +93,7 @@ abstract class AbstractSymCrypto {
       signKey = await getSignKey();
     }
 
-    return Sentc.getApi().encryptSymmetric(key: key.key, data: data, signKey: signKey);
+    return api_crypto.encryptSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
   Future<Uint8List> encryptSync(Uint8List data, [bool sign = false]) {
@@ -104,29 +105,29 @@ abstract class AbstractSymCrypto {
       signKey = getSignKeySync();
     }
 
-    return Sentc.getApi().encryptSymmetric(key: key.key, data: data, signKey: signKey);
+    return api_crypto.encryptSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
   Future<Uint8List> decrypt(Uint8List data, [bool verify = false, String? userId]) async {
-    final head = await Sentc.getApi().splitHeadAndEncryptedData(data: data);
+    final head = await api_crypto.splitHeadAndEncryptedData(data: data);
 
     final key = await getSymKeyById(head.id);
 
-    if (head.sign == null || !verify || userId == null) {
-      return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data);
+    if (head.signId == null || !verify || userId == null) {
+      return api_crypto.decryptSymmetric(key: key, encryptedData: data);
     }
 
-    final verifyKey = await Sentc.getUserVerifyKey(userId, head.sign!.id);
+    final verifyKey = await Sentc.getUserVerifyKey(userId, head.signId!);
 
-    return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
+    return api_crypto.decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
   Future<Uint8List> decryptSync(Uint8List data, [String? verifyKey]) async {
-    final head = await Sentc.getApi().splitHeadAndEncryptedData(data: data);
+    final head = await api_crypto.splitHeadAndEncryptedData(data: data);
 
     final key = getSymKeyByIdSync(head.id);
 
-    return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
+    return api_crypto.decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
   Future<String> encryptString(String data, [bool sign = false]) async {
@@ -138,7 +139,7 @@ abstract class AbstractSymCrypto {
       signKey = await getSignKey();
     }
 
-    return Sentc.getApi().encryptStringSymmetric(key: key.key, data: data, signKey: signKey);
+    return api_crypto.encryptStringSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
   Future<String> encryptStringSync(String data, [bool sign = false]) {
@@ -150,29 +151,29 @@ abstract class AbstractSymCrypto {
       signKey = getSignKeySync();
     }
 
-    return Sentc.getApi().encryptStringSymmetric(key: key.key, data: data, signKey: signKey);
+    return api_crypto.encryptStringSymmetric(key: key.key, data: data, signKey: signKey);
   }
 
   Future<String> decryptString(String data, [bool verify = false, String? userId]) async {
-    final head = await Sentc.getApi().splitHeadAndEncryptedString(data: data);
+    final head = await api_crypto.splitHeadAndEncryptedString(data: data);
 
     final key = await getSymKeyById(head.id);
 
-    if (head.sign == null || !verify || userId == null) {
-      return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data);
+    if (head.signId == null || !verify || userId == null) {
+      return api_crypto.decryptStringSymmetric(key: key, encryptedData: data);
     }
 
-    final verifyKey = await Sentc.getUserVerifyKey(userId, head.sign!.id);
+    final verifyKey = await Sentc.getUserVerifyKey(userId, head.signId!);
 
-    return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
+    return api_crypto.decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
   Future<String> decryptStringSync(String data, [String? verifyKey]) async {
-    final head = await Sentc.getApi().splitHeadAndEncryptedString(data: data);
+    final head = await api_crypto.splitHeadAndEncryptedString(data: data);
 
     final key = getSymKeyByIdSync(head.id);
 
-    return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
+    return api_crypto.decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
   //____________________________________________________________________________________________________________________
@@ -180,7 +181,7 @@ abstract class AbstractSymCrypto {
   Future<NonRegisteredKeyOut> generateNonRegisteredKey() async {
     final keyData = await getSymKeyToEncrypt();
 
-    final out = await Sentc.getApi().generateNonRegisterSymKey(masterKey: keyData.key);
+    final out = await api_crypto.generateNonRegisterSymKey(masterKey: keyData.key);
 
     return NonRegisteredKeyOut(
       SymKey(

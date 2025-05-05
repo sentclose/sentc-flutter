@@ -74,6 +74,9 @@ void main() {
 
   testWidgets("prepare test file", (widgetTester) async {
     testFilePath = await loadAssetAsFile(fileItemPathConst);
+
+    print(testFilePath);
+
     fileItemPath = testFilePath.testFilePath;
     file1Path = "${testFilePath.testDirPath}/file1";
     file2Path = "${testFilePath.testDirPath}/file_item(1)";

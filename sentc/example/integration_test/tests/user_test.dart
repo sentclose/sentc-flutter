@@ -64,8 +64,7 @@ void main() {
     await user.logOut();
   });
 
-  testWidgets("not login with the old new password after reset",
-      (widgetTester) async {
+  testWidgets("not login with the old new password after reset", (widgetTester) async {
     try {
       await Sentc.login("userIdentifier1", "newPassword");
     } catch (e) {
@@ -89,12 +88,10 @@ void main() {
       deviceIdentifier = res.identifier;
       devicePw = res.password;
 
-      deviceRegisterResult =
-          await Sentc.registerDeviceStart(deviceIdentifier, devicePw);
+      deviceRegisterResult = await Sentc.registerDeviceStart(deviceIdentifier, devicePw);
     });
 
-    testWidgets("not login with a not fully registered device",
-        (widgetTester) async {
+    testWidgets("not login with a not fully registered device", (widgetTester) async {
       try {
         await Sentc.login(deviceIdentifier, devicePw);
       } catch (e) {
@@ -119,8 +116,7 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 200));
     });
 
-    testWidgets("finish the key rotation on the other device",
-        (widgetTester) async {
+    testWidgets("finish the key rotation on the other device", (widgetTester) async {
       final storage = Sentc.getStorage();
 
       final oldUserJson = await storage.getItem("user_data_$deviceIdentifier");
@@ -134,14 +130,12 @@ void main() {
       expect((oldNewestKey == newNewestKey), false);
     });
 
-    testWidgets("register a new device after key rotation (with multiple keys)",
-        (widgetTester) async {
+    testWidgets("register a new device after key rotation (with multiple keys)", (widgetTester) async {
       final res = await Sentc.generateRegisterData();
       deviceIdentifier1 = res.identifier;
       devicePw1 = res.password;
 
-      deviceRegisterResult =
-          await Sentc.registerDeviceStart(deviceIdentifier1, devicePw1);
+      deviceRegisterResult = await Sentc.registerDeviceStart(deviceIdentifier1, devicePw1);
 
       //and now end register
       await user.registerDevice(deviceRegisterResult);
@@ -155,12 +149,10 @@ void main() {
       final newestKeyJson = await storage.getItem("user_data_userIdentifier1");
       final newestKey = jsonDecode(newestKeyJson!)["newestKeyId"];
 
-      final newestKey1Json =
-          await storage.getItem("user_data_$deviceIdentifier");
+      final newestKey1Json = await storage.getItem("user_data_$deviceIdentifier");
       final newestKey1 = jsonDecode(newestKey1Json!)["newestKeyId"];
 
-      final newestKey2Json =
-          await storage.getItem("user_data_$deviceIdentifier1");
+      final newestKey2Json = await storage.getItem("user_data_$deviceIdentifier1");
       final newestKey2 = jsonDecode(newestKey2Json!)["newestKeyId"];
 
       expect(newestKey, newestKey1);
@@ -213,17 +205,14 @@ void main() {
       final newestKey1Json = await storage.getItem("user_data_userIdentifier2");
       final newestKey1 = jsonDecode(newestKey1Json!)["newestKeyId"];
 
-      final number = await user.createSafetyNumber(
-          UserVerifyKeyCompareInfo(user2.userId, newestKey1));
+      final number = await user.createSafetyNumber(UserVerifyKeyCompareInfo(user2.userId, newestKey1));
 
-      final number2 = await user2
-          .createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
+      final number2 = await user2.createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
 
       expect(number, number2);
     });
 
-    testWidgets("not create the same number with different users",
-        (widgetTester) async {
+    testWidgets("not create the same number with different users", (widgetTester) async {
       await Sentc.register("userIdentifier3", "password");
       user3 = await Sentc.loginForced("userIdentifier3", "password");
 
@@ -238,21 +227,17 @@ void main() {
       final newestKey2Json = await storage.getItem("user_data_userIdentifier3");
       final newestKey2 = jsonDecode(newestKey2Json!)["newestKeyId"];
 
-      final number = await user.createSafetyNumber(
-          UserVerifyKeyCompareInfo(user2.userId, newestKey1));
+      final number = await user.createSafetyNumber(UserVerifyKeyCompareInfo(user2.userId, newestKey1));
 
-      final number2 = await user2
-          .createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
+      final number2 = await user2.createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
 
       expect(number, number2);
 
-      final number3 = await user3
-          .createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
+      final number3 = await user3.createSafetyNumber(UserVerifyKeyCompareInfo(user.userId, newestKey));
 
       expect((number != number3), true);
 
-      final number4 = await user.createSafetyNumber(
-          UserVerifyKeyCompareInfo(user3.userId, newestKey2));
+      final number4 = await user.createSafetyNumber(UserVerifyKeyCompareInfo(user3.userId, newestKey2));
 
       expect(number3, number4);
     });
@@ -305,8 +290,7 @@ void main() {
   });
 
   testWidgets("decrypt the string with verify", (widgetTester) async {
-    final decrypt =
-        await user2.decryptString(encryptedString, true, user.userId);
+    final decrypt = await user2.decryptString(encryptedString, true, user.userId);
 
     expect(decrypt, string);
   });
