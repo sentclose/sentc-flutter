@@ -60,28 +60,6 @@ _loadLib() async {
     return;
   }
 
-  /*
-  String? ioDirectory;
-
-  if (Platform.isWindows) {
-    if (Abi.current() == Abi.windowsX64) {
-      ioDirectory = "windows-x64/";
-    } else if (Abi.current() == Abi.windowsArm64) {
-      throw UnsupportedError('Unsupported Windows architecture: ${Abi.current()}');
-    } else {
-      throw UnsupportedError('Unsupported Windows architecture: ${Abi.current()}');
-    }
-  } else if (Platform.isLinux) {
-    if (Abi.current() == Abi.linuxX64) {
-      ioDirectory = "linux-x64/";
-    } else if (Abi.current() == Abi.linuxArm64) {
-      ioDirectory = "linux-arm64/";
-    } else {
-      throw UnsupportedError('Unsupported Linux architecture: ${Abi.current()}');
-    }
-  }
-   */
-
   ExternalLibrary lib;
   if (Platform.isIOS || Platform.isMacOS) {
     lib = ExternalLibrary.process(iKnowHowToUseIt: true);
