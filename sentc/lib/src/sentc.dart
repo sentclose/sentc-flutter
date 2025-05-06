@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -61,6 +60,7 @@ _loadLib() async {
     return;
   }
 
+  /*
   String? ioDirectory;
 
   if (Platform.isWindows) {
@@ -80,6 +80,7 @@ _loadLib() async {
       throw UnsupportedError('Unsupported Linux architecture: ${Abi.current()}');
     }
   }
+   */
 
   ExternalLibrary lib;
   if (Platform.isIOS || Platform.isMacOS) {
@@ -87,7 +88,7 @@ _loadLib() async {
   } else {
     final libraryLoaderConfig = ExternalLibraryLoaderConfig(
       stem: RustLib.kDefaultExternalLibraryLoaderConfig.stem,
-      ioDirectory: ioDirectory,
+      ioDirectory: null,
       webPrefix: RustLib.kDefaultExternalLibraryLoaderConfig.webPrefix,
     );
 
