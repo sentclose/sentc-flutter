@@ -1,8 +1,8 @@
 /// End to end encryption and group access sdk
-library sentc;
+library;
 
 //main
 export 'src/sentc.dart';
 export 'src/user.dart';
 export 'src/group.dart';
-export 'src/generated.dart';
+export 'src/rust/frb_generated.dart' show RustLib;

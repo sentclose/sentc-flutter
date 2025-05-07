@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:sentc_light/sentc_light.dart';
+import 'package:sentc_light/src/rust/api/group.dart' as api_group;
 
 Future<Group> getGroup(
   String groupId,
@@ -32,7 +33,7 @@ Future<Group> getGroup(
 
     if (group.lastCheckTime + 60000 * 5 < DateTime.now().millisecondsSinceEpoch) {
       //load the group from json data and just look for group updates
-      final update = await Sentc.getApi().groupGetGroupUpdates(
+      final update = await api_group.groupGetGroupUpdates(
         baseUrl: baseUrl,
         authToken: appToken,
         jwt: jwt,
@@ -51,7 +52,7 @@ Future<Group> getGroup(
   }
 
   //group data was not in the cache
-  final out = await Sentc.getApi().groupGetGroupData(
+  final out = await api_group.groupGetGroupData(
     baseUrl: baseUrl,
     authToken: appToken,
     jwt: jwt,
@@ -162,7 +163,7 @@ class Group {
   deleteGroup() async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupDeleteGroup(
+    return api_group.groupDeleteGroup(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -180,13 +181,13 @@ class Group {
     return getGroup(groupId, baseUrl, appToken, _user, false, this.groupId);
   }
 
-  Future<List<GroupChildrenList>> getChildren([GroupChildrenList? lastFetchedItem]) async {
+  Future<List<api_group.GroupChildrenList>> getChildren([api_group.GroupChildrenList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetAllFirstLevelChildren(
+    return api_group.groupGetAllFirstLevelChildren(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -200,7 +201,7 @@ class Group {
   Future<String> createChildGroup() async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupCreateChildGroup(
+    return api_group.groupCreateChildGroup(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -213,7 +214,7 @@ class Group {
   Future<String> createConnectedGroup() async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupCreateConnectedGroup(
+    return api_group.groupCreateConnectedGroup(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -226,7 +227,7 @@ class Group {
   Future<void> groupUpdateCheck() async {
     final jwt = await getJwt();
 
-    final update = await Sentc.getApi().groupGetGroupUpdates(
+    final update = await api_group.groupGetGroupUpdates(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -238,13 +239,13 @@ class Group {
     lastCheckTime = DateTime.now().millisecondsSinceEpoch;
   }
 
-  Future<List<GroupUserListItem>> getMember([GroupUserListItem? lastFetchedItem]) async {
+  Future<List<api_group.GroupUserListItem>> getMember([api_group.GroupUserListItem? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.joinedTime ?? "0";
     final lastFetchedId = lastFetchedItem?.userId ?? "none";
 
-    return Sentc.getApi().groupGetMember(
+    return api_group.groupGetMember(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -259,13 +260,13 @@ class Group {
   //admin fn for user management
 
   Future<String> prepareUpdateRank(String userId, int newRank) {
-    return Sentc.getApi().groupPrepareUpdateRank(userId: userId, rank: rank, adminRank: rank);
+    return api_group.groupPrepareUpdateRank(userId: userId, rank: rank, adminRank: rank);
   }
 
   Future<void> updateRank(String userId, int newRank) async {
     final jwt = await getJwt();
 
-    await Sentc.getApi().groupUpdateRank(
+    await api_group.groupUpdateRank(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -299,7 +300,7 @@ class Group {
   Future<void> kickUser(String userId) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupKickUser(
+    return api_group.groupKickUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -315,7 +316,7 @@ class Group {
   Future<void> leave() async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().leaveGroup(
+    return api_group.leaveGroup(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -327,13 +328,13 @@ class Group {
   //____________________________________________________________________________________________________________________
   //group as member
 
-  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
+  Future<List<api_group.ListGroups>> getGroups([api_group.ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetGroupsForUser(
+    return api_group.groupGetGroupsForUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -343,13 +344,13 @@ class Group {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
+  Future<List<api_group.GroupInviteReqList>> getGroupInvites([api_group.GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetInvitesForUser(
+    return api_group.groupGetInvitesForUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -363,7 +364,7 @@ class Group {
   Future<void> acceptGroupInvite(String groupIdToAccept) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupAcceptInvite(
+    return api_group.groupAcceptInvite(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -376,7 +377,7 @@ class Group {
   Future<void> rejectGroupInvite(groupIdToReject) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupRejectInvite(
+    return api_group.groupRejectInvite(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -390,7 +391,7 @@ class Group {
   Future<void> groupJoinRequest(String groupIdToJoin) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupJoinReq(
+    return api_group.groupJoinReq(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -400,13 +401,13 @@ class Group {
     );
   }
 
-  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
+  Future<List<api_group.GroupInviteReqList>> sentJoinReq([api_group.GroupInviteReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetSentJoinReq(
+    return api_group.groupGetSentJoinReq(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -421,7 +422,7 @@ class Group {
   Future<void> deleteJoinReq(String id) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupDeleteSentJoinReq(
+    return api_group.groupDeleteSentJoinReq(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -438,7 +439,7 @@ class Group {
   Future<void> stopInvites() async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupStopGroupInvites(
+    return api_group.groupStopGroupInvites(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -471,9 +472,8 @@ class Group {
     bool group = false,
   ]) async {
     final jwt = await getJwt();
-    final api = Sentc.getApi();
 
-    return api.groupInviteUser(
+    return api_group.groupInviteUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -490,13 +490,13 @@ class Group {
   //____________________________________________________________________________________________________________________
   //join req
 
-  Future<List<GroupJoinReqList>> getJoinRequests([GroupJoinReqList? lastFetchedItem]) async {
+  Future<List<api_group.GroupJoinReqList>> getJoinRequests([api_group.GroupJoinReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastFetchedId = lastFetchedItem?.userId ?? "none";
 
-    return Sentc.getApi().groupGetJoinReqs(
+    return api_group.groupGetJoinReqs(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -511,7 +511,7 @@ class Group {
   Future<void> rejectJoinRequest(String userId) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupRejectJoinReq(
+    return api_group.groupRejectJoinReq(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -524,9 +524,8 @@ class Group {
 
   Future<void> acceptJoinRequest(String userId, [int userType = 0, int? rank]) async {
     final jwt = await getJwt();
-    final api = Sentc.getApi();
 
-    return api.groupAcceptJoinReq(
+    return api_group.groupAcceptJoinReq(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,

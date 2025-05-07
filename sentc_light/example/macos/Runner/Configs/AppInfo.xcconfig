@@ -8,7 +8,7 @@
 PRODUCT_NAME = sentc_light_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.sentclose.sentclight.sentcLightExample
+PRODUCT_BUNDLE_IDENTIFIER = com.example.sentcLightExample
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.sentclose.sentc_light. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
