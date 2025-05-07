@@ -23,5 +23,5 @@ Pod::Spec.new do |spec|
   spec.vendored_frameworks = "Frameworks/#{framework_name}"
 
   spec.ios.deployment_target = '11.0'
-  spec.osx.deployment_target = '10.14'
+  spec.osx.deployment_target = '15.2'
 end
