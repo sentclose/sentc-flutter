@@ -1,4 +1,4 @@
 Flutter/
 Frameworks/*
 !Frameworks/.gitkeep
-!Sentc.xcframework.zip
+!SentcLight.xcframework.zip
