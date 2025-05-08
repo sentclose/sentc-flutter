@@ -16,7 +16,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
 }
 
 class FilePage extends StatefulWidget {
-  const FilePage({Key? key}) : super(key: key);
+  const FilePage({super.key});
 
   @override
   State<FilePage> createState() => _FilePageState();
@@ -260,7 +260,7 @@ class _FilePageState extends State<FilePage> {
 class FileIdForm extends StatefulWidget {
   final void Function(String fileId) updateData;
 
-  const FileIdForm({Key? key, required this.updateData}) : super(key: key);
+  const FileIdForm({super.key, required this.updateData});
 
   @override
   State<FileIdForm> createState() => _FileIdFormState();

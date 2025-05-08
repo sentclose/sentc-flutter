@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:sentc/sentc.dart';
+import 'package:sentc/src/rust/api/crypto.dart' as api_crypto;
 
 Future<SymKey> getNonRegisteredKey(String masterKey, String key, String masterKeyId, String signKey) async {
-  final keyOut = await Sentc.getApi().doneFetchSymKey(masterKey: masterKey, serverOut: key, nonRegistered: true);
+  final keyOut = await api_crypto.doneFetchSymKey(masterKey: masterKey, serverOut: key, nonRegistered: true);
 
   return SymKey("", "", keyOut, "non_register", masterKeyId, signKey);
 }
@@ -14,7 +14,7 @@ Future<SymKey> getNonRegisteredKeyByPrivateKey(
   String masterKeyId,
   String signKey,
 ) async {
-  final keyOut = await Sentc.getApi().doneFetchSymKeyByPrivateKey(
+  final keyOut = await api_crypto.doneFetchSymKeyByPrivateKey(
     privateKey: privateKey,
     serverOut: key,
     nonRegistered: true,
@@ -49,18 +49,18 @@ class SymKey {
     return {"key": key, "keyId": keyId, "masterKeyId": masterKeyId};
   }
 
-  Future<CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) {
+  Future<api_crypto.CryptoRawOutput> encryptRaw(Uint8List data, [bool sign = false]) {
     String? signKey;
 
     if (sign) {
       signKey = _signKey;
     }
 
-    return Sentc.getApi().encryptRawSymmetric(key: key, data: data, signKey: signKey);
+    return api_crypto.encryptRawSymmetric(key: key, data: data, signKey: signKey);
   }
 
   Future<Uint8List> decryptRaw(String head, Uint8List encryptedData, [String? verifyKey]) {
-    return Sentc.getApi().decryptRawSymmetric(
+    return api_crypto.decryptRawSymmetric(
       key: key,
       encryptedData: encryptedData,
       head: head,
@@ -75,11 +75,11 @@ class SymKey {
       signKey = _signKey;
     }
 
-    return Sentc.getApi().encryptSymmetric(key: key, data: data, signKey: signKey);
+    return api_crypto.encryptSymmetric(key: key, data: data, signKey: signKey);
   }
 
   Future<Uint8List> decrypt(Uint8List data, [String? verifyKey]) {
-    return Sentc.getApi().decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
+    return api_crypto.decryptSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 
   Future<String> encryptString(String data, [bool sign = false]) {
@@ -89,10 +89,10 @@ class SymKey {
       signKey = _signKey;
     }
 
-    return Sentc.getApi().encryptStringSymmetric(key: key, data: data, signKey: signKey);
+    return api_crypto.encryptStringSymmetric(key: key, data: data, signKey: signKey);
   }
 
   Future<String> decryptString(String data, [String? verifyKey]) {
-    return Sentc.getApi().decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
+    return api_crypto.decryptStringSymmetric(key: key, encryptedData: data, verifyKeyData: verifyKey);
   }
 }

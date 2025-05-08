@@ -1,0 +1,3 @@
+!.gitignore
+!CMakeLists.txt
+!libsentc_light_flutter.so

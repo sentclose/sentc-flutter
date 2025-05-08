@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  sentc_light
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  sentc_light
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

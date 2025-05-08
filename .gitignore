@@ -29,14 +29,6 @@ migrate_working_dir/
 .packages
 build/
 
-# the rust bin files
-sentc_flutter.dll
-sentc_flutter.lib
-
-libsentc_flutter.a
-
-libsentc_flutter.so
-
 sentc_light_flutter.dll
 sentc_light_flutter.lib
 

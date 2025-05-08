@@ -1,23 +1,25 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint sentc_light.podspec` to validate before publishing.
-#
-Pod::Spec.new do |s|
-  s.name             = 'sentc_light'
-  s.version          = '0.0.1'
-  s.summary          = 'Sentc sdk light with user and group management'
-  s.description      = <<-DESC
-Sentc sdk light with user and group management
-                       DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
-  s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.dependency 'Flutter'
-  s.platform = :ios, '11.0'
+framework_name = 'SentcLight.xcframework'
+local_zip_name = "#{framework_name}.zip"
+`
+cd Frameworks
+rm -rf #{framework_name}
+unzip #{local_zip_name}
+cd -
+`
 
-  # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
-  s.swift_version = '5.0'
+Pod::Spec.new do |spec|
+  spec.name          = 'sentc_light'
+  spec.version       = '0.0.1'
+  spec.license       = { :file => '../LICENSE' }
+  spec.homepage      = 'https://sentc.com'
+  spec.authors       = { 'Jörn Heinemann' => 'contact@sentclose.com' }
+  spec.summary       = 'An end to end encryption sdk for every developer.'
+
+  spec.source              = { :path => '.' }
+  spec.source_files        = 'Classes/**/*'
+  spec.public_header_files = 'Classes/**/*.h'
+  spec.vendored_frameworks = "Frameworks/#{framework_name}"
+
+  spec.ios.deployment_target = '11.0'
+  spec.osx.deployment_target = '10.14'
 end

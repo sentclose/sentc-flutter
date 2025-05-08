@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:sentc_light/sentc_light.dart';
 import 'package:sentc_light/src/group.dart' as group;
+import 'package:sentc_light/src/rust/api/user.dart' as api_user;
+import 'package:sentc_light/src/rust/api/group.dart' as api_group;
 
-Future<User> getUser(String deviceIdentifier, UserDataExport data, bool mfa) async {
+Future<User> getUser(String deviceIdentifier, api_user.UserDataExport data, bool mfa) async {
   final refreshToken = (Sentc.refreshEndpoint != RefreshOption.api) ? "" : data.refreshToken;
 
   final user = User._(
@@ -52,7 +54,7 @@ class User {
   final String _exportedPublicDeviceKey;
   final String _exportedVerifyDeviceKey;
 
-  late List<GroupInviteReqList> groupInvites;
+  late List<api_group.GroupInviteReqList> groupInvites;
 
   User._(
     this.baseUrl,
@@ -109,9 +111,9 @@ class User {
   }
 
   Future<String> getJwt() async {
-    final jwtData = await Sentc.getApi().decodeJwt(jwt: jwt);
+    final jwtData = await api_user.decodeJwt(jwt: jwt);
 
-    if (jwtData.exp <= DateTime.now().millisecondsSinceEpoch / 1000 + 30) {
+    if (jwtData.exp <= BigInt.from(DateTime.now().millisecondsSinceEpoch / 1000 + 30)) {
       jwt = await Sentc.refreshJwt(jwt, refreshToken);
 
       final storage = Sentc.getStorage();
@@ -123,7 +125,7 @@ class User {
   }
 
   Future<String> getFreshJwt(String userIdentifier, String password, [String? mfaToken, bool? mfaRecovery]) {
-    return Sentc.getApi().getFreshJwt(
+    return api_user.getFreshJwt(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: userIdentifier,
@@ -134,13 +136,13 @@ class User {
   }
 
   Future<void> updateUser(String newIdentifier) {
-    return Sentc.getApi().updateUser(baseUrl: baseUrl, authToken: appToken, jwt: jwt, userIdentifier: newIdentifier);
+    return api_user.updateUser(baseUrl: baseUrl, authToken: appToken, jwt: jwt, userIdentifier: newIdentifier);
   }
 
-  Future<OtpRegister> registerRawOtp(String password, [String? mfaToken, bool? mfaRecovery]) async {
+  Future<api_user.OtpRegister> registerRawOtp(String password, [String? mfaToken, bool? mfaRecovery]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().registerRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    final out = await api_user.registerRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     mfa = true;
 
@@ -160,7 +162,7 @@ class User {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().registerOtp(
+    final out = await api_user.registerOtp(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -184,19 +186,19 @@ class User {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().getOtpRecoverKeys(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    final out = await api_user.getOtpRecoverKeys(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     return out.keys;
   }
 
-  Future<OtpRegister> resetRawOtp(
+  Future<api_user.OtpRegister> resetRawOtp(
     String password, [
     String? mfaToken,
     bool? mfaRecovery,
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    return Sentc.getApi().resetRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    return api_user.resetRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
   }
 
   Future<(String, List<String>)> resetOtp(
@@ -208,7 +210,7 @@ class User {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().resetOtp(
+    final out = await api_user.resetOtp(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -226,7 +228,7 @@ class User {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    await Sentc.getApi().disableOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    await api_user.disableOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     mfa = true;
 
@@ -236,7 +238,7 @@ class User {
   }
 
   Future<void> changePassword(String oldPassword, String newPassword, [String? mfaToken, bool? mfaRecovery]) {
-    return Sentc.getApi().changePassword(
+    return api_user.changePassword(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: _userIdentifier,
@@ -256,7 +258,7 @@ class User {
   Future<void> deleteUser(String password, [String? mfaToken, bool? mfaRecovery]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    await Sentc.getApi().deleteUser(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt);
+    await api_user.deleteUser(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt);
 
     return logOut();
   }
@@ -264,7 +266,7 @@ class User {
   Future<void> deleteDevice(String password, String deviceId, [String? mfaToken, bool? mfaRecovery]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    await Sentc.getApi().deleteDevice(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt, deviceId: deviceId);
+    await api_user.deleteDevice(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt, deviceId: deviceId);
 
     if (deviceId == this.deviceId) {
       //only log the device out if it is the actual used device
@@ -277,7 +279,7 @@ class User {
   Future<void> registerDevice(String serverOutput) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().registerDevice(
+    return api_user.registerDevice(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -285,13 +287,13 @@ class User {
     );
   }
 
-  Future<List<UserDeviceList>> getDevices([UserDeviceList? lastFetchedItem]) async {
+  Future<List<api_user.UserDeviceList>> getDevices([api_user.UserDeviceList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastId = lastFetchedItem?.deviceId ?? "none";
 
-    return Sentc.getApi().getUserDevices(
+    return api_user.getUserDevices(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -303,20 +305,20 @@ class User {
   Future<String> createGroup() async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupCreateGroup(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    return api_group.groupCreateGroup(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
   }
 
   Future<group.Group> getGroup(String groupId, [String? groupAsMember]) {
     return group.getGroup(groupId, baseUrl, appToken, this, false, groupAsMember);
   }
 
-  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
+  Future<List<api_group.ListGroups>> getGroups([api_group.ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetGroupsForUser(
+    return api_group.groupGetGroupsForUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -325,13 +327,13 @@ class User {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
+  Future<List<api_group.GroupInviteReqList>> getGroupInvites([api_group.GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetInvitesForUser(
+    return api_group.groupGetInvitesForUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -343,28 +345,28 @@ class User {
   Future<void> acceptGroupInvites(String groupIdToAccept) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupAcceptInvite(baseUrl: baseUrl, authToken: appToken, jwt: jwt, id: groupIdToAccept);
+    return api_group.groupAcceptInvite(baseUrl: baseUrl, authToken: appToken, jwt: jwt, id: groupIdToAccept);
   }
 
   Future<void> rejectGroupInvite(String groupIdToReject) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupRejectInvite(baseUrl: baseUrl, authToken: appToken, jwt: jwt, id: groupIdToReject);
+    return api_group.groupRejectInvite(baseUrl: baseUrl, authToken: appToken, jwt: jwt, id: groupIdToReject);
   }
 
   Future<void> groupJoinRequest(String groupId) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupJoinReq(baseUrl: baseUrl, authToken: appToken, jwt: jwt, id: groupId, groupId: "");
+    return api_group.groupJoinReq(baseUrl: baseUrl, authToken: appToken, jwt: jwt, id: groupId, groupId: "");
   }
 
-  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
+  Future<List<api_group.GroupInviteReqList>> sentJoinReq([api_group.GroupInviteReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastFetchedId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetSentJoinReqUser(
+    return api_group.groupGetSentJoinReqUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -376,7 +378,7 @@ class User {
   Future<void> deleteJoinReq(String id) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupDeleteSentJoinReqUser(
+    return api_group.groupDeleteSentJoinReqUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,

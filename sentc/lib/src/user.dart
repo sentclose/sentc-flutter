@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:sentc/src/crypto/abstract_asym_crypto.dart';
 import 'package:sentc/src/group.dart' as group;
+import 'package:sentc/src/rust/api/user.dart' as api_user;
+import 'package:sentc/src/rust/api/group.dart' as api_group;
+import 'package:sentc/src/rust/api/file.dart' as api_file;
 import 'package:sentc/sentc.dart';
-import '../src/generated.dart' as plugin;
 
-Future<User> getUser(String deviceIdentifier, UserData data, bool mfa) async {
+Future<User> getUser(String deviceIdentifier, api_user.UserData data, bool mfa) async {
   final Map<String, int> keyMap = {};
 
   final List<UserKey> userKeys = [];
@@ -104,7 +106,7 @@ class UserKey extends group.GroupKey {
       exportedVerifyKey: json['exportedVerifyKey'] as String,
       exportedPublicKeySigKeyId: json["exportedPublicKeySigKeyId"] as String?);
 
-  factory UserKey.fromServer(plugin.UserKeyData key) => UserKey(
+  factory UserKey.fromServer(api_user.UserKeyData key) => UserKey(
         privateGroupKey: key.privateKey,
         publicGroupKey: key.publicKey,
         groupKey: key.groupKey,
@@ -163,7 +165,7 @@ class User extends AbstractAsymCrypto {
   String _newestKeyId;
   List<String> _hmacKeys;
 
-  late List<GroupInviteReqList> groupInvites;
+  late List<api_group.GroupInviteReqList> groupInvites;
 
   User._(
     super.baseUrl,
@@ -233,9 +235,9 @@ class User extends AbstractAsymCrypto {
 
   @override
   Future<String> getJwt() async {
-    final jwtData = await Sentc.getApi().decodeJwt(jwt: jwt);
+    final jwtData = api_user.decodeJwt(jwt: jwt);
 
-    if (jwtData.exp <= DateTime.now().millisecondsSinceEpoch / 1000 + 30) {
+    if (jwtData.exp <= BigInt.from(DateTime.now().millisecondsSinceEpoch / 1000 + 30)) {
       jwt = await Sentc.refreshJwt(jwt, refreshToken);
 
       final storage = Sentc.getStorage();
@@ -247,7 +249,7 @@ class User extends AbstractAsymCrypto {
   }
 
   Future<String> getFreshJwt(String userIdentifier, String password, [String? mfaToken, bool? mfaRecovery]) {
-    return Sentc.getApi().getFreshJwt(
+    return api_user.getFreshJwt(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: userIdentifier,
@@ -298,7 +300,7 @@ class User extends AbstractAsymCrypto {
   fetchUserKey(String keyId, [bool first = false]) async {
     final jwt = await getJwt();
 
-    final userKeys = await Sentc.getApi().fetchUserKey(
+    final userKeys = await api_user.fetchUserKey(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -320,7 +322,7 @@ class User extends AbstractAsymCrypto {
   }
 
   Future<void> doneFetchUserKey(String serverOutput) async {
-    final key = await Sentc.getApi().doneFetchUserKey(
+    final key = await api_user.doneFetchUserKey(
       privateKey: _privateDeviceKey,
       serverOutput: serverOutput,
     );
@@ -332,7 +334,7 @@ class User extends AbstractAsymCrypto {
     _keyMap[key.groupKeyId] = lastIndex;
   }
 
-  Future<List<String>> decryptHmacKeys(List<GroupOutDataHmacKeys> fetchedKeys) async {
+  Future<List<String>> decryptHmacKeys(List<api_group.GroupOutDataHmacKeys> fetchedKeys) async {
     final List<String> list = [];
 
     for (var i = 0; i < fetchedKeys.length; ++i) {
@@ -340,7 +342,7 @@ class User extends AbstractAsymCrypto {
 
       final groupKey = await _getUserSymKey(key.groupKeyId);
 
-      final decryptedHmacKey = await Sentc.getApi().groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
+      final decryptedHmacKey = await api_group.groupDecryptHmacKey(groupKey: groupKey, serverKeyData: key.keyData);
 
       list.add(decryptedHmacKey);
     }
@@ -404,13 +406,13 @@ class User extends AbstractAsymCrypto {
   //____________________________________________________________________________________________________________________
 
   Future<void> updateUser(String newIdentifier) {
-    return Sentc.getApi().updateUser(baseUrl: baseUrl, authToken: appToken, jwt: jwt, userIdentifier: newIdentifier);
+    return api_user.updateUser(baseUrl: baseUrl, authToken: appToken, jwt: jwt, userIdentifier: newIdentifier);
   }
 
-  Future<OtpRegister> registerRawOtp(String password, [String? mfaToken, bool? mfaRecovery]) async {
+  Future<api_user.OtpRegister> registerRawOtp(String password, [String? mfaToken, bool? mfaRecovery]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().registerRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    final out = await api_user.registerRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     mfa = true;
 
@@ -430,7 +432,7 @@ class User extends AbstractAsymCrypto {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().registerOtp(
+    final out = await api_user.registerOtp(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -454,19 +456,19 @@ class User extends AbstractAsymCrypto {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().getOtpRecoverKeys(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    final out = await api_user.getOtpRecoverKeys(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     return out.keys;
   }
 
-  Future<OtpRegister> resetRawOtp(
+  Future<api_user.OtpRegister> resetRawOtp(
     String password, [
     String? mfaToken,
     bool? mfaRecovery,
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    return Sentc.getApi().resetRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    return api_user.resetRawOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
   }
 
   Future<(String, List<String>)> resetOtp(
@@ -478,7 +480,7 @@ class User extends AbstractAsymCrypto {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    final out = await Sentc.getApi().resetOtp(
+    final out = await api_user.resetOtp(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -496,7 +498,7 @@ class User extends AbstractAsymCrypto {
   ]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    await Sentc.getApi().disableOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    await api_user.disableOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     mfa = true;
 
@@ -511,7 +513,7 @@ class User extends AbstractAsymCrypto {
     final decryptedPrivateKey = _privateDeviceKey;
     final decryptedSignKey = _signDeviceKey;
 
-    return Sentc.getApi().resetPassword(
+    return api_user.resetPassword(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -522,7 +524,7 @@ class User extends AbstractAsymCrypto {
   }
 
   Future<void> changePassword(String oldPassword, String newPassword, [String? mfaToken, bool? mfaRecovery]) {
-    return Sentc.getApi().changePassword(
+    return api_user.changePassword(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: _userIdentifier,
@@ -542,7 +544,7 @@ class User extends AbstractAsymCrypto {
   Future<void> deleteUser(String password, [String? mfaToken, bool? mfaRecovery]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    await Sentc.getApi().deleteUser(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt);
+    await api_user.deleteUser(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt);
 
     return logOut();
   }
@@ -550,7 +552,7 @@ class User extends AbstractAsymCrypto {
   Future<void> deleteDevice(String password, String deviceId, [String? mfaToken, bool? mfaRecovery]) async {
     final jwt = await getFreshJwt(_userIdentifier, password, mfaToken, mfaRecovery);
 
-    await Sentc.getApi().deleteDevice(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt, deviceId: deviceId);
+    await api_user.deleteDevice(baseUrl: baseUrl, authToken: appToken, freshJwt: jwt, deviceId: deviceId);
 
     if (deviceId == this.deviceId) {
       //only log the device out if it is the actual used device
@@ -560,12 +562,12 @@ class User extends AbstractAsymCrypto {
 
   //____________________________________________________________________________________________________________________
 
-  Future<PreRegisterDeviceData> prepareRegisterDevice(String serverOutput, int page) async {
+  Future<api_user.PreRegisterDeviceData> prepareRegisterDevice(String serverOutput, int page) async {
     final keyCount = _userKeys.length;
 
     final keyString = group.prepareKeys(_userKeys, page).str;
 
-    return Sentc.getApi().prepareRegisterDevice(serverOutput: serverOutput, userKeys: keyString, keyCount: keyCount);
+    return api_user.prepareRegisterDevice(serverOutput: serverOutput, userKeys: keyString, keyCount: keyCount);
   }
 
   Future<void> registerDevice(String serverOutput) async {
@@ -575,7 +577,7 @@ class User extends AbstractAsymCrypto {
 
     final jwt = await getJwt();
 
-    final out = await Sentc.getApi().registerDevice(
+    final out = await api_user.registerDevice(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -600,7 +602,7 @@ class User extends AbstractAsymCrypto {
 
       nextPage = nextKeys.end;
 
-      p.add(Sentc.getApi().userDeviceKeySessionUpload(
+      p.add(api_user.userDeviceKeySessionUpload(
         baseUrl: baseUrl,
         authToken: appToken,
         jwt: jwt,
@@ -615,13 +617,13 @@ class User extends AbstractAsymCrypto {
     await Future.wait(p);
   }
 
-  Future<List<UserDeviceList>> getDevices([UserDeviceList? lastFetchedItem]) async {
+  Future<List<api_user.UserDeviceList>> getDevices([api_user.UserDeviceList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastId = lastFetchedItem?.deviceId ?? "none";
 
-    return Sentc.getApi().getUserDevices(
+    return api_user.getUserDevices(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -637,7 +639,7 @@ class User extends AbstractAsymCrypto {
       verifyKey2 = await Sentc.getUserVerifyKey(userToCompare.userId, userToCompare.verifyKeyId);
     }
 
-    return Sentc.getApi().userCreateSafetyNumber(
+    return api_user.userCreateSafetyNumber(
       verifyKey1: _getNewestKey().exportedVerifyKey,
       userId1: userId,
       verifyKey2: verifyKey2,
@@ -650,7 +652,7 @@ class User extends AbstractAsymCrypto {
   Future<void> keyRotation() async {
     final jwt = await getJwt();
 
-    final keyId = await Sentc.getApi().userKeyRotation(
+    final keyId = await api_user.userKeyRotation(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -664,8 +666,8 @@ class User extends AbstractAsymCrypto {
   Future<void> finishKeyRotation() async {
     final jwt = await getJwt();
 
-    List<KeyRotationGetOut> keys =
-        await Sentc.getApi().userPreDoneKeyRotation(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
+    List<api_user.KeyRotationGetOut> keys =
+        await api_user.userPreDoneKeyRotation(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
     bool nextRound = false;
     int roundsLeft = 10;
@@ -674,7 +676,7 @@ class User extends AbstractAsymCrypto {
     final privateKey = _privateDeviceKey;
 
     do {
-      final List<KeyRotationGetOut> leftKeys = [];
+      final List<api_user.KeyRotationGetOut> leftKeys = [];
 
       for (var i = 0; i < keys.length; ++i) {
         var key = keys[i];
@@ -689,7 +691,7 @@ class User extends AbstractAsymCrypto {
           continue;
         }
 
-        await Sentc.getApi().userFinishKeyRotation(
+        await api_user.userFinishKeyRotation(
           baseUrl: baseUrl,
           authToken: appToken,
           jwt: jwt,
@@ -725,7 +727,7 @@ class User extends AbstractAsymCrypto {
       signKey = getNewestSignKey();
     }
 
-    return Sentc.getApi().groupPrepareCreateGroup(
+    return api_group.groupPrepareCreateGroup(
       creatorsPublicKey: getNewestPublicKey(),
       starter: userId,
       signKey: signKey,
@@ -741,7 +743,7 @@ class User extends AbstractAsymCrypto {
       signKey = getNewestSignKey();
     }
 
-    return Sentc.getApi().groupCreateGroup(
+    return api_group.groupCreateGroup(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -755,13 +757,13 @@ class User extends AbstractAsymCrypto {
     return group.getGroup(groupId, baseUrl, appToken, this, false, groupAsMember, verify);
   }
 
-  Future<List<ListGroups>> getGroups([ListGroups? lastFetchedItem]) async {
+  Future<List<api_group.ListGroups>> getGroups([api_group.ListGroups? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetGroupsForUser(
+    return api_group.groupGetGroupsForUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -770,13 +772,13 @@ class User extends AbstractAsymCrypto {
     );
   }
 
-  Future<List<GroupInviteReqList>> getGroupInvites([GroupInviteReqList? lastItem]) async {
+  Future<List<api_group.GroupInviteReqList>> getGroupInvites([api_group.GroupInviteReqList? lastItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastItem?.time.toString() ?? "0";
     final lastFetchedGroupId = lastItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetInvitesForUser(
+    return api_group.groupGetInvitesForUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -788,7 +790,7 @@ class User extends AbstractAsymCrypto {
   Future<void> acceptGroupInvites(String groupIdToAccept) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupAcceptInvite(
+    return api_group.groupAcceptInvite(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -799,7 +801,7 @@ class User extends AbstractAsymCrypto {
   Future<void> rejectGroupInvite(String groupIdToReject) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupRejectInvite(
+    return api_group.groupRejectInvite(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -810,7 +812,7 @@ class User extends AbstractAsymCrypto {
   Future<void> groupJoinRequest(String groupId) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupJoinReq(
+    return api_group.groupJoinReq(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -819,13 +821,13 @@ class User extends AbstractAsymCrypto {
     );
   }
 
-  Future<List<GroupInviteReqList>> sentJoinReq([GroupInviteReqList? lastFetchedItem]) async {
+  Future<List<api_group.GroupInviteReqList>> sentJoinReq([api_group.GroupInviteReqList? lastFetchedItem]) async {
     final jwt = await getJwt();
 
     final lastFetchedTime = lastFetchedItem?.time ?? "0";
     final lastFetchedId = lastFetchedItem?.groupId ?? "none";
 
-    return Sentc.getApi().groupGetSentJoinReqUser(
+    return api_group.groupGetSentJoinReqUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -837,7 +839,7 @@ class User extends AbstractAsymCrypto {
   Future<void> deleteJoinReq(String id) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().groupDeleteSentJoinReqUser(
+    return api_group.groupDeleteSentJoinReqUser(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -850,7 +852,7 @@ class User extends AbstractAsymCrypto {
   Future<void> updateFileName(String fileId, SymKey contentKey, String? fileName) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().fileFileNameUpdate(
+    return api_file.fileFileNameUpdate(
       baseUrl: baseUrl,
       authToken: appToken,
       jwt: jwt,
@@ -881,7 +883,7 @@ class User extends AbstractAsymCrypto {
     );
   }
 
-  Future<FileDoneRegister> doneFileRegister(String serverOutput) {
+  Future<api_file.FileDoneRegister> doneFileRegister(String serverOutput) {
     final uploader = Uploader(baseUrl, appToken, this, null, null, null, null);
 
     return uploader.doneFileRegister(serverOutput);
@@ -1007,6 +1009,6 @@ class User extends AbstractAsymCrypto {
   Future<void> deleteFile(String fileId) async {
     final jwt = await getJwt();
 
-    return Sentc.getApi().fileDeleteFile(baseUrl: baseUrl, authToken: appToken, jwt: jwt, fileId: fileId);
+    return api_file.fileDeleteFile(baseUrl: baseUrl, authToken: appToken, jwt: jwt, fileId: fileId);
   }
 }

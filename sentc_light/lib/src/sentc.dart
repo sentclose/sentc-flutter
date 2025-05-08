@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
-import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
-import 'package:sentc_light/src/generated.dart';
-import 'package:sentc_light/src/user.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:sentc_light/sentc_light.dart';
+import 'package:sentc_light/src/rust/api/user.dart' as api_user;
 import 'package:sentc_common/sentc_common.dart' as common;
 
 enum RefreshOption { cookie, cookieFn, api }
@@ -31,28 +30,53 @@ class SentcError {
       );
 
   factory SentcError.fromError(Object e) {
-    if (e is FrbAnyhowException) {
+    if (e is String) {
+      return SentcError.fromJson(jsonDecode(e));
+    }
+
+    if (e is AnyhowException) {
       return SentcError.fromAnyhowException(e);
     }
 
-    if (e is FfiException) {
+    if (e is FrbException) {
       return SentcError.fromFfiException(e);
     }
 
     return SentcError(status: "client_0", errorMessage: "Unknown exception object: ${e.toString()}");
   }
 
-  factory SentcError.fromAnyhowException(FrbAnyhowException e) {
-    return SentcError.fromJson(jsonDecode(e.anyhow));
+  factory SentcError.fromAnyhowException(AnyhowException e) {
+    return SentcError.fromJson(jsonDecode(e.message));
   }
 
-  factory SentcError.fromFfiException(FfiException e) {
-    return SentcError.fromJson(jsonDecode(e.message));
+  factory SentcError.fromFfiException(FrbException e) {
+    return SentcError.fromJson(jsonDecode(e.toString()));
   }
 }
 
+_loadLib() async {
+  if (RustLib.instance.initialized) {
+    return;
+  }
+
+  ExternalLibrary lib;
+  if (Platform.isIOS || Platform.isMacOS) {
+    lib = ExternalLibrary.process(iKnowHowToUseIt: true);
+  } else {
+    final libraryLoaderConfig = ExternalLibraryLoaderConfig(
+      stem: RustLib.kDefaultExternalLibraryLoaderConfig.stem,
+      ioDirectory: null,
+      webPrefix: RustLib.kDefaultExternalLibraryLoaderConfig.webPrefix,
+    );
+
+    lib = await loadExternalLibrary(libraryLoaderConfig);
+  }
+
+  await RustLib.init(externalLibrary: lib);
+}
+
 class Sentc {
-  static SentcFlutterRustLightImpl? _api;
+  static bool isInit = false;
   static common.StorageInterface? _storage;
 
   static String baseUrl = "";
@@ -71,25 +95,17 @@ class Sentc {
     RefreshOptions? refreshOptions,
     common.StorageInterface? storage,
   }) async {
-    if (_api != null) {
-      //no Init, only once
+    if (isInit) {
       try {
-        return await getActualUser(jwt: true);
+        return await getActualUser();
       } catch (e) {
         return null;
       }
     }
 
     //load the ffi lib
-    const base = "sentc_light_flutter";
-    final path = Platform.isWindows ? "$base.dll" : "lib$base.so";
-    late final dylib = Platform.isIOS
-        ? DynamicLibrary.process()
-        : Platform.isMacOS
-            ? DynamicLibrary.executable()
-            : DynamicLibrary.open(path);
+    await _loadLib();
 
-    final SentcFlutterRustLightImpl api = SentcFlutterRustLightImpl(dylib);
     Sentc.baseUrl = baseUrl ?? "https://api.sentc.com";
 
     RefreshOption refreshEndpoint = refreshOptions != null ? refreshOptions.endpoint : RefreshOption.api;
@@ -103,7 +119,6 @@ class Sentc {
             return "";
           };
 
-    _api = api;
     Sentc.appToken = appToken;
     Sentc.refreshEndpoint = refreshEndpoint;
     _endpointFn = refreshEndpointFn;
@@ -116,7 +131,7 @@ class Sentc {
 
       if (refreshEndpoint == RefreshOption.api) {
         //do init only when refresh endpoint is api
-        final out = await getApi().initUser(
+        final out = await api_user.initUser(
           baseUrl: Sentc.baseUrl,
           authToken: Sentc.appToken,
           jwt: user.jwt,
@@ -140,10 +155,6 @@ class Sentc {
 
   static common.StorageInterface getStorage() {
     return _storage!;
-  }
-
-  static SentcFlutterRustLightImpl getApi() {
-    return _api ?? (throw Exception("Not init"));
   }
 
   static Future<User> getActualUser({bool? jwt}) async {
@@ -177,15 +188,15 @@ class Sentc {
       return Future(() => false);
     }
 
-    return getApi().checkUserIdentifierAvailable(
+    return api_user.checkUserIdentifierAvailable(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: userIdentifier,
     );
   }
 
-  static Future<GeneratedRegisterData> generateRegisterData() async {
-    return getApi().generateUserRegisterData();
+  static Future<api_user.GeneratedRegisterData> generateRegisterData() async {
+    return api_user.generateUserRegisterData();
   }
 
   static Future<String> prepareRegister(String userIdentifier, String password) {
@@ -193,11 +204,11 @@ class Sentc {
       throw const FormatException();
     }
 
-    return getApi().prepareRegister(userIdentifier: userIdentifier, password: password);
+    return api_user.prepareRegister(userIdentifier: userIdentifier, password: password);
   }
 
   static Future<String> doneRegister(String serverOutput) {
-    return getApi().doneRegister(serverOutput: serverOutput);
+    return api_user.doneRegister(serverOutput: serverOutput);
   }
 
   static Future<String> register(String userIdentifier, String password) {
@@ -205,7 +216,7 @@ class Sentc {
       throw const FormatException();
     }
 
-    return getApi().register(
+    return api_user.register(
       baseUrl: baseUrl,
       authToken: appToken,
       password: password,
@@ -214,7 +225,7 @@ class Sentc {
   }
 
   static Future<void> doneRegisterDeviceStart(String serverOutput) {
-    return getApi().doneRegisterDeviceStart(serverOutput: serverOutput);
+    return api_user.doneRegisterDeviceStart(serverOutput: serverOutput);
   }
 
   static Future<String> registerDeviceStart(String deviceIdentifier, String password) {
@@ -222,7 +233,7 @@ class Sentc {
       throw const FormatException();
     }
 
-    return getApi().registerDeviceStart(
+    return api_user.registerDeviceStart(
       baseUrl: baseUrl,
       authToken: appToken,
       deviceIdentifier: deviceIdentifier,
@@ -234,41 +245,45 @@ class Sentc {
   //login
 
   static Future<User> loginForced(String deviceIdentifier, String password) async {
-    final out = await getApi().login(
+    final out = await api_user.login(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: deviceIdentifier,
       password: password,
     );
 
-    if (out.mfa != null) {
+    if (out.masterKey != null || out.authKey != null) {
       throw Exception("User enabled mfa and this must be handled.");
     }
 
-    return getUser(deviceIdentifier, out.userData!, false);
+    final userData = await api_user.extractUserData(data: out.direct!);
+
+    return getUser(deviceIdentifier, userData, false);
   }
 
   static Future<LoginUser> login(String deviceIdentifier, String password) async {
-    final out = await getApi().login(
+    final out = await api_user.login(
       baseUrl: baseUrl,
       authToken: appToken,
       userIdentifier: deviceIdentifier,
       password: password,
     );
 
-    if (out.mfa != null) {
+    if (out.masterKey != null && out.authKey != null) {
       return MfaLogin(UserMfaLogin(
-        masterKey: out.mfa!.masterKey,
-        authKey: out.mfa!.authKey,
+        masterKey: out.masterKey!,
+        authKey: out.authKey!,
         deviceIdentifier: deviceIdentifier,
       ));
     }
 
-    return UserLogin(await getUser(deviceIdentifier, out.userData!, false));
+    final userData = await api_user.extractUserData(data: out.direct!);
+
+    return UserLogin(await getUser(deviceIdentifier, userData, false));
   }
 
   static Future<User> mfaLogin(String token, UserMfaLogin loginData) async {
-    final out = await getApi().mfaLogin(
+    final out = await api_user.mfaLogin(
       baseUrl: baseUrl,
       authToken: appToken,
       masterKeyEncryption: loginData.masterKey,
@@ -282,7 +297,7 @@ class Sentc {
   }
 
   static Future<User> mfaRecoveryLogin(String recoveryToken, UserMfaLogin loginData) async {
-    final out = await getApi().mfaLogin(
+    final out = await api_user.mfaLogin(
       baseUrl: baseUrl,
       authToken: appToken,
       masterKeyEncryption: loginData.masterKey,
@@ -299,7 +314,7 @@ class Sentc {
 
   static Future<String> refreshJwt(String oldJwt, String refreshToken) {
     if (refreshEndpoint == RefreshOption.api) {
-      return getApi().refreshJwt(baseUrl: baseUrl, authToken: appToken, jwt: oldJwt, refreshToken: refreshToken);
+      return api_user.refreshJwt(baseUrl: baseUrl, authToken: appToken, jwt: oldJwt, refreshToken: refreshToken);
     }
 
     if (refreshEndpoint == RefreshOption.cookieFn) {
