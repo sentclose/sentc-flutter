@@ -1,92 +1,43 @@
-# sentc
+# Sentc
 
-A new Flutter FFI plugin project.
+from sentclose.
 
-## Getting Started
+Sentc is easy to use end-to-end encryption sdk. It can be used for any kind of data.
 
-This project is a starting point for a Flutter
-[FFI plugin](https://flutter.dev/to/ffi-package),
-a specialized package that includes native code directly invoked with Dart FFI.
+## Example
 
-## Project structure
+````dart
+demo() async {
+  //init the client
+  await Sentc.init(appToken: "5zMb6zs3dEM62n+FxjBilFPp+j9e7YUFA+7pi6Hi");
 
-This template uses the following structure:
+  //register a user
+  await Sentc.register("userIdentifier", "password");
 
-* `src`: Contains the native source code, and a CmakeFile.txt file for building
-  that source code into a dynamic library.
+  //log in a user
+  final user = await Sentc.login("userIdentifier", "password");
 
-* `lib`: Contains the Dart code that defines the API of the plugin, and which
-  calls into the native code using `dart:ffi`.
+  //create a group
+  final groupId = await user.createGroup();
 
-* platform folders (`android`, `ios`, `windows`, etc.): Contains the build files
-  for building and bundling the native code library with the platform application.
+  //load a group. returned a group obj for every user.
+  final group = await user.getGroup(groupId);
 
-## Building and bundling native code
+  //invite another user to the group. Not here in the example because we only got one user so far
+  // await group.inviteAuto("other user id");
 
-The `pubspec.yaml` specifies FFI plugins as follows:
+  //encrypt a string for the group
+  final encrypted = await group.encryptString("hello there!");
 
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        ffiPlugin: true
-```
+  //now every user in the group can decrypt the string
+  final decrypted = await group.decryptString(encrypted);
 
-This configuration invokes the native build for the various target platforms
-and bundles the binaries in Flutter applications using these FFI plugins.
+  print(decrypted); //hello there!
 
-This can be combined with dartPluginClass, such as when FFI is used for the
-implementation of one platform in a federated plugin:
+  //delete a group
+  await group.deleteGroup();
 
-```yaml
-  plugin:
-    implements: some_other_plugin
-    platforms:
-      some_platform:
-        dartPluginClass: SomeClass
-        ffiPlugin: true
-```
-
-A plugin can have both FFI and method channels:
-
-```yaml
-  plugin:
-    platforms:
-      some_platform:
-        pluginClass: SomeName
-        ffiPlugin: true
-```
-
-The native build systems that are invoked by FFI (and method channel) plugins are:
-
-* For Android: Gradle, which invokes the Android NDK for native builds.
-  * See the documentation in android/build.gradle.
-* For iOS and MacOS: Xcode, via CocoaPods.
-  * See the documentation in ios/sentc.podspec.
-  * See the documentation in macos/sentc.podspec.
-* For Linux and Windows: CMake.
-  * See the documentation in linux/CMakeLists.txt.
-  * See the documentation in windows/CMakeLists.txt.
-
-## Binding to native code
-
-To use the native code, bindings in Dart are needed.
-To avoid writing these by hand, they are generated from the header file
-(`src/sentc.h`) by `package:ffigen`.
-Regenerate the bindings by running `dart run ffigen --config ffigen.yaml`.
-
-## Invoking native code
-
-Very short-running native functions can be directly invoked from any isolate.
-For example, see `sum` in `lib/sentc.dart`.
-
-Longer-running functions should be invoked on a helper isolate to avoid
-dropping frames in Flutter applications.
-For example, see `sumAsync` in `lib/sentc.dart`.
-
-## Flutter help
-
-For help getting started with Flutter, view our
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+  //delete a user
+  await user.deleteUser("password");
+}
+````
