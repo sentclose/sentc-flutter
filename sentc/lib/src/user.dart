@@ -500,7 +500,7 @@ class User extends AbstractAsymCrypto {
 
     await api_user.disableOtp(baseUrl: baseUrl, authToken: appToken, jwt: jwt);
 
-    mfa = true;
+    mfa = false;
 
     final storage = Sentc.getStorage();
 
