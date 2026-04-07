@@ -1,3 +1,8 @@
+## 0.15.3
+
+- fix 16 kb page size for android
+- use aws-lc-rs for tls
+
 ## 0.15.1
 
 - rewrite of the flutter rust bindings with flutter rust bridge version 2.
