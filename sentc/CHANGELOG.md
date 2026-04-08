@@ -1,3 +1,7 @@
+## 0.15.4
+
+- Use different tls handling to avoid initialization errors on android on start up
+
 ## 0.15.3
 
 - fix 16 kb page size for android
